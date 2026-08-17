@@ -77,3 +77,33 @@ export function FeaturePage() {
   return <FeatureContainer />;
 }
 ```
+
+## Lỗi Thường Gặp
+
+### Query param không có `validateSearch`
+
+Route có query param (filter, page, redirectTo...) phải khai báo `validateSearch` để param type-safe, không tự parse `URLSearchParams` tay trong component:
+
+```tsx
+export const Route = createFileRoute('/_app/projects')({
+  component: ProjectsPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    page: typeof search.page === 'number' ? search.page : 1,
+    keyword: typeof search.keyword === 'string' ? search.keyword : undefined,
+  }),
+});
+```
+
+### Điều hướng bằng `window.location` thay vì router
+
+Không làm — full reload không cần thiết, mất SPA state:
+
+```ts
+window.location.href = '/projects';
+```
+
+Nên làm — dùng `navigate()`/`<Link>` của TanStack Router.
+
+### Guard/fetch nặng nhét trong route component
+
+Logic auth guard, gọi API bắt buộc trước khi render đặt trong `beforeLoad`, không đặt trong component của route hoặc trong page.

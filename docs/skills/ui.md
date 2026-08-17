@@ -187,3 +187,53 @@ Use responsive constraints for layout/content.
 Use aspect-ratio for images/video/thumbnail.
 Never fixed-height text containers unless overflow is handled.
 ```
+
+## Form Handling Rules
+
+### Dùng validation của Ant Design Form, không tự viết tay
+
+Không làm — tự quản state lỗi bằng `useState`:
+
+```tsx
+const [emailError, setEmailError] = useState('');
+```
+
+Nên làm — dùng `rules` của `Form.Item` (xem `LoginForm.tsx`/`RegisterForm.tsx` làm mẫu).
+
+### Submit phải có loading state và disable khi đang gửi
+
+Không làm — nút submit vẫn bấm được nhiều lần trong lúc request đang chạy:
+
+```tsx
+<Button htmlType="submit">Lưu</Button>
+```
+
+Nên làm — bind `loading`/`disabled` theo trạng thái mutation:
+
+```tsx
+<Button htmlType="submit" loading={mutation.isPending}>
+  Lưu
+</Button>
+```
+
+### Reset form đúng cách
+
+Dùng `form.resetFields()` của AntD `Form` instance, không tự set từng field bằng state tay.
+
+### Không watch toàn bộ form nếu chỉ cần 1-2 field
+
+Không làm — watch cả object gây re-render toàn form mỗi lần gõ:
+
+```tsx
+const values = Form.useWatch([], form);
+```
+
+Nên làm — watch đúng field cần:
+
+```tsx
+const status = Form.useWatch('status', form);
+```
+
+### Không tin validate frontend là đủ
+
+Validate frontend chỉ để UX tốt hơn; lỗi trả về từ backend vẫn phải hiển thị lại trên đúng field hoặc form-level error, không giả định request luôn thành công vì đã validate FE.

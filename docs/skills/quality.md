@@ -1,6 +1,6 @@
 # Quality Rules
 
-Đọc file này khi task liên quan clean code, tách file, performance, function vs arrow, validation/build/test.
+Đọc file này khi task liên quan clean code, tách file, performance, function vs arrow, error handling, try/catch, error boundary, validation/build/test.
 
 ## File Size
 
@@ -137,6 +137,52 @@ const user = useAuthStore((state) => state.user);
 - Component nặng như editor, video preview, asset picker, chart nên lazy load khi chỉ mở theo nhu cầu.
 - Không import ảnh/video lớn vào bundle nếu không cần.
 - Preview asset/video nên lazy load.
+
+## Error Handling Rules
+
+### Không nuốt lỗi im lặng
+
+Không làm:
+
+```ts
+try {
+  await doSomething();
+} catch {
+  // bỏ qua
+}
+```
+
+Nên làm — xử lý rõ ràng: hiện message an toàn cho user, hoặc log có kiểm soát, hoặc rethrow theo flow rõ:
+
+```ts
+try {
+  await doSomething();
+} catch (error) {
+  message.error(getFormattedErrorMessage(error));
+}
+```
+
+### Throw `Error` object, không throw string
+
+Không làm:
+
+```ts
+throw 'Không tìm thấy user';
+```
+
+Nên làm:
+
+```ts
+throw new Error('Không tìm thấy user');
+```
+
+### Không hiện raw error kỹ thuật lên UI
+
+Không hiện thẳng message backend chứa stack trace, SQL, tên field nội bộ. Dùng `getFormattedErrorMessage`/message an toàn theo `docs/skills/api.md`.
+
+### Error Boundary theo route/feature
+
+Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. Route root đã có `errorComponent` (`src/routes/__root.tsx`); feature phức tạp/rủi ro cao (editor, preview nặng) nên cân nhắc boundary riêng thay vì để lỗi propagate lên root.
 
 ## Validation Trước Khi Kết Thúc
 

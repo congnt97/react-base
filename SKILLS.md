@@ -40,8 +40,12 @@ Không dùng Next.js, shadcn/ui, Material UI, Chakra UI, Redux, React Router, CS
   đọc `docs/skills/routing-auth.md`.
 - Có security, permission, role, upload, file preview, token, secret, logging, XSS, AI/user/API output:
   đọc `docs/skills/security.md`.
-- Có clean code, fallback/default value, mock data, tách file, performance, re-render, memo, table/list lớn, form lớn, function vs arrow, validation/build/test:
+- Có clean code, fallback/default value, mock data, tách file, performance, re-render, memo, table/list lớn, form lớn, function vs arrow, error handling, try/catch, error boundary, validation/build/test:
   đọc `docs/skills/quality.md`.
+- Có `useEffect`, side effect, sync state, derived state, subscription, cleanup, custom hook:
+  đọc `docs/skills/hooks.md`.
+- Có type, interface, generic, DTO, `any`, non-null assertion, response API type:
+  đọc `docs/skills/typescript.md`.
 
 ## Checklist Tối Thiểu Trước Khi Code
 
@@ -55,7 +59,10 @@ Không dùng Next.js, shadcn/ui, Material UI, Chakra UI, Redux, React Router, CS
 8. Không dùng fallback giả/demo cho runtime data quan trọng; required data thiếu phải fail rõ hoặc hiện error state.
 9. Nếu có env, env phải required, không optional/fallback ngầm.
 10. Mỗi file không quá 500-600 dòng; gần 400 dòng thì cân nhắc tách.
-11. Chạy `yarn check:type` và `yarn build` trước khi kết thúc; chạy `yarn test` nếu phù hợp.
+11. Không dùng `useEffect` để tính derived value, sync data từ Query, hay phản ứng user action; xem `docs/skills/hooks.md`.
+12. Không dùng `any`/ép kiểu/`!` để né lỗi TypeScript; xem `docs/skills/typescript.md`.
+13. Không nuốt lỗi im lặng; không hiện raw error backend lên UI.
+14. Chạy `yarn check:type` và `yarn build` trước khi kết thúc; chạy `yarn test` nếu phù hợp.
 
 ## Prompt Gợi Ý Cho User
 

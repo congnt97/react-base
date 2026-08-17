@@ -88,3 +88,57 @@ Mutation rules:
 
 - Dùng `FormattedError`/`getFormattedErrorMessage` nếu phù hợp.
 - Toast ở presentation hook/container, không ở repository impl.
+
+## Lỗi Thường Gặp Khi Dùng TanStack Query
+
+### Query key không ổn định
+
+Không làm — object/array literal tạo mới mỗi render khiến cache miss liên tục:
+
+```ts
+useApiQuery({
+  queryKey: ['projects', { page, filter }],
+  queryFn: () => projectsRepository.list({ page, filter }),
+});
+```
+
+Nên làm — dùng giá trị nguyên thủy trong key hoặc `useMemo` cho object filter nếu cần giữ nguyên tham chiếu:
+
+```ts
+useApiQuery({
+  queryKey: ['projects', page, filter.status, filter.keyword],
+  queryFn: () => projectsRepository.list({ page, filter }),
+});
+```
+
+### Thiếu `enabled` guard
+
+Không gọi query khi param bắt buộc còn `undefined`/`null`:
+
+```ts
+useApiQuery({
+  queryKey: ['project', id],
+  queryFn: () => projectsRepository.detail(id),
+  options: { enabled: Boolean(id) },
+});
+```
+
+### Fetch qua `useEffect` + axios thay vì Query
+
+Không dùng `useEffect` để tự fetch rồi tự quản `isLoading`/`data`/`error` bằng `useState`. Luôn đi qua repository + `useApiQuery`/`useApiMutation` để có sẵn cache, retry, loading/error state. Xem thêm `docs/skills/hooks.md`.
+
+### Không xử lý `isLoading`/`isError`
+
+Không làm — chỉ check `data &&` rồi im lặng khi lỗi hoặc đang tải:
+
+```tsx
+{data && <ProjectList projects={data} />}
+```
+
+Nên làm — xử lý đủ 3 trạng thái:
+
+```tsx
+if (isLoading) return <Spin />;
+if (isError) return <ErrorState message={getFormattedErrorMessage(error)} />;
+return <ProjectList projects={data} />;
+```
