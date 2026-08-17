@@ -5,11 +5,12 @@
 ## Auth Flow Hiện Tại
 
 - Store: `src/presentation/stores/useAuthStore.ts`.
-- Sync user: `src/presentation/components/AuthSync.tsx`.
+- Session expiry: `src/main.tsx` đăng ký `subscribeSessionExpired` (HttpClient gọi `notifySessionExpired` khi refresh token thất bại) để `clearAuth` và đưa về `/auth/login`.
 - Storage: `src/shared/auth-storage.ts`.
 - Public routes: `src/routes/auth/*`.
 - Protected routes: `src/routes/_app/*`.
-- Guard: `src/routes/_app/route.tsx`.
+- Guard + hydrate user: `src/routes/_app/route.tsx` (`beforeLoad` gọi `/me` qua `context.repositories`, hydrate user vào Zustand).
+- Role guard helper: `src/shared/route-guards.ts` (`hasRole`).
 
 ## Auth Token Rules
 
@@ -20,7 +21,7 @@ Source of truth:
 - Token: `src/shared/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
 - Zustand: chỉ giữ UI auth state như `user`, `isAuthenticated`, `isLoading`, và actions `setAuthenticated`, `clearAuth`.
 - HttpClient: đọc token từ `auth-storage` hoặc gửi cookie credential, không đọc token từ component.
-- AuthSync/useMe: validate token và hydrate user vào Zustand.
+- Hydrate user: `_app/route.tsx` `beforeLoad` validate token qua `/me` và hydrate user vào Zustand; session hết hạn giữa phiên do listener trong `main.tsx` xử lý.
 - Logout: clear cả `auth-storage` và Zustand; clear query client nếu cần.
 
 Lý do:

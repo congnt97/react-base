@@ -36,7 +36,10 @@ export function RegisterForm() {
       <Form.Item
         label="Mật khẩu"
         name="password"
-        rules={[{ required: true, message: 'Nhập mật khẩu' }]}
+        rules={[
+          { required: true, message: 'Nhập mật khẩu' },
+          { min: 6, message: 'Mật khẩu tối thiểu 6 ký tự' },
+        ]}
       >
         <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" />
       </Form.Item>

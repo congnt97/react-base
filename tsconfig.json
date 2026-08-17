@@ -27,13 +27,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@application/*": ["./src/application/*"],
-      "@domain/*": ["./src/domain/*"],
-      "@infrastructure/*": ["./src/infrastructure/*"],
-      "@presentation/*": ["./src/presentation/*"],
-      "@shared/*": ["./src/shared/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@/*": ["./src/*"]
     }
   }
 }

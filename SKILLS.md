@@ -55,7 +55,7 @@ Không dùng Next.js, shadcn/ui, Material UI, Chakra UI, Redux, React Router, CS
 8. Không dùng fallback giả/demo cho runtime data quan trọng; required data thiếu phải fail rõ hoặc hiện error state.
 9. Nếu có env, env phải required, không optional/fallback ngầm.
 10. Mỗi file không quá 500-600 dòng; gần 400 dòng thì cân nhắc tách.
-11. Chạy `npm run check:type` và `npm run build` trước khi kết thúc; chạy `npm run test` nếu phù hợp.
+11. Chạy `yarn check:type` và `yarn build` trước khi kết thúc; chạy `yarn test` nếu phù hợp.
 
 ## Prompt Gợi Ý Cho User
 

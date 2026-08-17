@@ -127,6 +127,6 @@ yarn build
 
 - UI text tiếng Việt phải có dấu đầy đủ.
 - Dùng Ant Design trước, Tailwind cho layout/spacing.
-- Reuse `PageHeader`, `AppButton`, `SearchInput` khi phù hợp.
+- Reuse `PageHeader`, `SearchInput` khi phù hợp; button dùng Ant Design `Button` trực tiếp, chỉ tạo common khi có variant/behavior chung.
 - Không lồng card nhiều lớp, không tạo palette mới nếu token hiện tại đáp ứng.
 - Design tokens nằm trong `src/styles/styles.css` và `src/presentation/provider/theme/antd-theme.ts`.

@@ -44,7 +44,7 @@ Trước khi tạo component/container mới:
 Ví dụ:
 
 - Input mới: tạo/mở rộng `src/presentation/components/ui/input/*` dựa trên Ant Design `Input`.
-- Button mới: ưu tiên `AppButton.tsx`; nếu thiếu variant, mở rộng common component trước.
+- Button: dùng Ant Design `Button` trực tiếp; chỉ tạo common button khi có variant/behavior chung.
 - Page header: reuse `PageHeader.tsx`.
 
 ## Common Component Extraction Rules

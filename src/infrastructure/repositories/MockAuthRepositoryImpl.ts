@@ -1,4 +1,3 @@
-import type { ResponseCommon } from '@/application/dto/response/ResponseCommon';
 import type { AuthRepository } from '@/application/repositories/AuthRepository';
 import type {
   AuthMessageResponse,
@@ -22,9 +21,7 @@ const delay = (ms = 250) =>
   });
 
 export const MockAuthRepositoryImpl = (): AuthRepository => ({
-  login: async (
-    payload: LoginRequest,
-  ): Promise<ResponseCommon<LoginResponse>> => {
+  login: async (payload: LoginRequest): Promise<LoginResponse> => {
     await delay();
 
     if (
@@ -37,36 +34,27 @@ export const MockAuthRepositoryImpl = (): AuthRepository => ({
       });
     }
 
-    return {
-      success: true,
-      data: mockLoginResponse,
-    };
+    return mockLoginResponse;
   },
 
   logout: async () => {
     await delay(100);
-    return { success: true };
   },
 
-  register: async (
-    payload: RegisterRequest,
-  ): Promise<ResponseCommon<RegisterResponse>> => {
+  register: async (payload: RegisterRequest): Promise<RegisterResponse> => {
     await delay();
 
     return {
-      success: true,
-      data: {
-        user: {
-          ...mockAuthUser,
-          id: 'mock-user',
-          email: payload.email,
-          name: payload.name,
-        },
+      user: {
+        ...mockAuthUser,
+        id: 'mock-user',
+        email: payload.email,
+        name: payload.name,
       },
     };
   },
 
-  me: async (): Promise<ResponseCommon<AuthUser>> => {
+  me: async (): Promise<AuthUser> => {
     await delay(100);
 
     if (getStoredAccessToken() !== mockAuthTokens.accessToken) {
@@ -76,20 +64,14 @@ export const MockAuthRepositoryImpl = (): AuthRepository => ({
       });
     }
 
-    return {
-      success: true,
-      data: mockAuthUser,
-    };
+    return mockAuthUser;
   },
 
-  resendVerification: async (): Promise<ResponseCommon<AuthMessageResponse>> => {
+  resendVerification: async (): Promise<AuthMessageResponse> => {
     await delay();
 
     return {
-      success: true,
-      data: {
-        message: 'Đã gửi lại email xác thực',
-      },
+      message: 'Đã gửi lại email xác thực',
     };
   },
 });

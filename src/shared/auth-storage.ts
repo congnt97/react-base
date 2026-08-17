@@ -29,7 +29,6 @@ export const persistAuthTokens = (payload: AuthTokenPayload) => {
 };
 
 export const clearAuthStorage = () => {
-  localStorage.removeItem(Constants.API_USER_STORAGE);
   localStorage.removeItem(Constants.API_TOKEN_STORAGE);
   localStorage.removeItem(Constants.API_REFRESH_TOKEN_STORAGE);
 };
@@ -41,3 +40,16 @@ export const getStoredRefreshToken = () =>
   getStorageItem<string>(Constants.API_REFRESH_TOKEN_STORAGE);
 
 export const hasStoredAccessToken = () => Boolean(getStoredAccessToken());
+
+const sessionExpiredListeners = new Set<() => void>();
+
+export const subscribeSessionExpired = (listener: () => void) => {
+  sessionExpiredListeners.add(listener);
+  return () => {
+    sessionExpiredListeners.delete(listener);
+  };
+};
+
+export const notifySessionExpired = () => {
+  sessionExpiredListeners.forEach((listener) => listener());
+};

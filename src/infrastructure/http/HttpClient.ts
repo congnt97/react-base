@@ -8,6 +8,7 @@ import {
   clearAuthStorage,
   getStoredAccessToken,
   getStoredRefreshToken,
+  notifySessionExpired,
   persistAuthTokens,
 } from '@/shared/auth-storage';
 import { env } from '@/env';
@@ -58,6 +59,7 @@ const refreshAuthTokens = (refreshToken: string) => {
     .catch(() => {
       if (getStoredRefreshToken() === refreshToken) {
         clearAuthStorage();
+        notifySessionExpired();
       }
       return null;
     })

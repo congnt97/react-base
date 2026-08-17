@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 
 import type { AuthRepository } from '@/application/repositories/AuthRepository';
 import { createAuthRepository } from '@/infrastructure/repositories/createAuthRepository';
@@ -7,20 +7,26 @@ export interface RepositoryContainer {
   authRepository: AuthRepository;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
+export function createRepositoryContainer(): RepositoryContainer {
+  return {
+    authRepository: createAuthRepository(),
+  };
+}
+
 const RepositoriesContext = createContext<RepositoryContainer | undefined>(
   undefined,
 );
 
-export function RepositoriesProvider({ children }: { children: ReactNode }) {
-  const value = useMemo<RepositoryContainer>(
-    () => ({
-      authRepository: createAuthRepository(),
-    }),
-    [],
-  );
-
+export function RepositoriesProvider({
+  children,
+  container,
+}: {
+  children: ReactNode;
+  container: RepositoryContainer;
+}) {
   return (
-    <RepositoriesContext.Provider value={value}>
+    <RepositoriesContext.Provider value={container}>
       {children}
     </RepositoriesContext.Provider>
   );

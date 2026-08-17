@@ -7,7 +7,6 @@
 Dùng PascalCase cho file component/container/class-like:
 
 - `PageHeader.tsx`
-- `AppButton.tsx`
 - `SearchInput.tsx`
 - `LoginForm.tsx`
 - `ProjectsContainer.tsx`
@@ -29,7 +28,6 @@ Dùng camelCase cho hook/store bắt đầu bằng `use`:
 - `useAuthStore.ts`
 - `useAppStore.ts`
 - `useApi.ts`
-- `useAxios.ts`
 
 ## `use-case`
 

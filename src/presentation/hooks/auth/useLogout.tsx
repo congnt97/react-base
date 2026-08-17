@@ -1,7 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { ResponseCommon } from '@/application/dto/response/ResponseCommon';
 import { useRepository } from '@/di/RepositoriesProvider';
 import { useApiMutation } from '@/infrastructure/hooks/useApi';
 import { useAuthStore } from '@/presentation/stores/useAuthStore';
@@ -12,7 +11,7 @@ export function useLogout() {
   const { authRepository } = useRepository();
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  return useApiMutation<void, ResponseCommon<void>>({
+  return useApiMutation<void, void>({
     mutationFn: authRepository.logout,
     options: {
       onSettled: () => {

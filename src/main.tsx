@@ -10,18 +10,23 @@ import { routeTree } from './routeTree.gen';
 import { Provider as QueryProvider } from './presentation/provider/integrations/tanstack-query/root-provider';
 import { getContext as getQueryContext } from './presentation/provider/integrations/tanstack-query/query-client';
 import { antdTheme } from './presentation/provider/theme/antd-theme';
-import { RepositoriesProvider } from './di/RepositoriesProvider';
+import {
+  RepositoriesProvider,
+  createRepositoryContainer,
+} from './di/RepositoriesProvider';
 import { useAuthStore } from './presentation/stores/useAuthStore';
-import { AuthSync } from './presentation/components/AuthSync';
+import { subscribeSessionExpired } from './shared/auth-storage';
 import './styles/styles.css';
 
 const queryContext = getQueryContext();
+const repositories = createRepositoryContainer();
 
 const router = createRouter({
   routeTree,
   context: {
     ...queryContext,
     auth: undefined!,
+    repositories,
   },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -35,6 +40,15 @@ declare module '@tanstack/react-router' {
   }
 }
 
+subscribeSessionExpired(() => {
+  useAuthStore.getState().clearAuth();
+  void router.navigate({
+    to: '/auth/login',
+    search: { redirectTo: undefined },
+    replace: true,
+  });
+});
+
 function InnerApp() {
   const auth = useAuthStore();
 
@@ -44,6 +58,7 @@ function InnerApp() {
       context={{
         ...queryContext,
         auth,
+        repositories,
       }}
     />
   );
@@ -56,9 +71,8 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <ConfigProvider locale={viVN} theme={antdTheme}>
         <AntdApp>
-          <RepositoriesProvider>
+          <RepositoriesProvider container={repositories}>
             <QueryProvider queryClient={queryContext.queryClient}>
-              <AuthSync />
               <InnerApp />
               <Toaster position="top-right" richColors />
             </QueryProvider>

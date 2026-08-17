@@ -7,7 +7,8 @@ const replaceUrlParams = (
   }
 
   return Object.entries(urlParams).reduce(
-    (url, [key, value]) => url.replace(`:${key}`, encodeURIComponent(value)),
+    (url, [key, value]) =>
+      url.replace(new RegExp(`:${key}\\b`, 'g'), encodeURIComponent(value)),
     endpoint,
   );
 };

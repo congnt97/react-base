@@ -1,5 +1,5 @@
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Typography } from 'antd';
+import { Avatar, Button, Dropdown } from 'antd';
 
 import { useLogout } from '@/presentation/hooks/auth/useLogout';
 import { useAuthStore } from '@/presentation/stores/useAuthStore';
@@ -10,15 +10,6 @@ export function Header() {
 
   return (
     <header className="app-header">
-      <div className="min-w-0">
-        <Typography.Text className="block text-sm text-[var(--text-muted)]">
-          Dashboard
-        </Typography.Text>
-        <Typography.Title level={4} className="!m-0 !text-[var(--text-main)]">
-          Tổng quan hệ thống
-        </Typography.Title>
-      </div>
-
       <Dropdown
         trigger={['click']}
         menu={{

@@ -14,7 +14,6 @@ export type AuthState = {
   isLoading: boolean;
   setAuthenticated: (user?: AuthUser | null, tokens?: AuthTokenPayload) => void;
   clearAuth: () => void;
-  setIsLoading: (isLoading: boolean) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -25,11 +24,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (tokens) {
       persistAuthTokens(tokens);
     }
-    set({ user, isAuthenticated: true, isLoading: false });
+    set((state) =>
+      state.user === user && state.isAuthenticated && !state.isLoading
+        ? state
+        : { user, isAuthenticated: true, isLoading: false },
+    );
   },
   clearAuth: () => {
     clearAuthStorage();
-    set({ user: null, isAuthenticated: false, isLoading: false });
+    set((state) =>
+      !state.user && !state.isAuthenticated && !state.isLoading
+        ? state
+        : { user: null, isAuthenticated: false, isLoading: false },
+    );
   },
-  setIsLoading: (isLoading) => set({ isLoading }),
 }));

@@ -1,4 +1,3 @@
-import type { ResponseCommon } from '@/application/dto/response/ResponseCommon';
 import type {
   AuthMessageResponse,
   AuthUser,
@@ -9,13 +8,9 @@ import type {
 } from '@/domain/models/Auth';
 
 export interface AuthRepository {
-  login: (payload: LoginRequest) => Promise<ResponseCommon<LoginResponse>>;
-  logout: () => Promise<ResponseCommon<void>>;
-  register: (
-    payload: RegisterRequest,
-  ) => Promise<ResponseCommon<RegisterResponse>>;
-  me: () => Promise<ResponseCommon<AuthUser>>;
-  resendVerification: (
-    email: string,
-  ) => Promise<ResponseCommon<AuthMessageResponse>>;
+  login: (payload: LoginRequest) => Promise<LoginResponse>;
+  logout: () => Promise<void>;
+  register: (payload: RegisterRequest) => Promise<RegisterResponse>;
+  me: () => Promise<AuthUser>;
+  resendVerification: (email: string) => Promise<AuthMessageResponse>;
 }

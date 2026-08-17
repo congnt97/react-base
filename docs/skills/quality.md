@@ -143,14 +143,14 @@ const user = useAuthStore((state) => state.user);
 Bắt buộc chạy:
 
 ```bash
-npm run check:type
-npm run build
+yarn check:type
+yarn build
 ```
 
 Nên chạy thêm:
 
 ```bash
-npm run test
+yarn test
 ```
 
 Nếu có UI thay đổi:

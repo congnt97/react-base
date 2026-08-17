@@ -18,7 +18,7 @@ export function Sidebar() {
       <Menu
         className="app-sidebar-menu"
         mode="inline"
-        selectedKeys={[pathname === '/' ? '/' : pathname]}
+        selectedKeys={[pathname]}
         items={[
           {
             key: '/',
