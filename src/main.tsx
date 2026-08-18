@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { App as AntdApp, ConfigProvider } from 'antd';
 import viVN from 'antd/locale/vi_VN';
-import { Toaster } from 'sonner';
 
 import { routeTree } from './routeTree.gen';
 import { Provider as QueryProvider } from './presentation/provider/integrations/tanstack-query/root-provider';
@@ -77,7 +76,6 @@ if (rootElement && !rootElement.innerHTML) {
           <RepositoriesProvider container={repositories}>
             <QueryProvider queryClient={queryContext.queryClient}>
               <InnerApp />
-              <Toaster position="top-right" richColors />
             </QueryProvider>
           </RepositoriesProvider>
         </AntdApp>

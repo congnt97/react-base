@@ -88,6 +88,24 @@ Mutation rules:
 
 - Dùng `FormattedError`/`getFormattedErrorMessage` nếu phù hợp.
 - Toast ở presentation hook/container, không ở repository impl.
+- Toast dùng `App.useApp().message` của Ant Design (đã setup qua `<AntdApp>` trong `main.tsx`). Không thêm thư viện toast khác (`sonner`, `react-hot-toast`...) — base đã gỡ `sonner` vì gây 2 hệ thống toast song song không nhất quán.
+
+## Pagination / List Response
+
+Danh sách từ API dùng envelope pagination, không tự chế field rời rạc. Định nghĩa 1 type dùng chung trong `application/dto/response`:
+
+```ts
+export type PaginatedResponse<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+```
+
+Repository trả `Promise<PaginatedResponse<Project>>`; container truyền `total`/`page`/`pageSize` thẳng vào `Table` `pagination` prop của Ant Design, không tự tính lại state phân trang song song với response.
+
+Query key phải gồm `page`/`pageSize`/filter (giá trị nguyên thủy, xem `docs/skills/hooks.md` và mục "Lỗi Thường Gặp" bên dưới) để mỗi trang là 1 cache entry riêng.
 
 ## Lỗi Thường Gặp Khi Dùng TanStack Query
 

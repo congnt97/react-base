@@ -237,3 +237,13 @@ const status = Form.useWatch('status', form);
 ### Không tin validate frontend là đủ
 
 Validate frontend chỉ để UX tốt hơn; lỗi trả về từ backend vẫn phải hiển thị lại trên đúng field hoặc form-level error, không giả định request luôn thành công vì đã validate FE.
+
+## Accessibility Cơ Bản
+
+Ant Design đã xử lý phần lớn a11y (focus trap trong Modal/Drawer, keyboard nav trong Menu/Select). Vẫn cần tự đảm bảo:
+
+- Icon-only button (không có text) phải có `title`/`aria-label`, không để screen reader đọc trống.
+- Ảnh có nghĩa (không phải decorative) phải có `alt` mô tả; ảnh trang trí thuần túy để `alt=""`.
+- Không disable outline focus (`outline: none`) mà không thay bằng style focus khác rõ ràng.
+- Modal/Drawer xác nhận hành động phá hủy (xoá, logout) phải có nút Huỷ rõ ràng, không chỉ dựa vào click ra ngoài.
+- Không dùng màu là cách duy nhất truyền đạt trạng thái (status chỉ có màu, không có text/icon đi kèm).

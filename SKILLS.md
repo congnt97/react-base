@@ -46,6 +46,8 @@ Không dùng Next.js, shadcn/ui, Material UI, Chakra UI, Redux, React Router, CS
   đọc `docs/skills/hooks.md`.
 - Có type, interface, generic, DTO, `any`, non-null assertion, response API type:
   đọc `docs/skills/typescript.md`.
+- Có viết/sửa test, mock repository/API trong test, quyết định có nên test hay không:
+  đọc `docs/skills/testing.md`.
 
 ## Checklist Tối Thiểu Trước Khi Code
 
