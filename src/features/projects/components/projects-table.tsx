@@ -3,6 +3,7 @@ import {
   EditOutlined,
   PaperClipOutlined,
 } from '@ant-design/icons';
+import { Link } from '@tanstack/react-router';
 import { Button, Space, Table, type TableProps } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +40,9 @@ export function ProjectsTable({
       render: (name: string, project) => (
         <div className="min-w-0">
           <div className="flex items-center gap-1 truncate font-medium">
-            {name}
+            <Link to="/projects/$id" params={{ id: project.id }}>
+              {name}
+            </Link>
             {project.attachmentUrl ? (
               <a
                 href={project.attachmentUrl}

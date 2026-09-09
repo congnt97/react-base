@@ -67,6 +67,16 @@ const updateSearch = (patch: Partial<ProjectsSearch>) =>
 
 Đổi filter thì reset `page: 1`.
 
+## Route Có Param (detail)
+
+Mẫu: `routes/_app/projects/$id.tsx` + `features/projects/pages/project-detail-page.tsx`.
+
+- List và detail là anh em trong folder: `projects/index.tsx` (`/projects`) và `projects/$id.tsx` (`/projects/:id`). Không đặt `projects.tsx` cạnh folder `projects/` vì nó sẽ thành layout cha và cần `<Outlet>`.
+- `loader` gọi `queryClient.ensureQueryData(<feature>DetailQueryOptions(params.id))` để render lần đầu có data ngay; component vẫn dùng `use<Entity>(id)` để cache đồng bộ sau mutation.
+- API trả 404 thì loader `throw notFound()` để hiện trang Not Found chung, không hiện ErrorState.
+- Page lấy param qua `getRouteApi('/_app/projects/$id').useParams()`. Link tới detail: `<Link to="/projects/$id" params={{ id }}>`.
+- `PageHeader` nhận `breadcrumbs` để quay về list.
+
 ## redirectTo
 
 `features/auth/search.ts` chỉ nhận đường dẫn nội bộ (`/...`, không `//`) để chặn open redirect.

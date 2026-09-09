@@ -21,7 +21,7 @@ import { useProjects } from '@/features/projects/hooks/use-projects';
 import type { ProjectsSearch } from '@/features/projects/search';
 import type { Project, ProjectPayload } from '@/features/projects/types';
 
-const route = getRouteApi('/_app/projects');
+const route = getRouteApi('/_app/projects/');
 
 type FormState = { open: boolean; project: Project | null };
 

@@ -52,6 +52,12 @@ export const projectsHandlers = [
     });
   }),
 
+  http.get(apiUrl(Endpoints.Projects.DETAIL), async ({ params }) => {
+    await delay(300);
+    const project = projects.find((item) => item.id === params.id);
+    return project ? ok(project) : fail(404, 'Không tìm thấy dự án');
+  }),
+
   http.post(apiUrl(Endpoints.Projects.LIST), async ({ request }) => {
     await delay(300);
     const body = (await request.json()) as ProjectPayload;

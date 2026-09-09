@@ -7,11 +7,12 @@ import {
 import { projectsApi } from '@/features/projects/api';
 import type { ProjectListParams } from '@/features/projects/types';
 
-// Key factory: invalidate `all` sau mutation là đủ cho mọi trang/filter.
+// Key factory: invalidate `all` sau mutation là đủ cho mọi trang/filter lẫn detail.
 export const projectKeys = {
   all: ['projects'] as const,
   list: (params: ProjectListParams) =>
     [...projectKeys.all, 'list', params] as const,
+  detail: (id: string) => [...projectKeys.all, 'detail', id] as const,
 };
 
 export const projectsQueryOptions = (params: ProjectListParams) =>

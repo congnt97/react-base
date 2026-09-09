@@ -14,6 +14,7 @@ import { http } from '@/lib/http';
 // Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
 export interface ProjectsApi {
   list: (params: ProjectListParams) => Promise<PaginatedResponse<Project>>;
+  detail: (id: string) => Promise<Project>;
   create: (body: ProjectPayload) => Promise<Project>;
   update: (id: string, body: ProjectPayload) => Promise<Project>;
   patch: (id: string, body: Partial<ProjectPayload>) => Promise<Project>;
@@ -27,6 +28,13 @@ export const projectsApi: ProjectsApi = {
         Endpoints.Projects.LIST,
         { queryParams: params },
       ),
+    ),
+
+  detail: async (id) =>
+    unwrapResponse(
+      await http.get<ApiResponse<Project>>(Endpoints.Projects.DETAIL, {
+        urlParams: { id },
+      }),
     ),
 
   create: async (body) =>

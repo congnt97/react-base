@@ -66,7 +66,7 @@ export const projectsQueryOptions = (params: ProjectListParams) =>
 ```
 
 - Query key phải chứa mọi param mà `queryFn` dùng. Object trong key là bình thường, TanStack hash ổn định không phụ thuộc thứ tự field.
-- `enabled: Boolean(id)` khi param bắt buộc có thể `undefined`.
+- `enabled: Boolean(id)` khi param bắt buộc có thể `undefined`. Mẫu detail: `use-project.ts` với `projectDetailQueryOptions(id)` dùng chung cho route loader.
 - List dùng `placeholderData: keepPreviousData` để bảng không nháy khi đổi trang.
 - Mutation: toast + `invalidateQueries({ queryKey: projectKeys.all })`. Chỉ auth/logout mới `queryClient.clear()`.
 - Không fetch bằng `useEffect` + `useState`.

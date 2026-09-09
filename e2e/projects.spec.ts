@@ -52,6 +52,31 @@ test.describe('Dự án (CRUD, filter, permission)', () => {
     await expect(page.getByText('23 dự án')).toBeVisible();
   });
 
+  test('trang detail: mở từ bảng, breadcrumb, sửa; id sai ra 404', async ({
+    page,
+  }) => {
+    await login(page, 'admin');
+    await page.goto('/projects');
+    await page.getByRole('link', { name: 'Dự án 23' }).click();
+
+    await expect(page).toHaveURL(/\/projects\/p23$/);
+    await expect(page.getByRole('heading', { name: 'Dự án 23' })).toBeVisible();
+    // Breadcrumb là <nav>; sidebar cũng có link "Dự án" nên phải scope.
+    await expect(
+      page.getByRole('navigation').getByRole('link', { name: 'Dự án' }),
+    ).toBeVisible();
+
+    await page.getByRole('button', { name: 'Sửa dự án' }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('Người phụ trách').fill('Người mới');
+    await dialog.getByRole('button', { name: 'Lưu' }).click();
+    await expect(page.getByText('Đã cập nhật dự án')).toBeVisible();
+    await expect(page.getByText('Người mới')).toBeVisible();
+
+    await page.goto('/projects/khong-ton-tai');
+    await expect(page.getByText('Không tìm thấy trang')).toBeVisible();
+  });
+
   test('user: không có nút xoá, không có menu Cài đặt, /settings ra 403', async ({
     page,
   }) => {
