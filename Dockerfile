@@ -14,6 +14,7 @@ RUN yarn build
 FROM nginx:1.27-alpine
 # nginx image tự chạy envsubst cho /etc/nginx/templates/*.template lúc start.
 COPY deploy/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY deploy/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 ENV API_UPSTREAM=http://api:3000
 # Image nginx tự đọc /etc/resolv.conf ra NGINX_LOCAL_RESOLVERS khi bật cờ này.
