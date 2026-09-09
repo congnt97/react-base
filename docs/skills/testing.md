@@ -29,6 +29,7 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 - Query theo role/label như component test. AntD: option của `Select` dùng `getByTitle`, modal dùng `getByRole('dialog')`, toast dùng `getByText`.
 - Helper dùng chung (`login`) đặt ở `e2e/helpers.ts`. Data MSW reset mỗi page load nên test độc lập nhau.
 - CI chạy E2E ở job riêng sau job check; report upload khi fail.
+- `e2e/a11y.spec.ts` quét axe từng trang; trang mới phải thêm vào đây.
 
 ## Bắt Buộc Thêm Test Khi
 

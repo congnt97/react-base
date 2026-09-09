@@ -57,7 +57,11 @@ export function RegisterForm() {
 
       <p className="mb-0 mt-4 text-center text-sm text-[var(--text-muted)]">
         {t('Đã có tài khoản?')}{' '}
-        <Link to="/auth/login" search={{ redirectTo: undefined }}>
+        <Link
+          to="/auth/login"
+          search={{ redirectTo: undefined }}
+          className="underline!"
+        >
           {t('Đăng nhập')}
         </Link>
       </p>

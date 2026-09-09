@@ -23,9 +23,11 @@ Chỉnh Ant Design qua token trong `app/theme.ts` (`token`, `components.<Tên>`)
 - Text muted: `#64748b`.
 - Border: `#e2e8f0`.
 - Border strong: `#cbd5e1`.
-- Success: `#16a34a`.
-- Warning: `#d97706`.
-- Danger: `#dc2626`.
+- Link: `#1d4ed8`.
+- Success: `#166534` trên nền `#dcfce7`.
+- Warning: `#92400e` trên nền `#fef3c7`.
+- Danger: `#dc2626` trên nền `#fee2e2`.
+- Placeholder, text phụ (tertiary/description): `#64748b`. Các màu chữ này đã chọn để đạt WCAG AA trên nền trắng; đổi nhạt hơn sẽ fail `e2e/a11y.spec.ts`.
 - Border radius mặc định: 8px.
 - Header height: 64px.
 - Sidebar width: 260px.
@@ -242,6 +244,11 @@ const status = Form.useWatch('status', form);
 Validate frontend chỉ để UX tốt hơn; lỗi trả về từ backend vẫn phải hiển thị lại trên đúng field hoặc form-level error, không giả định request luôn thành công vì đã validate FE.
 
 ## Accessibility Cơ Bản
+
+Hai lớp kiểm tra tự động, không bỏ qua bằng cách disable rule:
+
+- `eslint-plugin-jsx-a11y` (recommended) chạy trong `yarn validate`: thiếu `alt`, label, role sai, click không có keyboard event.
+- `e2e/a11y.spec.ts` quét axe WCAG 2.1 AA trên mọi trang chính; thêm trang mới thì thêm test. Helper `expectNoA11yViolations(page)`; `disableRules` chỉ khi có lý do ghi trong test.
 
 Ant Design đã xử lý phần lớn a11y (focus trap trong Modal/Drawer, keyboard nav trong Menu/Select). Vẫn cần tự đảm bảo:
 

@@ -41,7 +41,10 @@ export function LoginForm() {
 
       <p className="mb-0 mt-4 text-center text-sm text-[var(--text-muted)]">
         {t('Chưa có tài khoản?')}{' '}
-        <Link to="/auth/register">{t('Đăng ký')}</Link>
+        {/* underline! vì .ant-app a đặt text-decoration none; link trong đoạn văn phải có gạch chân (a11y). */}
+        <Link to="/auth/register" className="underline!">
+          {t('Đăng ký')}
+        </Link>
       </p>
     </Form>
   );

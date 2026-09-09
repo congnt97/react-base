@@ -67,7 +67,8 @@ export function Sidebar() {
       className="overflow-auto"
     >
       <div className="flex h-16 items-center px-6">
-        <Link to="/" className="text-base font-semibold text-white">
+        {/* text-white! vì AntD đặt màu link cho mọi <a>; nền sidebar tối cần chữ trắng. */}
+        <Link to="/" className="text-base font-semibold text-white!">
           React Base
         </Link>
       </div>

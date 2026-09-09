@@ -3,6 +3,7 @@ import { readdirSync } from 'node:fs';
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import checkFile from 'eslint-plugin-check-file';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
@@ -45,6 +46,8 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginQuery.configs['flat/recommended'],
+  // docs/skills/ui.md: a11y cơ bản bắt ngay lúc code (alt, label, role, key events).
+  { ...jsxA11y.flatConfigs.recommended, files: ['src/**/*.tsx'] },
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
