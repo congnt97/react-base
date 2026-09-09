@@ -13,9 +13,9 @@ Backend must enforce auth, permission, file validation, and data access.
 
 - Không log token, refresh token, password, API key, full auth response.
 - Không lưu token làm source of truth trong Zustand.
-- Token source of truth là `src/shared/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
+- Token source of truth là `lib/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
 - Zustand chỉ giữ UI auth state: `user`, `isAuthenticated`.
-- HttpClient đọc token từ storage/cookie, component không đọc token trực tiếp.
+- `lib/http.ts` đọc token từ storage/cookie, component không đọc token trực tiếp.
 - Logout phải clear auth storage, Zustand, và query cache liên quan.
 - Protected route phải nằm dưới `src/routes/_app`.
 
@@ -31,7 +31,7 @@ Backend must enforce auth, permission, file validation, and data access.
 - Không trust frontend validation; backend phải validate lại.
 - Không expose raw backend error quá chi tiết lên UI.
 - Không swallow error im lặng; hiện message an toàn, log có kiểm soát nếu cần.
-- Không hardcode endpoint string rải rác; dùng `src/shared/endpoints.ts`.
+- Không hardcode endpoint string rải rác; dùng `lib/endpoints.ts`.
 - Không gửi data nhạy cảm nếu prompt/task không yêu cầu rõ.
 - Không dùng fallback demo để che data required bị thiếu trong production.
 
@@ -56,7 +56,7 @@ Backend must enforce auth, permission, file validation, and data access.
 
 - Hide button trên UI không thay thế backend authorization.
 - Role guard frontend chỉ là UX guard; backend phải enforce.
-- Nếu thêm role guard, tạo helper chung trong `src/shared/route-guards.ts`.
+- Role guard dùng `requireRole`/`hasRole` trong `features/auth/guards.ts`, không tự viết lại.
 - Không duplicate permission logic rải rác trong component.
 
 ## Logging

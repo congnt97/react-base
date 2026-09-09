@@ -1,77 +1,43 @@
 # React Base Skill Router
 
-Bắt buộc đọc file này trước khi làm bất kỳ feature, page, API flow, UI component, auth/route, store, repository, env/config, hoặc refactor nào trong `src/`.
-
-Mục tiêu: AI tự phân loại task và chỉ đọc rule phụ liên quan, không đọc toàn bộ rule nếu không cần.
+Đọc file này trước khi làm bất kỳ feature, page, API, UI, auth/route, store, env, hoặc refactor nào trong `src/`. Sau đó chỉ đọc rule phụ liên quan.
 
 ## Stack Cố Định
 
-- ReactJS + TypeScript + Vite.
-- Ant Design là UI component system chính.
-- Tailwind CSS dùng cho layout utility và tinh chỉnh UI.
-- TanStack Router dùng cho routing.
-- TanStack Query dùng cho server state/API state.
-- Zustand dùng cho client UI/auth state.
-- Axios dùng qua `src/infrastructure/http/HttpClient.ts`.
+React + TypeScript + Vite, Ant Design, Tailwind (layout/spacing), TanStack Router, TanStack Query, Zustand, Axios qua `lib/http.ts`, MSW cho mock, Vitest + Testing Library.
 
-Không dùng Next.js, shadcn/ui, Material UI, Chakra UI, Redux, React Router, CSS module mới, hoặc styling system mới khi chưa được yêu cầu rõ.
-
-## Cách Đọc Rule Để Tiết Kiệm Token
-
-1. Đọc file router này trước.
-2. Tự phân loại task theo các trigger bên dưới.
-3. Chỉ đọc file rule phụ liên quan.
-4. Không đọc tất cả file trong `docs/skills` nếu task không cần.
-5. Nếu task chạm nhiều nhóm, đọc nhiều file phụ tương ứng.
+Không thêm Next.js, shadcn/ui, MUI, Redux, React Router, thư viện toast khác, CSS module, hoặc styling system mới khi chưa được yêu cầu rõ.
 
 ## Rule Loading Router
 
-- Có tạo/sửa folder, model, repository, hook, container, page, route, store, state, hoặc feature mới:
-  đọc `docs/skills/architecture.md`.
-- Có đặt tên file, component, hook, store, page, layout, DTO, repository, service:
-  đọc `docs/skills/naming.md`.
-- Có UI, layout, form, table, modal, component, container, icon, image, thumbnail, width/height, Ant Design, Tailwind, màu sắc, font:
-  đọc `docs/skills/ui.md`.
-- Có API, endpoint, data fetching, mutation, TanStack Query, cache, repository impl, response/error:
-  đọc `docs/skills/api.md`.
-- Có env/config/base URL/secret/runtime variable:
-  đọc `docs/skills/env.md`.
-- Có auth, token, route, guard, login/logout/register, protected page, role:
-  đọc `docs/skills/routing-auth.md`.
-- Có security, permission, role, upload, file preview, token, secret, logging, XSS, AI/user/API output:
-  đọc `docs/skills/security.md`.
-- Có clean code, fallback/default value, mock data, tách file, performance, re-render, memo, table/list lớn, form lớn, function vs arrow, error handling, try/catch, error boundary, validation/build/test:
-  đọc `docs/skills/quality.md`.
-- Có `useEffect`, side effect, sync state, derived state, subscription, cleanup, custom hook:
-  đọc `docs/skills/hooks.md`.
-- Có type, interface, generic, DTO, `any`, non-null assertion, response API type:
-  đọc `docs/skills/typescript.md`.
-- Có viết/sửa test, mock repository/API trong test, quyết định có nên test hay không:
-  đọc `docs/skills/testing.md`.
+| Task chạm tới                                                          | Đọc                           |
+| ---------------------------------------------------------------------- | ----------------------------- |
+| Folder, feature mới, state, store, đặt tên                             | `docs/skills/architecture.md` |
+| API, endpoint, query/mutation, cache, response/error, pagination, mock | `docs/skills/api.md`          |
+| UI, layout, form, table, modal, Ant Design, Tailwind, màu, font, a11y  | `docs/skills/ui.md`           |
+| Auth, token, route, guard, role, protected page, query param           | `docs/skills/routing-auth.md` |
+| Env, config, base URL, secret                                          | `docs/skills/env.md`          |
+| Security, permission, upload, XSS, logging                             | `docs/skills/security.md`     |
+| useEffect, derived state, sync, subscription, custom hook              | `docs/skills/hooks.md`        |
+| Type, generic, `any`, `!`, ép kiểu                                     | `docs/skills/typescript.md`   |
+| Clean code, fallback, tách file, performance, error handling           | `docs/skills/quality.md`      |
+| Test, mock trong test                                                  | `docs/skills/testing.md`      |
 
-## Checklist Tối Thiểu Trước Khi Code
+## Checklist Tối Thiểu
 
-1. Search trước khi tạo mới: `rg`/`find` trong `src/presentation/components`, `src/presentation/features`, `src/presentation/hooks`, `src/domain/models`, `src/application/repositories`, `src/infrastructure/repositories`, `src/shared/endpoints.ts`, `src/routes`.
-2. Reuse component/container/hook/model/repository nếu đã tồn tại.
-3. Nếu common component chưa có, tạo trong `src/presentation/components` và wrap Ant Design.
-4. Nếu có API, đi đúng flow: domain model -> application repository -> shared endpoint -> infrastructure repository impl -> presentation hook -> container/page.
-5. Nếu có UI, check `src/styles/styles.css` và `src/presentation/provider/theme/antd-theme.ts`.
-6. State rule nhanh: UI local dùng `useState/useReducer`; shared client state dùng Zustand; server/API state dùng TanStack Query.
-7. Auth token không lưu chính trong Zustand; source of truth là `auth-storage` hoặc cookie.
-8. Không dùng fallback giả/demo cho runtime data quan trọng; required data thiếu phải fail rõ hoặc hiện error state.
-9. Nếu có env, env phải required, không optional/fallback ngầm.
-10. Mỗi file không quá 500-600 dòng; gần 400 dòng thì cân nhắc tách.
-11. Không dùng `useEffect` để tính derived value, sync data từ Query, hay phản ứng user action; xem `docs/skills/hooks.md`.
-12. Không dùng `any`/ép kiểu/`!` để né lỗi TypeScript; xem `docs/skills/typescript.md`.
-13. Không nuốt lỗi im lặng; không hiện raw error backend lên UI.
-14. Chạy `yarn check:type` và `yarn build` trước khi kết thúc; chạy `yarn test` nếu phù hợp.
+1. Search trước khi tạo mới: `rg` trong `src/components`, `src/features`, `src/lib`.
+2. Feature có API đi đúng flow: `types -> lib/endpoints -> api.ts -> hooks -> components -> pages -> routes`, kèm handler MSW. Mẫu: `features/projects`.
+3. State: local dùng `useState`; shared client state dùng Zustand; server state dùng TanStack Query. Không copy query data sang store.
+4. Token không ở Zustand; guard đọc `useAuthStore.getState()`.
+5. Env required, không fallback ngầm.
+6. Không `useEffect` cho derived value, sync data, hay phản ứng user action.
+7. Không `any`, ép kiểu, `!` để né lỗi.
+8. Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`; không nuốt lỗi.
+9. File dưới 400 dòng; mỗi component/hook một việc.
+10. Trước khi kết thúc chạy `yarn check`, `yarn test`, `yarn build`.
 
-## Prompt Gợi Ý Cho User
-
-User chỉ cần nói:
+## Prompt Gợi Ý
 
 ```text
 Đọc SKILLS.md trước, sau đó làm feature ...
 ```
-
-AI phải tự đọc rule phụ liên quan theo router ở trên.

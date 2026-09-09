@@ -158,7 +158,7 @@ Nên làm — xử lý rõ ràng: hiện message an toàn cho user, hoặc log c
 try {
   await doSomething();
 } catch (error) {
-  message.error(getFormattedErrorMessage(error));
+  message.error(getErrorMessage(error));
 }
 ```
 
@@ -184,11 +184,11 @@ throw new ApiError('Phiên đăng nhập không hợp lệ', 401);
 
 ### Không hiện raw error kỹ thuật lên UI
 
-Không hiện thẳng message backend chứa stack trace, SQL, tên field nội bộ. Dùng `getFormattedErrorMessage`/message an toàn theo `docs/skills/api.md`.
+Không hiện thẳng message backend chứa stack trace, SQL, tên field nội bộ. Dùng `getErrorMessage`/message an toàn theo `docs/skills/api.md`.
 
 ### Error Boundary theo route/feature
 
-Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. Route root đã có `errorComponent` (`src/routes/__root.tsx`); feature phức tạp/rủi ro cao (editor, preview nặng) nên cân nhắc boundary riêng thay vì để lỗi propagate lên root.
+Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. Router đã có `defaultErrorComponent` (`components/feedback/route-error.tsx`, set trong `app/router.tsx`) nên lỗi render/beforeLoad của một route chỉ thay phần Outlet của route đó, layout vẫn còn; feature phức tạp/rủi ro cao (editor, preview nặng) nên cân nhắc boundary riêng thay vì để lỗi propagate lên root.
 
 ## Validation Trước Khi Kết Thúc
 

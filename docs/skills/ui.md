@@ -7,7 +7,9 @@
 Trước khi làm UI, đọc nhanh:
 
 - `src/styles/styles.css`
-- `src/presentation/provider/theme/antd-theme.ts`
+- `src/app/theme.ts`
+
+Chỉnh Ant Design qua token trong `app/theme.ts` (`token`, `components.<Tên>`), không override CSS bằng `!important`.
 
 ## Design Tokens
 
@@ -33,9 +35,9 @@ Trước khi làm UI, đọc nhanh:
 Trước khi tạo component/container mới:
 
 1. Search component tồn tại:
-   `rg -n "Input|Button|Table|PageHeader|Modal|Upload|Select|Tabs" src/presentation/components src/presentation/features`
+   `rg -n "Input|Button|Table|PageHeader|Modal|Upload|Select|Tabs" src/components src/features`
 2. Nếu có common component phù hợp, reuse.
-3. Nếu chưa có, tạo common component trong `src/presentation/components`.
+3. Nếu chưa có, tạo common component trong `src/components` (`layout/`, `ui/`, `feedback/`).
 4. Common component phải wrap Ant Design, không viết lại từ `div` nếu AntD đã có.
 5. Container chỉ orchestration UI của feature, không viết helper lớn trong cùng file.
 6. Page chỉ compose layout/container, không chứa form/table logic dài.
@@ -43,15 +45,16 @@ Trước khi tạo component/container mới:
 
 Ví dụ:
 
-- Input mới: tạo/mở rộng `src/presentation/components/ui/input/*` dựa trên Ant Design `Input`.
+- Input mới: tạo/mở rộng `src/components/ui/*` dựa trên Ant Design `Input` (mẫu: `search-input.tsx`).
 - Button: dùng Ant Design `Button` trực tiếp; chỉ tạo common button khi có variant/behavior chung.
-- Page header: reuse `PageHeader.tsx`.
+- Page header: reuse `components/layout/page-header.tsx`.
+- Loading/lỗi/404/403: reuse `components/feedback/*` (`PageLoading`, `ErrorState`, `NotFound`, `RouteError`).
 
 ## Common Component Extraction Rules
 
 Không phải cứ gặp Ant Design component là bọc ra common. Chỉ đưa ra common khi component đó có giá trị tái sử dụng, design-system behavior, hoặc custom logic rõ ràng.
 
-Nên đưa ra `src/presentation/components` khi:
+Nên đưa ra `src/components` khi:
 
 - Custom style/token giống nhau ở nhiều nơi.
 - Có behavior chung: debounce search, clearable input, confirm delete, upload validation, table action menu.
@@ -90,7 +93,7 @@ export function AppCheckbox(props) {
 
 Nếu page đang vẽ UI:
 
-1. Check `src/presentation/components` trước.
+1. Check `src/components` trước.
 2. Nếu common có rồi thì reuse.
 3. Nếu chưa có và chỉ là AntD bình thường, dùng AntD trực tiếp.
 4. Nếu phải custom AntD theo style/behavior chung, tạo common component.
@@ -198,7 +201,7 @@ Không làm — tự quản state lỗi bằng `useState`:
 const [emailError, setEmailError] = useState('');
 ```
 
-Nên làm — dùng `rules` của `Form.Item` (xem `LoginForm.tsx`/`RegisterForm.tsx` làm mẫu).
+Nên làm — dùng `rules` của `Form.Item` (xem `features/auth/components/login-form.tsx` và `features/projects/components/project-form-modal.tsx` làm mẫu).
 
 ### Submit phải có loading state và disable khi đang gửi
 

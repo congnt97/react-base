@@ -1,120 +1,85 @@
 # Architecture Rules
 
-Đọc file này khi task tạo/sửa feature, folder, model, repository, hook, container, page, route, store, hoặc refactor trong `src/`.
+Đọc khi tạo/sửa folder, feature, model, hook, component, page, route, store, hoặc refactor.
 
-## Luồng Feature Mới
-
-1. Check file/folder đã tồn tại bằng `rg` và `find`.
-2. Tạo model/type trước khi tạo API/hook/UI.
-3. Tạo endpoint trong `src/shared/endpoints.ts` nếu có API.
-4. Tạo repository interface ở `application`.
-5. Tạo repository impl ở `infrastructure`.
-6. Tạo hook ở `presentation/hooks`.
-7. Tạo/reuse common component.
-8. Tạo container/page.
-9. Tạo route file cuối cùng.
-
-## Folder Responsibilities
-
-### `src/domain`
-
-- Chứa domain model/type thuần túy.
-- Không import React, Ant Design, TanStack Query, Axios, Zustand.
-- Không chứa API call, UI text, toast, route, localStorage.
-
-### `src/application`
-
-- Chứa contract và rule ứng dụng.
-- `repositories`: interface repository, không implement API.
-- `dto`: response/request DTO dùng chung (`ResponseCommon`, `unwrapResponse`, `getFormattedErrorMessage`).
-- `exceptions`: exception class (`ApiError`). Lỗi API/mock phải throw `ApiError`, không throw plain object.
-- `services`: service interface, tạo khi có use case cần.
-
-### `src/infrastructure`
-
-- Chứa implementation kết nối bên ngoài.
-- `http/HttpClient.ts`: axios instance, interceptor, base URL, token, chuẩn hoá lỗi thành `ApiError`.
-- `hooks/useApi.ts`: `useApiQuery`/`useApiMutation` wrap TanStack Query với error type `ApiError`.
-- `repositories/*Impl.ts`: implement repository bằng `httpClient`; `Mock*Impl.ts` cho dev-only.
-- `services/*Impl.ts`: implement service, tạo khi có use case cần.
-- Không gọi axios trực tiếp trong component/container/page.
-
-### `src/presentation`
-
-- Chứa UI, route-level composition, hook UI, store UI.
-- `components`: common component tái sử dụng.
-- `features/<feature>/containers`: container phục vụ feature.
-- `features/<feature>/<page>.tsx`: feature page composition.
-- `hooks/<feature>`: hook presentation dùng repository/query/mutation.
-- `layouts`: layout của app/auth/dashboard.
-- `stores`: Zustand store.
-- `provider`: root providers/theme/query/devtools.
-- Presentation gọi hook, hook gọi repository.
-
-### `src/routes`
-
-- Chứa TanStack Router file-based routes.
-- Root route: `src/routes/__root.tsx`.
-- Protected app route: `src/routes/_app/route.tsx`.
-- Protected app pages: `src/routes/_app/<route>/route.tsx`.
-- Public auth route: `src/routes/auth/route.tsx`.
-- Auth pages: `src/routes/auth/login.tsx`, `src/routes/auth/register.tsx`.
-- Route file chỉ nên import page và khai báo `createFileRoute`.
-- Page component compose layout/container; container giữ orchestration UI của feature.
-
-### `src/shared`
-
-- Chứa utility, constants, endpoints, enums, validations, auth storage.
-- API endpoints đặt trong `src/shared/endpoints.ts`.
-- LocalStorage auth helper đặt trong `src/shared/auth-storage.ts`.
-- Validation/search schema đặt trong `src/shared/validations`.
-- Không import React component vào `shared`.
-
-## State Ownership Rules
-
-Chọn state theo ownership, không theo thói quen.
-
-### Dùng `useState` / `useReducer`
-
-Dùng state thuần khi state chỉ sống trong một component hoặc một cụm component gần nhau:
-
-- Modal/drawer open close.
-- Tab local trong một màn.
-- Selected row trong một table.
-- Filter tạm trong một page.
-- Form draft chưa submit.
-- Hover/focus/transient UI.
-- Loading UI cục bộ không liên quan module khác.
-
-Nếu state không cần dùng ở page/component khác, không đưa vào Zustand.
-
-### Dùng Zustand
-
-Dùng Zustand cho shared client state, app-level state, hoặc module-level state cần nhiều component/page cùng đọc/ghi:
-
-- Auth UI state: `user`, `isAuthenticated`.
-- Sidebar collapsed/layout setting.
-- Selected workspace/project đang active toàn app.
-- Queue panel/editor state phức tạp chia nhiều component.
-- State cần action reset/clear rõ ràng.
-
-Không dùng Zustand cho server/API data như list project, user list, render jobs, assets, presets.
-
-### Dùng TanStack Query
-
-Dùng TanStack Query cho server state/API state:
-
-- List/detail từ API.
-- Current user `/me`.
-- Render queue, asset library, presets.
-- Mutation create/update/delete và invalidate/refetch.
-
-Không copy API data từ React Query sang Zustand nếu không có lý do rất rõ.
-
-Rule ngắn:
+## Cấu Trúc Feature-First
 
 ```text
-useState/useReducer = UI local state
-Zustand = shared client state
-TanStack Query = server/API state
+src/
+  app/          bootstrap + layout app (router, providers, theme, AppShell, Header, Sidebar)
+  components/   UI dùng chung, không biết feature
+  features/     mỗi feature một folder, tự chứa mọi thứ của nó
+  lib/          tầng thấp nhất: http, env, error, response, storage, url, endpoints, query-client
+  mocks/        MSW handlers + data (chỉ dev)
+  routes/       TanStack file routes, chỉ khai báo route + import page
+  styles/       global CSS + tokens
 ```
+
+Chiều phụ thuộc (ESLint enforce):
+
+```text
+routes -> features -> components -> lib
+app    -> features, components, lib
+```
+
+- `lib` không import React, AntD, hay bất kỳ tầng trên nào.
+- `components` không import `features`/`app`. Component có logic feature thì đặt trong `features/<x>/components`.
+- `axios` chỉ xuất hiện trong `lib/http.ts`.
+- Feature không import feature khác trừ `features/auth` (store/guards/types là app-level). Nếu hai feature cần chung code, đưa xuống `components` hoặc `lib`.
+
+## Bên Trong Một Feature
+
+```text
+features/<x>/
+  types.ts          model, payload, list params, label map
+  api.ts            gọi http + unwrapResponse, không toast, không transform UI
+  search.ts         zod schema cho query param của route (nếu có)
+  hooks/            key factory, queryOptions, useQuery, useMutation, toast, invalidate
+  components/       UI riêng của feature, nhận props, không gọi API trực tiếp
+  pages/            compose components + hooks; là nơi duy nhất orchestration
+  store.ts          Zustand nếu feature có shared client state
+  guards.ts         helper cho beforeLoad (chỉ auth có)
+```
+
+Không phải feature nào cũng cần đủ file. Dashboard chỉ có `pages/`.
+
+## Thứ Tự Làm Feature Mới
+
+1. `rg` xem đã có chưa.
+2. `types.ts`.
+3. `lib/endpoints.ts`.
+4. `api.ts`.
+5. `hooks/`.
+6. `mocks/handlers/<x>.ts` để chạy local.
+7. `components/` rồi `pages/`.
+8. `routes/_app/<x>.tsx` (file phẳng; chuyển sang folder `routes/_app/<x>/` khi có route con).
+
+## State Ownership
+
+```text
+useState/useReducer = UI local (modal open, tab, selected row, form draft)
+Zustand             = shared client state (auth user, sidebar collapsed, workspace đang chọn)
+TanStack Query      = server state (list/detail, /me, mọi thứ từ API)
+URL search params   = filter/pagination/sort của list page (share link, back/forward đúng)
+```
+
+- Không copy query data vào Zustand hay `useState` để render.
+- Filter/pagination của list đi qua `validateSearch` + `navigate({ search })`, không `useState`. Mẫu: `features/projects/pages/projects-page.tsx`.
+- Zustand selector phải hẹp: `useAuthStore((s) => s.user)`.
+
+## Naming
+
+- File và folder: kebab-case. `project-form-modal.tsx`, `use-projects.ts`, `auth-storage.ts`.
+- Component/page export: PascalCase. `export function ProjectFormModal() {}`.
+- Hook: `useX`. `export function useProjects() {}`.
+- API object: `<feature>Api`. `projectsApi.list()`.
+- Query key factory: `<feature>Keys`. `projectKeys.list(params)`.
+- Page: `<x>-page.tsx`, export `XPage`.
+- Route: `export const Route = createFileRoute(...)`.
+- Không trộn PascalCase file với kebab-case file trong cùng repo.
+
+## Kích Thước
+
+- File dưới 400 dòng. Gần tới thì tách: columns, form, filter, sub component, hook.
+- Không tạo component bên trong component khác.
+- Không viết helper/transform lớn trong JSX.

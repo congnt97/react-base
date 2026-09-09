@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { LoginPage } from '@/presentation/features/auth/login-page';
-import { redirectToSearchSchema } from '@/shared/validations/common/redirectTo';
+import { LoginPage } from '@/features/auth/pages/login-page';
+import { redirectToSearchSchema } from '@/features/auth/search';
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,

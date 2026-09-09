@@ -1,40 +1,32 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
-import { AppShell } from '@/presentation/layouts/app-shell';
-import { getMeQueryOptions } from '@/presentation/hooks/auth/useMe';
-import { useAuthStore } from '@/presentation/stores/useAuthStore';
+import { AppShell } from '@/app/layout/app-shell';
+import { meQueryOptions } from '@/features/auth/hooks/use-me';
+import { useAuthStore } from '@/features/auth/store';
 
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
   beforeLoad: async ({ context, location }) => {
-    // Đọc store trực tiếp (không qua router context) để guard luôn thấy giá trị
-    // mới nhất ngay sau login/logout, không phụ thuộc React re-render.
+    // Đọc store trực tiếp để guard thấy giá trị mới nhất ngay sau login/logout,
+    // không phụ thuộc React re-render.
     const auth = useAuthStore.getState();
-
-    if (!auth.isAuthenticated) {
-      throw redirect({
+    const redirectToLogin = () =>
+      redirect({
         to: '/auth/login',
-        search: {
-          redirectTo: location.href,
-        },
+        search: { redirectTo: location.href },
         replace: true,
       });
+
+    if (!auth.isAuthenticated) {
+      throw redirectToLogin();
     }
 
     try {
-      const user = await context.queryClient.ensureQueryData(
-        getMeQueryOptions(context.repositories.authRepository),
-      );
+      const user = await context.queryClient.ensureQueryData(meQueryOptions());
       auth.setAuthenticated(user);
     } catch {
       auth.clearAuth();
-      throw redirect({
-        to: '/auth/login',
-        search: {
-          redirectTo: location.href,
-        },
-        replace: true,
-      });
+      throw redirectToLogin();
     }
   },
 });

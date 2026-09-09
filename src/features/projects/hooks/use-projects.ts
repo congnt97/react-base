@@ -1,0 +1,27 @@
+import {
+  keepPreviousData,
+  queryOptions,
+  useQuery,
+} from '@tanstack/react-query';
+
+import { projectsApi } from '@/features/projects/api';
+import type { ProjectListParams } from '@/features/projects/types';
+
+// Key factory: invalidate `all` sau mutation là đủ cho mọi trang/filter.
+export const projectKeys = {
+  all: ['projects'] as const,
+  list: (params: ProjectListParams) =>
+    [...projectKeys.all, 'list', params] as const,
+};
+
+export const projectsQueryOptions = (params: ProjectListParams) =>
+  queryOptions({
+    queryKey: projectKeys.list(params),
+    queryFn: () => projectsApi.list(params),
+    // Giữ data trang cũ khi đổi trang/filter để bảng không nháy trắng.
+    placeholderData: keepPreviousData,
+  });
+
+export function useProjects(params: ProjectListParams) {
+  return useQuery(projectsQueryOptions(params));
+}

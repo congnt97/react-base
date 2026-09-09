@@ -67,7 +67,7 @@ Nên làm:
 
 ```ts
 export const getProjects = () =>
-  httpClient.get<ResponseCommon<Project[]>>(Endpoints.Projects.LIST);
+  http.get<ApiResponse<Project[]>>(Endpoints.Projects.LIST);
 ```
 
 ## Không Định Nghĩa Type Trùng Lặp

@@ -2,26 +2,22 @@ import type { QueryClient } from '@tanstack/react-query';
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { lazy, Suspense } from 'react';
 
-import type { RepositoryContainer } from '@/di/RepositoriesProvider';
-import { GeneralError } from '@/presentation/features/errors/general-error';
-import { NotFoundError } from '@/presentation/features/errors/not-found-error';
+import { NotFound } from '@/components/feedback/not-found';
 
 interface RouterContext {
   queryClient: QueryClient;
-  repositories: RepositoryContainer;
 }
 
 const AppDevtools = import.meta.env.DEV
   ? lazy(() =>
-      import('@/presentation/provider/devtools/AppDevtools').then((module) => ({
+      import('@/app/devtools').then((module) => ({
         default: module.AppDevtools,
       })),
     )
   : null;
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  errorComponent: GeneralError,
-  notFoundComponent: NotFoundError,
+  notFoundComponent: NotFound,
   component: () => (
     <>
       <Outlet />

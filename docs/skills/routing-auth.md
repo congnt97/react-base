@@ -1,112 +1,68 @@
 # Routing And Auth Rules
 
-Đọc file này khi task có auth, route, guard, login/logout/register, protected page, role.
+Đọc khi có auth, token, route, guard, role, protected page, query param.
 
-## Auth Flow Hiện Tại
+## Auth Flow
 
-- Store: `src/presentation/stores/useAuthStore.ts`.
-- Session expiry: `src/main.tsx` đăng ký `subscribeSessionExpired` (HttpClient gọi `notifySessionExpired` khi refresh token thất bại) để `clearAuth` và đưa về `/auth/login`.
-- Storage: `src/shared/auth-storage.ts`.
-- Public routes: `src/routes/auth/*`.
-- Protected routes: `src/routes/_app/*`.
-- Guard + hydrate user: `src/routes/_app/route.tsx` (`beforeLoad` đọc `useAuthStore.getState()`, gọi `/me` qua `context.repositories`, hydrate user vào Zustand).
-- Guard ngược cho trang public: `src/routes/auth/route.tsx` (đã đăng nhập thì về `/`).
-- Role guard helper: `src/shared/route-guards.ts` (`hasRole`).
+- Token: `lib/auth-storage.ts` là source of truth. Zustand `features/auth/store.ts` chỉ giữ `user`, `isAuthenticated`.
+- `lib/http.ts` đọc token từ storage; gặp 401 thì refresh một lần (gom nhiều request), thất bại thì `clearAuthStorage` + `notifySessionExpired`.
+- `app/router.tsx` đăng ký `subscribeSessionExpired` để clear store, clear query cache và về `/auth/login`.
+- `routes/_app/route.tsx`: guard + hydrate user qua `queryClient.ensureQueryData(meQueryOptions())`.
+- `routes/auth/route.tsx`: đã đăng nhập thì về `/`.
+- Logout (`use-logout.ts`): `onSettled` clear store, clear query, về login, dù server lỗi.
 
-Guard đọc store qua `useAuthStore.getState()` thay vì router context. Lý do: `beforeLoad` chạy đồng bộ ngay khi `navigate()` được gọi trong `onSuccess`/`onSettled`, trước khi React re-render; nếu đọc từ context sẽ thấy giá trị cũ và redirect sai (login xong bị đẩy lại login, logout bị bounce qua `/`).
+Guard đọc `useAuthStore.getState()` chứ không đọc router context. `beforeLoad` chạy đồng bộ ngay khi `navigate()` được gọi trong `onSuccess`/`onSettled`, trước khi React re-render, nên đọc từ context sẽ thấy giá trị cũ và redirect sai.
 
-## Auth Token Rules
+## Role Guard
 
-Auth token không được lưu làm source of truth trong Zustand.
+```ts
+export const Route = createFileRoute('/_app/settings')({
+  component: SettingsPage,
+  beforeLoad: () => requireRole(Role.ADMIN),
+});
+```
 
-Source of truth:
-
-- Token: `src/shared/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
-- Zustand: chỉ giữ UI auth state `user`, `isAuthenticated`, và actions `setAuthenticated`, `clearAuth`.
-- HttpClient: đọc token từ `auth-storage` hoặc gửi cookie credential, không đọc token từ component.
-- Hydrate user: `_app/route.tsx` `beforeLoad` validate token qua `/me` và hydrate user vào Zustand; session hết hạn giữa phiên do listener trong `main.tsx` xử lý.
-- Logout: clear cả `auth-storage` và Zustand; clear query client nếu cần.
-
-Lý do:
-
-- Zustand mất state khi refresh page.
-- Token cần dùng ở HttpClient interceptor.
-- Giảm nguy cơ log/expose token trong store/devtools.
-- Persistence auth nằm một chỗ rõ ràng.
-
-Nếu backend support httpOnly cookie:
-
-- Frontend không đọc access token trực tiếp.
-- HttpClient gửi request với credential config.
-- Zustand vẫn chỉ giữ `user/isAuthenticated`.
+`requireRole` throw `ForbiddenError`; `defaultErrorComponent` (`components/feedback/route-error.tsx`) render 403. Sidebar ẩn menu theo `hasRole`. Frontend guard chỉ là UX, backend phải enforce.
 
 ## Route Rules
 
-- Route file chỉ nên import page và khai báo `createFileRoute`.
-- Ưu tiên folder route của TanStack Router: `src/routes/_app/<route>/route.tsx`.
-- Route không import thẳng container, trừ khi đó là route đặc biệt chưa có page.
-- Guard auth đặt trong `_app/route.tsx`.
-- Route không chứa UI phức tạp.
-- Đặt route trong `_app` nếu cần đăng nhập.
-- Không tự viết guard riêng trong từng page nếu `_app` đã bảo vệ đủ.
-- Nếu cần role guard, tạo helper trong `src/shared/route-guards.ts` trước, rồi dùng trong route.
+- Route file chỉ `createFileRoute` + import page (+ `validateSearch`, `beforeLoad`, `loader`). Không UI trong route.
+- Protected: `routes/_app/<x>.tsx`. Public: `routes/auth/<x>.tsx`.
+- File phẳng cho route lá; chuyển sang folder `routes/_app/<x>/route.tsx` khi có route con.
+- Điều hướng bằng `navigate()`/`<Link>`, không `window.location`.
+- Guard/fetch bắt buộc đặt trong `beforeLoad`/`loader`, không trong component.
+- `defaultPendingComponent` đã set trong `app/router.tsx`; route chờ API sẽ hiện spinner thay vì trắng.
 
-## Tạo Page Mới
+## Query Param
 
-1. Tạo model/type nếu cần.
-2. Tạo repository + hook nếu page có data.
-3. Tạo/reuse common components.
-4. Tạo container trong `src/presentation/features/<feature>/containers/<FeatureContainer>.tsx`.
-5. Tạo feature page lowercase: `src/presentation/features/<feature>/<feature>-page.tsx`.
-6. Tạo route file trong `src/routes/_app/<route>/route.tsx` hoặc `src/routes/auth/<route>.tsx`.
-
-Route file nên ngắn:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router';
-import { FeaturePage } from '@/presentation/features/feature/feature-page';
-
-export const Route = createFileRoute('/_app/feature')({
-  component: FeaturePage,
-});
-```
-
-Page file compose container:
-
-```tsx
-import { FeatureContainer } from '@/presentation/features/feature/containers/FeatureContainer';
-
-export function FeaturePage() {
-  return <FeatureContainer />;
-}
-```
-
-## Lỗi Thường Gặp
-
-### Query param không có `validateSearch`
-
-Route có query param (filter, page, redirectTo...) phải khai báo `validateSearch` để param type-safe, không tự parse `URLSearchParams` tay trong component:
-
-```tsx
-export const Route = createFileRoute('/_app/projects')({
-  component: ProjectsPage,
-  validateSearch: (search: Record<string, unknown>) => ({
-    page: typeof search.page === 'number' ? search.page : 1,
-    keyword: typeof search.keyword === 'string' ? search.keyword : undefined,
-  }),
-});
-```
-
-### Điều hướng bằng `window.location` thay vì router
-
-Không làm — full reload không cần thiết, mất SPA state:
+Route có query param bắt buộc có `validateSearch`. Dùng zod với `.catch` để param sai về mặc định thay vì văng lỗi:
 
 ```ts
-window.location.href = '/projects';
+export const projectsSearchSchema = z.object({
+  page: z.number().int().min(1).catch(1),
+  pageSize: z.number().int().min(1).max(100).catch(10),
+  keyword: z.string().trim().min(1).optional().catch(undefined),
+  status: z.enum(PROJECT_STATUSES).optional().catch(undefined),
+});
+
+export const Route = createFileRoute('/_app/projects')({
+  component: ProjectsPage,
+  validateSearch: (search) => projectsSearchSchema.parse(search),
+});
 ```
 
-Nên làm — dùng `navigate()`/`<Link>` của TanStack Router.
+Trong page:
 
-### Guard/fetch nặng nhét trong route component
+```ts
+const route = getRouteApi('/_app/projects');
+const search = route.useSearch();
+const navigate = route.useNavigate();
+const updateSearch = (patch: Partial<ProjectsSearch>) =>
+  navigate({ search: (prev) => ({ ...prev, ...patch }) });
+```
 
-Logic auth guard, gọi API bắt buộc trước khi render đặt trong `beforeLoad`, không đặt trong component của route hoặc trong page.
+Đổi filter thì reset `page: 1`.
+
+## redirectTo
+
+`features/auth/search.ts` chỉ nhận đường dẫn nội bộ (`/...`, không `//`) để chặn open redirect.

@@ -1,140 +1,82 @@
 # React Base
 
-Base core frontend React được tách từ `ai-video-factory-cms`.
+Base frontend cho CMS/admin: React + TypeScript + Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW.
 
-Đọc [SKILLS.md](./SKILLS.md) trước khi tạo hoặc sửa feature mới. File này là router rule chính cho kiến trúc, UI, API, auth, env, security và quality.
+Đọc [SKILLS.md](./SKILLS.md) trước khi tạo hoặc sửa feature. File đó là router rule cho AI và dev.
 
-## Stack
-
-- React + TypeScript + Vite
-- Ant Design
-- Tailwind CSS v4
-- TanStack Router
-- TanStack Query
-- Zustand
-- Axios qua `src/infrastructure/http/HttpClient.ts`
-
-## Cấu Trúc Base
-
-```text
-src/
-  application/      Contract ứng dụng: repository interface, DTO, exception, service interface
-  di/               Provider gom dependency/repository để presentation dùng qua context
-  domain/           Model/type thuần túy, không phụ thuộc UI/API framework
-  infrastructure/   HTTP client, repository implementation, service implementation, API hooks
-  mocks/            Mock data/dev-only repository, ví dụ mock auth
-  presentation/     UI layer: component, feature page/container, hook, layout, provider, store
-  routes/           TanStack Router file-based routes
-  shared/           Constants, endpoints, enums, helper, validation, auth storage
-  styles/           Global CSS, Tailwind import, design tokens
-  test/             Test setup
-```
-
-## Luồng Khởi Tạo App
-
-- `src/main.tsx` tạo router, query client, Ant Design provider, repository provider và render app.
-- `src/routes/__root.tsx` khai báo root route, error boundary và chỉ load devtools trong development.
-- `src/routes/_app/route.tsx` là protected app route, kiểm tra auth trước khi render `AppShell`.
-- `src/routes/auth/*` là public auth routes.
-- `src/presentation/layouts/app-shell.tsx` dựng layout CMS: sidebar, header, content.
-
-## Auth Và Mock Login
-
-Auth token không lưu làm source of truth trong Zustand. Token nằm ở `src/shared/auth-storage.ts`; Zustand chỉ giữ UI state `user`, `isAuthenticated`. Route guard (`_app/route.tsx`, `auth/route.tsx`) đọc thẳng `useAuthStore.getState()` để luôn thấy giá trị mới nhất ngay sau login/logout.
-
-Mock auth mặc định tắt trong `.env` (file này được commit vì chỉ chứa public config) để tránh nhầm khi build production:
-
-```env
-VITE_ENABLE_MOCK_AUTH=false
-```
-
-Khi chạy `yarn dev`, `.env.development` bật mock auth cho local development:
-
-```env
-VITE_ENABLE_MOCK_AUTH=true
-```
-
-Tài khoản mock:
-
-- Email: `admin@example.com`
-- Mật khẩu: `123456`
-
-Repository auth được chọn tại `src/infrastructure/repositories/createAuthRepository.ts`:
-
-- Development + `VITE_ENABLE_MOCK_AUTH=true`: dùng `MockAuthRepositoryImpl`.
-- Production hoặc `VITE_ENABLE_MOCK_AUTH=false`: dùng `AuthRepositoryImpl` để gọi API thật.
-
-## API Flow
-
-Khi thêm một module có API, đi theo flow:
-
-```text
-domain model
--> application repository interface
--> shared endpoint
--> infrastructure repository impl
--> presentation hook
--> container/page
--> route
-```
-
-Ví dụ auth hiện tại:
-
-```text
-src/domain/models/Auth.ts
-src/application/repositories/AuthRepository.ts
-src/shared/endpoints.ts
-src/infrastructure/repositories/AuthRepositoryImpl.ts
-src/presentation/hooks/auth/useLogin.tsx
-src/presentation/features/auth/containers/LoginForm.tsx
-src/routes/auth/login.tsx
-```
-
-Không gọi axios trực tiếp trong component/container/page. Gọi API qua repository và hook.
-
-## Env
-
-Env được validate tập trung ở `src/env.ts`.
-
-```env
-VITE_API_BASE_URL=/api
-VITE_ENABLE_MOCK_AUTH=false
-```
-
-Không đọc `import.meta.env` rải rác trong feature/component. Thêm env mới thì khai báo required trong `src/env.ts` và cập nhật cả `.env`, `.env.development`, `.env.example`. Env thiếu sẽ throw ngay lúc khởi động (fail fast).
-
-File env và cách load của Vite:
-
-- `.env`: giá trị mặc định cho mọi mode, được commit (production build dùng file này).
-- `.env.development`: override khi `yarn dev`, được commit.
-- `.env.local`, `.env.*.local`: override riêng máy, không commit. Secret thật không được đặt trong bất kỳ `VITE_*` nào vì đều bị bundle ra client.
-
-Lỗi API được chuẩn hoá thành `ApiError` (`src/application/exceptions/ApiError.ts`) ở `HttpClient` và `unwrapResponse`; presentation lấy message an toàn qua `getFormattedErrorMessage`.
-
-## Thêm Feature Mới
-
-1. Đọc `SKILLS.md`, sau đó đọc rule phụ liên quan trong `docs/skills`.
-2. Search trước khi tạo mới để reuse component/hook/model có sẵn.
-3. Nếu có API, tạo model -> repository interface -> endpoint -> repository impl -> hook.
-4. Tạo container trong `src/presentation/features/<feature>/containers`.
-5. Tạo page trong `src/presentation/features/<feature>/<feature>-page.tsx`.
-6. Tạo route trong `src/routes/_app/<route>/route.tsx` nếu cần đăng nhập, hoặc `src/routes/auth/*` nếu public.
-
-## Scripts
+## Chạy
 
 ```bash
 yarn install
-yarn dev
-yarn check        # chạy song song check:type, check:lint, check:format
-yarn fix          # fix:lint + fix:format
+yarn dev          # http://localhost:3001, mock API bật sẵn (MSW)
+yarn check        # type + lint + format
 yarn test
 yarn build
 ```
 
-## Quy Ước UI
+Tài khoản mock: `admin@example.com` / `123456`.
 
-- UI text tiếng Việt phải có dấu đầy đủ.
-- Dùng Ant Design trước, Tailwind cho layout/spacing.
-- Reuse `PageHeader`, `SearchInput` khi phù hợp; button dùng Ant Design `Button` trực tiếp, chỉ tạo common khi có variant/behavior chung.
-- Không lồng card nhiều lớp, không tạo palette mới nếu token hiện tại đáp ứng.
-- Design tokens nằm trong `src/styles/styles.css` và `src/presentation/provider/theme/antd-theme.ts`.
+Node `>=20` (xem `.nvmrc`). Pre-commit chạy lint-staged; CI chạy `check`, `test`, `build`.
+
+## Cấu Trúc
+
+Feature-first: mỗi feature tự chứa mọi thứ của nó, tầng chung mỏng.
+
+```text
+src/
+  app/            Bootstrap: router, providers, theme, devtools, layout (AppShell/Header/Sidebar)
+  components/     UI dùng chung, không biết feature: layout/, ui/, feedback/
+  features/       Mỗi feature: api.ts, types.ts, hooks/, components/, pages/ (+ store, search, guards nếu cần)
+    auth/         Login/register/me, store, role guard
+    projects/     CRUD mẫu: filter qua URL, phân trang server, form modal, xoá có confirm
+    dashboard/
+    settings/     Route chỉ admin (ví dụ requireRole)
+  lib/            Tầng thấp nhất: http, env, api-error, api-response, auth-storage, url, endpoints, query-client
+  mocks/          MSW handlers + data, chỉ load ở dev khi VITE_ENABLE_MOCK_API=true
+  routes/         TanStack Router file-based routes, chỉ khai báo route và import page
+  styles/         Global CSS + design tokens
+  test/           Vitest setup
+```
+
+Quy tắc phụ thuộc (ESLint enforce): `lib` không import gì ở tầng trên; `components` không import `features`/`app`; `axios` chỉ trong `lib/http.ts`.
+
+## Luồng Thêm Feature Có API
+
+```text
+features/<x>/types.ts        model + payload + list params
+lib/endpoints.ts             thêm endpoint
+features/<x>/api.ts          gọi http + unwrapResponse
+features/<x>/hooks/          queryOptions/useQuery/useMutation, key factory, toast
+features/<x>/components/     UI riêng của feature
+features/<x>/pages/          compose page
+routes/_app/<x>.tsx          createFileRoute + validateSearch nếu có query param
+mocks/handlers/<x>.ts        handler MSW để chạy local
+```
+
+Ví dụ đầy đủ: `features/projects`.
+
+## Auth
+
+- Token: `lib/auth-storage.ts` là source of truth. Zustand (`features/auth/store.ts`) chỉ giữ `user`, `isAuthenticated`.
+- Guard: `routes/_app/route.tsx` đọc `useAuthStore.getState()`, gọi `/me` qua `queryClient.ensureQueryData`, hydrate user. `routes/auth/route.tsx` đẩy user đã đăng nhập về `/`.
+- Role: `requireRole(Role.ADMIN)` trong `beforeLoad` throw `ForbiddenError`, `RouteError` render trang 403.
+- Refresh token: `lib/http.ts` gom các request 401 vào một lần refresh; thất bại thì clear storage và về login.
+
+## Env
+
+Validate ở `lib/env.ts`, thiếu là throw lúc khởi động.
+
+| File                         | Commit | Dùng khi                   |
+| ---------------------------- | ------ | -------------------------- |
+| `.env`                       | có     | mọi mode, production build |
+| `.env.development`           | có     | `yarn dev`                 |
+| `.env.local`, `.env.*.local` | không  | override riêng máy         |
+
+`VITE_*` luôn public, không đặt secret.
+
+## Quy Ước Nhanh
+
+- File kebab-case, component/hook export PascalCase/`useX`.
+- UI text tiếng Việt có dấu.
+- Ant Design trước, Tailwind cho layout/spacing. Chỉnh AntD qua token trong `app/theme.ts`, không override CSS bằng `!important`.
+- Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`.
