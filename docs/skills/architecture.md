@@ -33,7 +33,7 @@ app    -> features, components, lib
 ```text
 features/<x>/
   types.ts          model, payload, list params, label map
-  api.ts            gọi http + unwrapResponse, không toast, không transform UI
+  api.ts            interface <Feature>Api (contract) + object gọi http, không toast, không transform UI
   search.ts         zod schema cho query param của route (nếu có)
   hooks/            key factory, queryOptions, useQuery, useMutation, toast, invalidate
   components/       UI riêng của feature, nhận props, không gọi API trực tiếp

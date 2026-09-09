@@ -8,7 +8,7 @@ Trước khi tạo hoặc sửa bất kỳ thứ gì trong `src/`, đọc [SKILL
 - Chiều phụ thuộc `routes → features → components → lib`. ESLint chặn vi phạm; không disable rule để né.
 - Feature không import feature khác (trừ `features/auth`). Code chung đưa xuống `components` hoặc `lib`.
 - File kebab-case. Export component PascalCase, hook `useX`.
-- API: `lib/endpoints.ts` → `features/<x>/api.ts` → hooks TanStack Query. Không gọi `axios`/`http` trong component. Kèm handler MSW trong `mocks/handlers/`.
+- API: `lib/endpoints.ts` → `features/<x>/api.ts` (khai báo `interface <X>Api` rồi `const xApi: XApi`) → hooks TanStack Query. Không gọi `axios`/`http` trong component. Kèm handler MSW trong `mocks/handlers/`.
 - Filter/pagination của list nằm trên URL qua `validateSearch` (zod `.catch`).
 - Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`; không nuốt lỗi.
 - UI text tiếng Việt có dấu, đi qua `t()` của react-i18next với key là chính câu tiếng Việt; thêm bản dịch vào `locales/en.json`. Ant Design chỉnh qua token trong `app/theme.ts`, không `!important`.

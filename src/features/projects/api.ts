@@ -11,8 +11,17 @@ import {
 import { Endpoints } from '@/lib/endpoints';
 import { http } from '@/lib/http';
 
-export const projectsApi = {
-  list: async (params: ProjectListParams) =>
+// Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
+export interface ProjectsApi {
+  list: (params: ProjectListParams) => Promise<PaginatedResponse<Project>>;
+  create: (body: ProjectPayload) => Promise<Project>;
+  update: (id: string, body: ProjectPayload) => Promise<Project>;
+  patch: (id: string, body: Partial<ProjectPayload>) => Promise<Project>;
+  remove: (id: string) => Promise<void>;
+}
+
+export const projectsApi: ProjectsApi = {
+  list: async (params) =>
     unwrapResponse(
       await http.get<ApiResponse<PaginatedResponse<Project>>>(
         Endpoints.Projects.LIST,
@@ -20,7 +29,7 @@ export const projectsApi = {
       ),
     ),
 
-  create: async (body: ProjectPayload) =>
+  create: async (body) =>
     unwrapResponse(
       await http.post<ApiResponse<Project>, ProjectPayload>(
         Endpoints.Projects.LIST,
@@ -28,7 +37,7 @@ export const projectsApi = {
       ),
     ),
 
-  update: async (id: string, body: ProjectPayload) =>
+  update: async (id, body) =>
     unwrapResponse(
       await http.put<ApiResponse<Project>, ProjectPayload>(
         Endpoints.Projects.DETAIL,
@@ -37,7 +46,7 @@ export const projectsApi = {
       ),
     ),
 
-  patch: async (id: string, body: Partial<ProjectPayload>) =>
+  patch: async (id, body) =>
     unwrapResponse(
       await http.patch<ApiResponse<Project>, Partial<ProjectPayload>>(
         Endpoints.Projects.DETAIL,
@@ -46,7 +55,7 @@ export const projectsApi = {
       ),
     ),
 
-  remove: async (id: string) => {
+  remove: async (id) => {
     await http.delete<ApiResponse<void>>(Endpoints.Projects.DETAIL, undefined, {
       urlParams: { id },
     });

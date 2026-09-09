@@ -14,8 +14,15 @@ Mẫu đầy đủ: `features/projects`.
 
 ## `api.ts`
 
+Mỗi `api.ts` khai báo `interface <Feature>Api` trước, rồi `export const <feature>Api: <Feature>Api`. Interface là contract với backend: đọc nó là biết feature gọi gì, nhận gì, không cần đọc phần gọi `http`. Sửa contract thì sửa interface trước, TypeScript sẽ chỉ chỗ cần cập nhật.
+
 ```ts
-export const projectsApi = {
+export interface ProjectsApi {
+  list: (params: ProjectListParams) => Promise<PaginatedResponse<Project>>;
+  update: (id: string, body: ProjectPayload) => Promise<Project>;
+}
+
+export const projectsApi: ProjectsApi = {
   list: async (params: ProjectListParams) =>
     unwrapResponse(
       await http.get<ApiResponse<PaginatedResponse<Project>>>(
@@ -34,6 +41,7 @@ export const projectsApi = {
 };
 ```
 
+- Interface trước, implementation sau; kiểu tham số/kết quả nằm ở interface, implementation không lặp lại.
 - Generic response luôn rõ: `ApiResponse<T>` rồi `unwrapResponse`.
 - Endpoint từ `lib/endpoints.ts`, không hardcode URL.
 - Không toast, không transform UI trong `api.ts`.

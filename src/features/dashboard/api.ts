@@ -7,8 +7,13 @@ import {
 import { Endpoints } from '@/lib/endpoints';
 import { http } from '@/lib/http';
 
-export const dashboardApi = {
-  activity: async (params: ActivityListParams) =>
+// Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
+export interface DashboardApi {
+  activity: (params: ActivityListParams) => Promise<CursorPage<Activity>>;
+}
+
+export const dashboardApi: DashboardApi = {
+  activity: async (params) =>
     unwrapResponse(
       await http.get<ApiResponse<CursorPage<Activity>>>(
         Endpoints.Dashboard.ACTIVITY,
