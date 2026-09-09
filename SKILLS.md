@@ -12,7 +12,8 @@ Không thêm Next.js, shadcn/ui, MUI, Redux, React Router, thư viện toast kh�
 
 | Task chạm tới                                                          | Đọc                           |
 | ---------------------------------------------------------------------- | ----------------------------- |
-| Folder, feature mới, state, store, đặt tên                             | `docs/skills/architecture.md` |
+| Folder, feature mới, state, store                                      | `docs/skills/architecture.md` |
+| Đặt tên file, biến, type, hook, API, query key, event, branch, commit  | `docs/skills/naming.md`       |
 | API, endpoint, query/mutation, cache, response/error, pagination, mock | `docs/skills/api.md`          |
 | UI, layout, form, table, modal, Ant Design, Tailwind, màu, font, a11y  | `docs/skills/ui.md`           |
 | Auth, token, route, guard, role, protected page, query param           | `docs/skills/routing-auth.md` |

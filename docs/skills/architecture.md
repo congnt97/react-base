@@ -70,14 +70,7 @@ URL search params   = filter/pagination/sort của list page (share link, back/f
 
 ## Naming
 
-- File và folder: kebab-case. `project-form-modal.tsx`, `use-projects.ts`, `auth-storage.ts`.
-- Component/page export: PascalCase. `export function ProjectFormModal() {}`.
-- Hook: `useX`. `export function useProjects() {}`.
-- API object: `<feature>Api`. `projectsApi.list()`.
-- Query key factory: `<feature>Keys`. `projectKeys.list(params)`.
-- Page: `<x>-page.tsx`, export `XPage`.
-- Route: `export const Route = createFileRoute(...)`.
-- Không trộn PascalCase file với kebab-case file trong cùng repo.
+Xem `docs/skills/naming.md`. Tóm tắt: file kebab-case, component PascalCase, hook `useX`, hằng UPPER_SNAKE, type không prefix `I`, API chỉ `list/detail/create/update/patch/remove`, không default export.
 
 ## Kích Thước
 

@@ -77,6 +77,50 @@ export default tseslint.config(
             'dangerouslySetInnerHTML cần sanitize trước khi dùng (xem docs/skills/security.md).',
         },
       ],
+
+      // docs/skills/naming.md
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'typeLike', format: ['PascalCase'] },
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+          custom: { regex: '^I[A-Z]', match: false },
+        },
+        { selector: 'enumMember', format: ['UPPER_CASE'] },
+        {
+          selector: 'variable',
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+          leadingUnderscore: 'allow',
+        },
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase'],
+        },
+        {
+          selector: 'parameter',
+          format: ['camelCase', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
+      ],
+    },
+  },
+  {
+    // docs/skills/naming.md: named export giữ tên trong stack trace/DevTools.
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportDefaultDeclaration',
+          message: 'Dùng named export (xem docs/skills/naming.md).',
+        },
+        {
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message:
+            'dangerouslySetInnerHTML cần sanitize trước khi dùng (xem docs/skills/security.md).',
+        },
+      ],
     },
   },
   {
