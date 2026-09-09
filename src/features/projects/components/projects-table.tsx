@@ -1,19 +1,24 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PaperClipOutlined,
+} from '@ant-design/icons';
 import { Button, Space, Table, type TableProps } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
-import type { Project } from '@/features/projects/types';
+import type { Project, ProjectStatus } from '@/features/projects/types';
 
 type ProjectsTableProps = {
   projects: Project[];
   loading: boolean;
   pagination: { page: number; pageSize: number; total: number };
   onPageChange: (page: number, pageSize: number) => void;
-  // undefined = không có quyền, ẩn nút tương ứng.
+  // undefined = không có quyền, ẩn control tương ứng.
   onEdit?: (project: Project) => void;
   onDelete?: (project: Project) => void;
+  onStatusChange?: (project: Project, status: ProjectStatus) => void;
 };
 
 export function ProjectsTable({
@@ -23,6 +28,7 @@ export function ProjectsTable({
   onPageChange,
   onEdit,
   onDelete,
+  onStatusChange,
 }: ProjectsTableProps) {
   const { t } = useTranslation();
 
@@ -32,7 +38,20 @@ export function ProjectsTable({
       dataIndex: 'name',
       render: (name: string, project) => (
         <div className="min-w-0">
-          <div className="truncate font-medium">{name}</div>
+          <div className="flex items-center gap-1 truncate font-medium">
+            {name}
+            {project.attachmentUrl ? (
+              <a
+                href={project.attachmentUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={t('Tài liệu đính kèm')}
+                className="text-[var(--text-muted)]"
+              >
+                <PaperClipOutlined />
+              </a>
+            ) : null}
+          </div>
           {project.description ? (
             <div className="truncate text-xs text-[var(--text-muted)]">
               {project.description}
@@ -44,9 +63,14 @@ export function ProjectsTable({
     {
       title: t('Trạng thái'),
       dataIndex: 'status',
-      width: 130,
-      render: (status: Project['status']) => (
-        <ProjectStatusTag status={status} />
+      width: 150,
+      render: (status: ProjectStatus, project) => (
+        <ProjectStatusTag
+          status={status}
+          onChange={
+            onStatusChange ? (next) => onStatusChange(project, next) : undefined
+          }
+        />
       ),
     },
     { title: t('Phụ trách'), dataIndex: 'owner', width: 160 },

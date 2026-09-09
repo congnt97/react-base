@@ -9,6 +9,7 @@ import { Card, Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { PageHeader } from '@/components/layout/page-header';
+import { ActivityFeed } from '@/features/dashboard/components/activity-feed';
 
 const items = [
   {
@@ -77,6 +78,8 @@ export function DashboardPage() {
           </Col>
         ))}
       </Row>
+
+      <ActivityFeed />
     </>
   );
 }

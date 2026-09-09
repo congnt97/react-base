@@ -6,7 +6,20 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
-    chunkSizeWarningLimit: 1000,
+    rolldownOptions: {
+      output: {
+        // Gom framework ổn định vào một chunk để cache lâu giữa các lần deploy.
+        // Không gom antd: để rolldown tách theo route, tránh một chunk khổng lồ.
+        codeSplitting: {
+          groups: [
+            {
+              name: 'framework',
+              test: /node_modules[\\/](react|react-dom|scheduler|@tanstack|zustand|axios|i18next|react-i18next|zod|dayjs)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
   },
   plugins: [
     tanstackRouter({

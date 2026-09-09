@@ -7,6 +7,7 @@ export type ApiResponse<T = unknown> = {
   result?: T;
 };
 
+/** List phân trang theo số trang (Table). */
 export type PaginatedResponse<T> = {
   items: T[];
   total: number;
@@ -17,6 +18,12 @@ export type PaginatedResponse<T> = {
 export type PaginationParams = {
   page: number;
   pageSize: number;
+};
+
+/** List phân trang theo cursor (infinite scroll / "Tải thêm"). */
+export type CursorPage<T> = {
+  items: T[];
+  nextCursor: string | null;
 };
 
 /**

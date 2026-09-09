@@ -46,7 +46,7 @@ Backend must enforce auth, permission, file validation, and data access.
 ## Upload, Asset, Video, Subtitle
 
 - Frontend validate file type/size để UX tốt, nhưng backend vẫn phải validate lại.
-- Upload phải whitelist MIME/extension.
+- Upload phải whitelist MIME/extension: dùng `components/ui/app-upload.tsx` (`accept`, `maxSizeMb`), không tự viết `Upload` mới.
 - Không tin metadata file từ client.
 - Không preview file là HTML/SVG/script không kiểm soát.
 - Subtitle/script upload phải coi là text untrusted, không render HTML.

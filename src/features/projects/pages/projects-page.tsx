@@ -15,6 +15,7 @@ import {
   useCreateProject,
   useDeleteProject,
   useUpdateProject,
+  useUpdateProjectStatus,
 } from '@/features/projects/hooks/use-project-mutations';
 import { useProjects } from '@/features/projects/hooks/use-projects';
 import type { ProjectsSearch } from '@/features/projects/search';
@@ -38,6 +39,7 @@ export function ProjectsPage() {
   const projects = useProjects(search);
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
+  const updateStatus = useUpdateProjectStatus();
   const deleteProject = useDeleteProject();
 
   const [form, setForm] = useState<FormState>({ open: false, project: null });
@@ -65,6 +67,8 @@ export function ProjectsPage() {
         ),
     });
   };
+
+  const canUpdate = can('projects:update');
 
   return (
     <>
@@ -112,8 +116,14 @@ export function ProjectsPage() {
                 updateSearch({ page, pageSize })
               }
               onEdit={
-                can('projects:update')
+                canUpdate
                   ? (project) => setForm({ open: true, project })
+                  : undefined
+              }
+              onStatusChange={
+                canUpdate
+                  ? (project, status) =>
+                      updateStatus.mutate({ id: project.id, status })
                   : undefined
               }
               onDelete={can('projects:delete') ? confirmDelete : undefined}

@@ -1,7 +1,9 @@
-import { Tag } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { Dropdown, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import {
+  PROJECT_STATUSES,
   PROJECT_STATUS_LABELS,
   type ProjectStatus,
 } from '@/features/projects/types';
@@ -12,10 +14,48 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
   archived: 'default',
 };
 
-export function ProjectStatusTag({ status }: { status: ProjectStatus }) {
+type ProjectStatusTagProps = {
+  status: ProjectStatus;
+  /** Có onChange thì tag thành dropdown đổi trạng thái (cần permission update). */
+  onChange?: (status: ProjectStatus) => void;
+};
+
+export function ProjectStatusTag({ status, onChange }: ProjectStatusTagProps) {
   const { t } = useTranslation();
+  const tag = (
+    <Tag
+      color={STATUS_COLORS[status]}
+      className={onChange ? 'cursor-pointer' : ''}
+    >
+      {t(PROJECT_STATUS_LABELS[status])}
+      {onChange ? <DownOutlined className="ml-1 text-[10px]" /> : null}
+    </Tag>
+  );
+
+  if (!onChange) {
+    return tag;
+  }
 
   return (
-    <Tag color={STATUS_COLORS[status]}>{t(PROJECT_STATUS_LABELS[status])}</Tag>
+    <Dropdown
+      trigger={['click']}
+      menu={{
+        selectedKeys: [status],
+        items: PROJECT_STATUSES.map((value) => ({
+          key: value,
+          label: t(PROJECT_STATUS_LABELS[value]),
+          disabled: value === status,
+        })),
+        onClick: ({ key }) => onChange(key as ProjectStatus),
+      }}
+    >
+      <button
+        type="button"
+        className="cursor-pointer border-0 bg-transparent p-0"
+        aria-label={t('Đổi trạng thái')}
+      >
+        {tag}
+      </button>
+    </Dropdown>
   );
 }

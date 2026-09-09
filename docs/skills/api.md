@@ -98,6 +98,24 @@ type PaginatedResponse<T> = {
 
 Page truyền `total/page/pageSize` thẳng vào `Table.pagination`, không tự giữ state phân trang song song. `page/pageSize/filter` nằm trên URL (xem `routing-auth.md`).
 
+## Optimistic Update
+
+Chỉ dùng cho thao tác nhỏ, tỉ lệ lỗi thấp, user cần phản hồi tức thì (đổi trạng thái, toggle, sắp xếp). Mẫu: `useUpdateProjectStatus` trong `features/projects/hooks/use-project-mutations.ts`.
+
+Bắt buộc đủ 4 bước: `onMutate` cancel query + lưu snapshot + `setQueriesData`; `onError` rollback từ snapshot + toast; `onSettled` invalidate. Thiếu rollback thì UI sai khi server lỗi.
+
+Create/delete vẫn dùng invalidate thường, không optimistic.
+
+## Infinite List (Cursor)
+
+List dạng feed/"Tải thêm" dùng `useInfiniteQuery` với envelope `CursorPage<T>` (`items`, `nextCursor`), `nextCursor: null` là hết. Mẫu: `features/dashboard/hooks/use-activity.ts` + `components/activity-feed.tsx`.
+
+Bảng có phân trang số trang vẫn dùng `PaginatedResponse<T>`; không trộn hai kiểu trong một màn.
+
+## Upload
+
+Dùng `components/ui/app-upload.tsx` với `accept` (MIME whitelist) và `maxSizeMb`; giá trị là URL string nên đặt thẳng trong `Form.Item`. Hàm upload dùng chung ở `lib/upload.ts`. Client validate chỉ để UX, backend phải validate lại.
+
 ## Mock (MSW)
 
 - Handler đặt trong `mocks/handlers/<feature>.ts`, đăng ký ở `mocks/handlers/index.ts`.

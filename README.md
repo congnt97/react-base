@@ -29,8 +29,8 @@ src/
   components/     UI dùng chung, không biết feature: layout/, ui/, feedback/
   features/       Mỗi feature: api.ts, types.ts, hooks/, components/, pages/ (+ store, search, guards nếu cần)
     auth/         Login/register/me, store, role guard
-    projects/     CRUD mẫu: filter qua URL, phân trang server, form modal, xoá có confirm
-    dashboard/
+    projects/     CRUD mẫu: filter qua URL, phân trang server, form modal, xoá có confirm, optimistic update trạng thái, upload đính kèm
+    dashboard/    Cards + infinite list hoạt động theo cursor
     settings/     Route chỉ admin (ví dụ requireRole)
   lib/            Tầng thấp nhất: http, env, api-error, api-response, auth-storage, url, endpoints, query-client, monitoring, analytics
   locales/        Bản dịch (en.json); tiếng Việt là key nên không cần file
@@ -76,6 +76,17 @@ Validate ở `lib/env.ts`, thiếu là throw lúc khởi động.
 | `.env.local`, `.env.*.local` | không  | override riêng máy         |
 
 `VITE_*` luôn public, không đặt secret.
+
+## Deploy
+
+```bash
+docker build -t react-base --build-arg VITE_API_BASE_URL=/api .
+docker run -p 8080:80 -e API_UPSTREAM=http://api:3000 react-base
+```
+
+Image nginx serve `dist/`, SPA fallback, cache dài cho `/assets/`, proxy `/api/` sang `API_UPSTREAM` (đổi lúc chạy, không cần build lại). Healthcheck `/healthz`. Config ở `deploy/nginx.conf.template`.
+
+Dependabot mở PR hàng tuần cho npm (gộp minor/patch), hàng tháng cho GitHub Actions và Docker.
 
 ## Quy Ước Nhanh
 

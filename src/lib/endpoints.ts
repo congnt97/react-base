@@ -6,6 +6,12 @@ export const Endpoints = {
     ME: '/auth/me',
     REFRESH_TOKEN: '/auth/refresh-token',
   },
+  Files: {
+    UPLOAD: '/files',
+  },
+  Dashboard: {
+    ACTIVITY: '/dashboard/activity',
+  },
   Projects: {
     LIST: '/projects',
     DETAIL: '/projects/:id',

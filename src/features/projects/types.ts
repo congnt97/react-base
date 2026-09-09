@@ -16,12 +16,14 @@ export type Project = {
   status: ProjectStatus;
   owner: string;
   description?: string;
+  attachmentUrl?: string;
   createdAt: string;
   updatedAt: string;
 };
 
 export type ProjectPayload = Pick<Project, 'name' | 'status' | 'owner'> & {
   description?: string;
+  attachmentUrl?: string;
 };
 
 export type ProjectListParams = PaginationParams & {

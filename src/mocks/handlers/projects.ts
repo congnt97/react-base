@@ -85,6 +85,25 @@ export const projectsHandlers = [
     return ok(updated);
   }),
 
+  http.patch(apiUrl(Endpoints.Projects.DETAIL), async ({ request, params }) => {
+    await delay(300);
+    const existing = projects.find((project) => project.id === params.id);
+    if (!existing) {
+      return fail(404, 'Không tìm thấy dự án');
+    }
+
+    const body = (await request.json()) as Partial<ProjectPayload>;
+    const updated: Project = {
+      ...existing,
+      ...body,
+      updatedAt: new Date().toISOString(),
+    };
+    projects = projects.map((project) =>
+      project.id === updated.id ? updated : project,
+    );
+    return ok(updated);
+  }),
+
   http.delete(apiUrl(Endpoints.Projects.DETAIL), async ({ params }) => {
     await delay(300);
     if (!projects.some((project) => project.id === params.id)) {

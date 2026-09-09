@@ -37,6 +37,15 @@ export const projectsApi = {
       ),
     ),
 
+  patch: async (id: string, body: Partial<ProjectPayload>) =>
+    unwrapResponse(
+      await http.patch<ApiResponse<Project>, Partial<ProjectPayload>>(
+        Endpoints.Projects.DETAIL,
+        body,
+        { urlParams: { id } },
+      ),
+    ),
+
   remove: async (id: string) => {
     await http.delete<ApiResponse<void>>(Endpoints.Projects.DETAIL, undefined, {
       urlParams: { id },

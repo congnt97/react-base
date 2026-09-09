@@ -1,12 +1,14 @@
 import { Form, Input, Modal, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { AppUpload } from '@/components/ui/app-upload';
 import {
   PROJECT_STATUSES,
   PROJECT_STATUS_LABELS,
   type Project,
   type ProjectPayload,
 } from '@/features/projects/types';
+import { uploadFile } from '@/lib/upload';
 
 type ProjectFormModalProps = {
   open: boolean;
@@ -21,6 +23,8 @@ const DEFAULT_VALUES: ProjectPayload = {
   owner: '',
   status: 'active',
 };
+
+const ATTACHMENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg'];
 
 export function ProjectFormModal({
   open,
@@ -79,6 +83,14 @@ export function ProjectFormModal({
 
         <Form.Item label={t('Mô tả')} name="description">
           <Input.TextArea rows={3} placeholder={t('Không bắt buộc')} />
+        </Form.Item>
+
+        <Form.Item label={t('Tài liệu đính kèm')} name="attachmentUrl">
+          <AppUpload
+            accept={ATTACHMENT_TYPES}
+            maxSizeMb={5}
+            upload={uploadFile}
+          />
         </Form.Item>
       </Form>
     </Modal>
