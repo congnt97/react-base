@@ -6,6 +6,7 @@ import {
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Layout, Menu } from 'antd';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { usePermissions } from '@/features/auth/hooks/use-permissions';
 import type { Permission } from '@/features/auth/permissions';
@@ -43,6 +44,7 @@ const matchNavKey = (pathname: string) =>
     .sort((a, b) => b.length - a.length)[0];
 
 export function Sidebar() {
+  const { t } = useTranslation();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
@@ -53,7 +55,7 @@ export function Sidebar() {
   ).map((item) => ({
     key: item.key,
     icon: item.icon,
-    label: <Link to={item.key}>{item.label}</Link>,
+    label: <Link to={item.key}>{t(item.label)}</Link>,
   }));
 
   return (

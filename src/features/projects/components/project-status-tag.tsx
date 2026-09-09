@@ -1,4 +1,5 @@
 import { Tag } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import {
   PROJECT_STATUS_LABELS,
@@ -12,7 +13,9 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
 };
 
 export function ProjectStatusTag({ status }: { status: ProjectStatus }) {
+  const { t } = useTranslation();
+
   return (
-    <Tag color={STATUS_COLORS[status]}>{PROJECT_STATUS_LABELS[status]}</Tag>
+    <Tag color={STATUS_COLORS[status]}>{t(PROJECT_STATUS_LABELS[status])}</Tag>
   );
 }

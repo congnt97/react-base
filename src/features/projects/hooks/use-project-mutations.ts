@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { App } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { projectsApi } from '@/features/projects/api';
 import { projectKeys } from '@/features/projects/hooks/use-projects';
@@ -7,16 +8,17 @@ import type { ProjectPayload } from '@/features/projects/types';
 import { getErrorMessage } from '@/lib/api-error';
 
 function useProjectMutationFeedback(successMessage: string) {
+  const { t } = useTranslation();
   const { message } = App.useApp();
   const queryClient = useQueryClient();
 
   return {
     onSuccess: () => {
-      message.success(successMessage);
+      message.success(t(successMessage));
       return queryClient.invalidateQueries({ queryKey: projectKeys.all });
     },
     onError: (error: unknown) => {
-      message.error(getErrorMessage(error));
+      message.error(t(getErrorMessage(error)));
     },
   };
 }

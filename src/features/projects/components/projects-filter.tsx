@@ -1,4 +1,5 @@
 import { Select } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { SearchInput } from '@/components/ui/search-input';
 import type { ProjectsSearch } from '@/features/projects/search';
@@ -13,16 +14,13 @@ type ProjectsFilterProps = {
   onChange: (filter: Pick<ProjectsSearch, 'keyword' | 'status'>) => void;
 };
 
-const STATUS_OPTIONS = PROJECT_STATUSES.map((value) => ({
-  value,
-  label: PROJECT_STATUS_LABELS[value],
-}));
-
 export function ProjectsFilter({
   keyword,
   status,
   onChange,
 }: ProjectsFilterProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
       <SearchInput
@@ -30,8 +28,8 @@ export function ProjectsFilter({
         key={keyword ?? ''}
         className="sm:max-w-[320px]"
         defaultValue={keyword}
-        placeholder="Tìm theo tên dự án"
-        aria-label="Tìm theo tên dự án"
+        placeholder={t('Tìm theo tên dự án')}
+        aria-label={t('Tìm theo tên dự án')}
         onPressEnter={(event) =>
           onChange({
             keyword: event.currentTarget.value.trim() || undefined,
@@ -43,10 +41,13 @@ export function ProjectsFilter({
       <Select
         allowClear
         className="sm:w-[180px]"
-        placeholder="Trạng thái"
-        aria-label="Trạng thái"
+        placeholder={t('Trạng thái')}
+        aria-label={t('Trạng thái')}
         value={status}
-        options={STATUS_OPTIONS}
+        options={PROJECT_STATUSES.map((value) => ({
+          value,
+          label: t(PROJECT_STATUS_LABELS[value]),
+        }))}
         onChange={(value) => onChange({ keyword, status: value })}
       />
     </div>

@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Space, Table, type TableProps } from 'antd';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
 import type { Project } from '@/features/projects/types';
@@ -23,9 +24,11 @@ export function ProjectsTable({
   onEdit,
   onDelete,
 }: ProjectsTableProps) {
+  const { t } = useTranslation();
+
   const columns: TableProps<Project>['columns'] = [
     {
-      title: 'Tên dự án',
+      title: t('Tên dự án'),
       dataIndex: 'name',
       render: (name: string, project) => (
         <div className="min-w-0">
@@ -39,16 +42,16 @@ export function ProjectsTable({
       ),
     },
     {
-      title: 'Trạng thái',
+      title: t('Trạng thái'),
       dataIndex: 'status',
       width: 130,
       render: (status: Project['status']) => (
         <ProjectStatusTag status={status} />
       ),
     },
-    { title: 'Phụ trách', dataIndex: 'owner', width: 160 },
+    { title: t('Phụ trách'), dataIndex: 'owner', width: 160 },
     {
-      title: 'Cập nhật',
+      title: t('Cập nhật'),
       dataIndex: 'updatedAt',
       width: 160,
       render: (value: string) => dayjs(value).format('DD/MM/YYYY HH:mm'),
@@ -68,7 +71,7 @@ export function ProjectsTable({
               type="text"
               size="small"
               icon={<EditOutlined />}
-              aria-label={`Sửa ${project.name}`}
+              aria-label={t('Sửa {{name}}', { name: project.name })}
               onClick={() => onEdit(project)}
             />
           ) : null}
@@ -78,7 +81,7 @@ export function ProjectsTable({
               type="text"
               size="small"
               icon={<DeleteOutlined />}
-              aria-label={`Xoá ${project.name}`}
+              aria-label={t('Xoá {{name}}', { name: project.name })}
               onClick={() => onDelete(project)}
             />
           ) : null}
@@ -99,7 +102,7 @@ export function ProjectsTable({
         pageSize: pagination.pageSize,
         total: pagination.total,
         showSizeChanger: true,
-        showTotal: (total) => `${total} dự án`,
+        showTotal: (total) => t('{{total}} dự án', { total }),
         onChange: onPageChange,
       }}
     />

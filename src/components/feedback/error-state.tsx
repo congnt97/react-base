@@ -1,4 +1,5 @@
 import { Button, Result } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { getErrorMessage } from '@/lib/api-error';
 
@@ -8,15 +9,17 @@ type ErrorStateProps = {
 };
 
 export function ErrorState({ error, onRetry }: ErrorStateProps) {
+  const { t } = useTranslation();
+
   return (
     <Result
       status="error"
-      title="Không tải được dữ liệu"
-      subTitle={getErrorMessage(error)}
+      title={t('Không tải được dữ liệu')}
+      subTitle={t(getErrorMessage(error))}
       extra={
         onRetry ? (
           <Button type="primary" onClick={onRetry}>
-            Thử lại
+            {t('Thử lại')}
           </Button>
         ) : null
       }

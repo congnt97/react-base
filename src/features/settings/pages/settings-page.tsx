@@ -1,16 +1,20 @@
 import { Card, Descriptions } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { PageHeader } from '@/components/layout/page-header';
 import { useAuthStore } from '@/features/auth/store';
 
 export function SettingsPage() {
+  const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
 
   return (
     <>
       <PageHeader
-        title="Cài đặt"
-        description="Ví dụ route cần permission settings:manage (requirePermission trong beforeLoad)."
+        title={t('Cài đặt')}
+        description={t(
+          'Ví dụ route cần permission settings:manage (requirePermission trong beforeLoad).',
+        )}
       />
 
       <Card className="app-card">
@@ -19,18 +23,18 @@ export function SettingsPage() {
           items={[
             {
               key: 'email',
-              label: 'Email',
-              children: user?.email ?? 'Chưa có email',
+              label: t('Email'),
+              children: user?.email ?? t('Chưa có email'),
             },
             {
               key: 'name',
-              label: 'Tên',
-              children: user?.name ?? 'Chưa cập nhật',
+              label: t('Tên'),
+              children: user?.name ?? t('Chưa cập nhật'),
             },
             {
               key: 'role',
-              label: 'Vai trò',
-              children: user?.role ?? 'Chưa xác định',
+              label: t('Vai trò'),
+              children: user?.role ?? t('Chưa xác định'),
             },
           ]}
         />

@@ -1,4 +1,5 @@
 import { Form, Input, Modal, Select } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import {
   PROJECT_STATUSES,
@@ -15,11 +16,6 @@ type ProjectFormModalProps = {
   onSubmit: (values: ProjectPayload) => void;
 };
 
-const STATUS_OPTIONS = PROJECT_STATUSES.map((value) => ({
-  value,
-  label: PROJECT_STATUS_LABELS[value],
-}));
-
 const DEFAULT_VALUES: ProjectPayload = {
   name: '',
   owner: '',
@@ -33,15 +29,16 @@ export function ProjectFormModal({
   onCancel,
   onSubmit,
 }: ProjectFormModalProps) {
+  const { t } = useTranslation();
   const [form] = Form.useForm<ProjectPayload>();
   const isEdit = Boolean(project);
 
   return (
     <Modal
       open={open}
-      title={isEdit ? 'Sửa dự án' : 'Tạo dự án'}
-      okText={isEdit ? 'Lưu' : 'Tạo dự án'}
-      cancelText="Huỷ"
+      title={isEdit ? t('Sửa dự án') : t('Tạo dự án')}
+      okText={isEdit ? t('Lưu') : t('Tạo dự án')}
+      cancelText={t('Huỷ')}
       confirmLoading={submitting}
       onOk={() => form.submit()}
       onCancel={onCancel}
@@ -56,27 +53,32 @@ export function ProjectFormModal({
         onFinish={onSubmit}
       >
         <Form.Item
-          label="Tên dự án"
+          label={t('Tên dự án')}
           name="name"
-          rules={[{ required: true, message: 'Nhập tên dự án' }]}
+          rules={[{ required: true, message: t('Nhập tên dự án') }]}
         >
-          <Input placeholder="Ví dụ: CMS nội bộ" />
+          <Input placeholder={t('Ví dụ: CMS nội bộ')} />
         </Form.Item>
 
         <Form.Item
-          label="Người phụ trách"
+          label={t('Người phụ trách')}
           name="owner"
-          rules={[{ required: true, message: 'Nhập người phụ trách' }]}
+          rules={[{ required: true, message: t('Nhập người phụ trách') }]}
         >
-          <Input placeholder="Tên người phụ trách" />
+          <Input placeholder={t('Tên người phụ trách')} />
         </Form.Item>
 
-        <Form.Item label="Trạng thái" name="status">
-          <Select options={STATUS_OPTIONS} />
+        <Form.Item label={t('Trạng thái')} name="status">
+          <Select
+            options={PROJECT_STATUSES.map((value) => ({
+              value,
+              label: t(PROJECT_STATUS_LABELS[value]),
+            }))}
+          />
         </Form.Item>
 
-        <Form.Item label="Mô tả" name="description">
-          <Input.TextArea rows={3} placeholder="Không bắt buộc" />
+        <Form.Item label={t('Mô tả')} name="description">
+          <Input.TextArea rows={3} placeholder={t('Không bắt buộc')} />
         </Form.Item>
       </Form>
     </Modal>

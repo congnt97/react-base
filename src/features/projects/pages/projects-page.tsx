@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
 import { App, Button, Card } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
@@ -24,6 +25,7 @@ const route = getRouteApi('/_app/projects');
 type FormState = { open: boolean; project: Project | null };
 
 export function ProjectsPage() {
+  const { t } = useTranslation();
   const { modal } = App.useApp();
   const { can } = usePermissions();
   const search = route.useSearch();
@@ -51,11 +53,11 @@ export function ProjectsPage() {
 
   const confirmDelete = (project: Project) => {
     modal.confirm({
-      title: `Xoá dự án "${project.name}"?`,
-      content: 'Hành động này không thể hoàn tác.',
-      okText: 'Xoá',
+      title: t('Xoá dự án "{{name}}"?', { name: project.name }),
+      content: t('Hành động này không thể hoàn tác.'),
+      okText: t('Xoá'),
       okButtonProps: { danger: true },
-      cancelText: 'Huỷ',
+      cancelText: t('Huỷ'),
       onOk: () =>
         deleteProject.mutateAsync(project.id).then(
           () => undefined,
@@ -67,8 +69,10 @@ export function ProjectsPage() {
   return (
     <>
       <PageHeader
-        title="Dự án"
-        description="Ví dụ CRUD đầy đủ: filter qua URL, phân trang server, form modal, xác nhận xoá, permission theo hành động."
+        title={t('Dự án')}
+        description={t(
+          'Ví dụ CRUD đầy đủ: filter qua URL, phân trang server, form modal, xác nhận xoá, permission theo hành động.',
+        )}
         actions={
           <Can permission="projects:create">
             <Button
@@ -76,7 +80,7 @@ export function ProjectsPage() {
               icon={<PlusOutlined />}
               onClick={() => setForm({ open: true, project: null })}
             >
-              Tạo dự án
+              {t('Tạo dự án')}
             </Button>
           </Can>
         }

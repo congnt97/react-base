@@ -32,7 +32,8 @@ src/
     projects/     CRUD mẫu: filter qua URL, phân trang server, form modal, xoá có confirm
     dashboard/
     settings/     Route chỉ admin (ví dụ requireRole)
-  lib/            Tầng thấp nhất: http, env, api-error, api-response, auth-storage, url, endpoints, query-client
+  lib/            Tầng thấp nhất: http, env, api-error, api-response, auth-storage, url, endpoints, query-client, monitoring, analytics
+  locales/        Bản dịch (en.json); tiếng Việt là key nên không cần file
   mocks/          MSW handlers + data, chỉ load ở dev khi VITE_ENABLE_MOCK_API=true
   routes/         TanStack Router file-based routes, chỉ khai báo route và import page
   styles/         Global CSS + design tokens
@@ -79,6 +80,7 @@ Validate ở `lib/env.ts`, thiếu là throw lúc khởi động.
 ## Quy Ước Nhanh
 
 - File kebab-case, component/hook export PascalCase/`useX`.
-- UI text tiếng Việt có dấu.
+- UI text tiếng Việt có dấu, đi qua `t()` với key là chính câu tiếng Việt; bản dịch tiếng Anh ở `locales/en.json`, đổi ngôn ngữ ở header.
+- Monitoring/analytics cắm SDK thật ở `app/monitoring.ts`; lỗi query/route/window đã tự báo qua `lib/monitoring.ts`.
 - Ant Design trước, Tailwind cho layout/spacing. Chỉnh AntD qua token trong `app/theme.ts`, không override CSS bằng `!important`.
 - Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`.

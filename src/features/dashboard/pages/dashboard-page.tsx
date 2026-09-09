@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
 import { Card, Col, Row, Typography } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { PageHeader } from '@/components/layout/page-header';
 
@@ -25,7 +26,8 @@ const items = [
   },
   {
     title: 'Auth guard',
-    description: 'Token ở auth-storage, guard đọc store, role guard 403.',
+    description:
+      'Token ở auth-storage, guard đọc store, permission theo hành động.',
     icon: <SafetyCertificateOutlined />,
     className: 'stat-icon-amber',
   },
@@ -39,11 +41,15 @@ const items = [
 ];
 
 export function DashboardPage() {
+  const { t } = useTranslation();
+
   return (
     <>
       <PageHeader
-        title="Dashboard"
-        description="Base core sẵn sàng để phát triển module frontend React."
+        title={t('Dashboard')}
+        description={t(
+          'Base core sẵn sàng để phát triển module frontend React.',
+        )}
       />
 
       <Row gutter={[16, 16]}>
@@ -57,13 +63,13 @@ export function DashboardPage() {
                 <div className="min-w-0">
                   <Typography.Title level={5} className="!m-0">
                     {item.to ? (
-                      <Link to={item.to}>{item.title}</Link>
+                      <Link to={item.to}>{t(item.title)}</Link>
                     ) : (
-                      item.title
+                      t(item.title)
                     )}
                   </Typography.Title>
                   <Typography.Paragraph className="!mb-0 !mt-1 !text-sm !text-[var(--text-muted)]">
-                    {item.description}
+                    {t(item.description)}
                   </Typography.Paragraph>
                 </div>
               </div>

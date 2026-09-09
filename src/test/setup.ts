@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 
+// i18n khởi tạo với locale vi (trả về key), để component dùng t() render được.
+import '@/app/i18n';
+
 // Ant Design cần vài browser API mà jsdom chưa có.
 if (!window.matchMedia) {
   window.matchMedia = (query: string) => ({

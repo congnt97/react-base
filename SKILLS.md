@@ -22,6 +22,7 @@ Không thêm Next.js, shadcn/ui, MUI, Redux, React Router, thư viện toast kh�
 | Type, generic, `any`, `!`, ép kiểu                                     | `docs/skills/typescript.md`   |
 | Clean code, fallback, tách file, performance, error handling           | `docs/skills/quality.md`      |
 | Test, mock trong test                                                  | `docs/skills/testing.md`      |
+| UI text, dịch, thêm ngôn ngữ, format ngày                              | `docs/skills/i18n.md`         |
 
 ## Checklist Tối Thiểu
 

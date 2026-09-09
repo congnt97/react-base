@@ -2,6 +2,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
+import '@/app/i18n';
 import { setupMonitoring } from '@/app/monitoring';
 import { AppProviders } from '@/app/providers';
 import { router } from '@/app/router';
