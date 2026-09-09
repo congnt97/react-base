@@ -1,8 +1,44 @@
+import { readdirSync } from 'node:fs';
+
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import checkFile from 'eslint-plugin-check-file';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
+
+// Feature được phép import từ mọi nơi (store/guards/types là app-level).
+const SHARED_FEATURES = ['auth'];
+
+const featureDirs = readdirSync('src/features', { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name);
+
+// Mỗi feature chỉ được import chính nó và SHARED_FEATURES.
+const crossFeatureRules = featureDirs.map((feature) => ({
+  files: [`src/features/${feature}/**/*.{ts,tsx}`],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [
+              '@/features/*',
+              ...new Set(
+                [feature, ...SHARED_FEATURES].map(
+                  (name) => `!@/features/${name}`,
+                ),
+              ),
+            ],
+            message:
+              'Feature không import feature khác. Đưa code chung xuống components/ hoặc lib/ (xem docs/skills/architecture.md).',
+          },
+        ],
+      },
+    ],
+  },
+}));
 
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'public', 'src/routeTree.gen.ts'] },
@@ -14,6 +50,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'check-file': checkFile,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -38,6 +75,23 @@ export default tseslint.config(
           message:
             'dangerouslySetInnerHTML cần sanitize trước khi dùng (xem docs/skills/security.md).',
         },
+      ],
+    },
+  },
+  {
+    // docs/skills/architecture.md: file và folder kebab-case.
+    // routes/ theo convention TanStack (_app, __root, $id) nên bỏ qua.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/routes/**'],
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        { 'src/**/*.{ts,tsx}': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
+      'check-file/folder-naming-convention': [
+        'error',
+        { 'src/**/': 'KEBAB_CASE' },
       ],
     },
   },
@@ -104,4 +158,5 @@ export default tseslint.config(
       ],
     },
   },
+  ...crossFeatureRules,
 );
