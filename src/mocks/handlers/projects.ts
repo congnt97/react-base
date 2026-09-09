@@ -6,9 +6,9 @@ import {
   type ProjectPayload,
 } from '@/features/projects/types';
 import { Endpoints } from '@/lib/endpoints';
-import { apiUrl, fail, ok } from '@/mocks/utils';
+import { apiUrl, cycle, fail, ok } from '@/mocks/utils';
 
-const OWNERS = ['Lan', 'Minh', 'Hà', 'Tuấn', 'Ngọc'];
+const OWNERS = ['Lan', 'Minh', 'Hà', 'Tuấn', 'Ngọc'] as const;
 
 const seedProjects = (count: number): Project[] =>
   Array.from({ length: count }, (_, index) => {
@@ -16,8 +16,8 @@ const seedProjects = (count: number): Project[] =>
     return {
       id: `p${index + 1}`,
       name: `Dự án ${index + 1}`,
-      status: PROJECT_STATUSES[index % PROJECT_STATUSES.length],
-      owner: OWNERS[index % OWNERS.length],
+      status: cycle(PROJECT_STATUSES, index),
+      owner: cycle(OWNERS, index),
       description: index % 3 === 0 ? 'Mô tả ngắn cho dự án mẫu.' : undefined,
       createdAt: date,
       updatedAt: date,

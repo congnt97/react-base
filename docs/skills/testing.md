@@ -31,6 +31,13 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 - CI chạy E2E ở job riêng sau job check; report upload khi fail.
 - `e2e/a11y.spec.ts` quét axe từng trang; trang mới phải thêm vào đây.
 
+## Test Đối Chiếu (guard)
+
+Hai test chạy cùng `yarn test`, không cần viết thêm, chỉ cần biết vì sao đỏ:
+
+- `src/mocks/handlers.test.ts`: mọi path trong `lib/endpoints.ts` phải có MSW handler.
+- `src/app/i18n.test.ts`: mọi `t('...')` tĩnh trong `src` phải có key trong `locales/en.json`. Key động qua map (`t(PROJECT_STATUS_LABELS[x])`) không quét được, tự thêm.
+
 ## Bắt Buộc Thêm Test Khi
 
 - Thêm/sửa pure function có rẽ nhánh.

@@ -3,7 +3,9 @@ import { readdirSync } from 'node:fs';
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import checkFile from 'eslint-plugin-check-file';
+import i18next from 'eslint-plugin-i18next';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
@@ -58,6 +60,41 @@ export default tseslint.config(
   ...pluginQuery.configs['flat/recommended'],
   // docs/skills/ui.md: a11y cơ bản bắt ngay lúc code (alt, label, role, key events).
   { ...jsxA11y.flatConfigs.recommended, files: ['src/**/*.tsx'] },
+  {
+    // Lỗi JSX cơ bản TypeScript không bắt được.
+    files: ['src/**/*.tsx'],
+    plugins: { react },
+    settings: { react: { version: 'detect' } },
+    rules: {
+      'react/jsx-key': ['error', { checkFragmentShorthand: true }],
+      'react/jsx-no-target-blank': 'error',
+      'react/no-array-index-key': 'error',
+      'react/self-closing-comp': 'error',
+      'react/jsx-no-useless-fragment': 'error',
+    },
+  },
+  {
+    // docs/skills/i18n.md: text user thấy phải qua t(). Bắt chuỗi trần trong JSX
+    // (text lẫn attribute như placeholder/title/aria-label).
+    files: ['src/**/*.tsx'],
+    ignores: ['src/**/*.test.tsx'],
+    plugins: { i18next },
+    rules: {
+      'i18next/no-literal-string': [
+        'error',
+        {
+          mode: 'jsx-only',
+          'jsx-attributes': {
+            include: ['placeholder', 'title', 'aria-label', 'alt', 'label'],
+          },
+          words: {
+            // Tên thương hiệu và mẫu định dạng không dịch.
+            exclude: ['React Base', 'you@example.com', 'DD/MM/YYYY HH:mm'],
+          },
+        },
+      ],
+    },
+  },
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {

@@ -2,21 +2,21 @@ import { delay, http } from 'msw';
 
 import type { Activity } from '@/features/dashboard/types';
 import { Endpoints } from '@/lib/endpoints';
-import { apiUrl, ok } from '@/mocks/utils';
+import { apiUrl, cycle, ok } from '@/mocks/utils';
 
-const ACTORS = ['Lan', 'Minh', 'Hà', 'Tuấn', 'Ngọc'];
+const ACTORS = ['Lan', 'Minh', 'Hà', 'Tuấn', 'Ngọc'] as const;
 const MESSAGES = [
   'đã tạo dự án mới',
   'đã đổi trạng thái dự án',
   'đã cập nhật mô tả',
   'đã tải lên tài liệu',
   'đã xoá một dự án',
-];
+] as const;
 
 const activities: Activity[] = Array.from({ length: 45 }, (_, index) => ({
   id: `a${index + 1}`,
-  actor: ACTORS[index % ACTORS.length],
-  message: MESSAGES[index % MESSAGES.length],
+  actor: cycle(ACTORS, index),
+  message: cycle(MESSAGES, index),
   createdAt: new Date(Date.now() - index * 37 * 60_000).toISOString(),
 }));
 

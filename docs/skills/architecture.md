@@ -44,6 +44,8 @@ features/<x>/
 
 Không phải feature nào cũng cần đủ file. Dashboard chỉ có `pages/`.
 
+`scripts/check-structure.mjs` (trong `yarn validate`) fail khi có folder lạ ở `src/`, file sai chỗ trong feature, hoặc folder con trong `lib/`. Cần loại file mới thì sửa script kèm docs này, không tạo tạm rồi để đó.
+
 ## Thứ Tự Làm Feature Mới
 
 1. `rg` xem đã có chưa.
