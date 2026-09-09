@@ -4,54 +4,83 @@ import { Role, type AuthUser, type LoginRequest } from '@/features/auth/types';
 import { Endpoints } from '@/lib/endpoints';
 import { apiUrl, fail, ok } from '@/mocks/utils';
 
-export const mockUser: AuthUser = {
-  id: 'mock-admin',
-  email: 'admin@example.com',
-  name: 'Admin',
-  role: Role.ADMIN,
-  isEmailVerified: true,
+type MockAccount = {
+  user: AuthUser;
+  password: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
-export const mockCredentials = {
-  email: 'admin@example.com',
-  password: '123456',
-};
+// Hai tài khoản để thấy khác biệt permission: admin có tất cả, user không xoá
+// dự án và không vào Cài đặt.
+export const mockAccounts: MockAccount[] = [
+  {
+    user: {
+      id: 'mock-admin',
+      email: 'admin@example.com',
+      name: 'Admin',
+      role: Role.ADMIN,
+      isEmailVerified: true,
+    },
+    password: '123456',
+    accessToken: 'mock-access-admin',
+    refreshToken: 'mock-refresh-admin',
+  },
+  {
+    user: {
+      id: 'mock-user',
+      email: 'user@example.com',
+      name: 'Người dùng',
+      role: Role.USER,
+      isEmailVerified: true,
+    },
+    password: '123456',
+    accessToken: 'mock-access-user',
+    refreshToken: 'mock-refresh-user',
+  },
+];
 
-export const mockTokens = {
-  accessToken: 'mock-access-token',
-  refreshToken: 'mock-refresh-token',
+const findByRequest = (request: Request) => {
+  const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+  return mockAccounts.find((account) => account.accessToken === token);
 };
-
-const isAuthorized = (request: Request) =>
-  request.headers.get('Authorization') === `Bearer ${mockTokens.accessToken}`;
 
 export const authHandlers = [
   http.post(apiUrl(Endpoints.Auth.LOGIN), async ({ request }) => {
     await delay(300);
     const body = (await request.json()) as LoginRequest;
+    const account = mockAccounts.find(
+      ({ user, password }) =>
+        user.email === body.email && password === body.password,
+    );
 
-    if (
-      body.email !== mockCredentials.email ||
-      body.password !== mockCredentials.password
-    ) {
+    if (!account) {
       return fail(401, 'Email hoặc mật khẩu không đúng');
     }
 
-    return ok({ user: mockUser, ...mockTokens });
+    const { user, accessToken, refreshToken } = account;
+    return ok({ user, accessToken, refreshToken });
   }),
 
   http.get(apiUrl(Endpoints.Auth.ME), async ({ request }) => {
     await delay(200);
-    return isAuthorized(request)
-      ? ok(mockUser)
+    const account = findByRequest(request);
+    return account
+      ? ok(account.user)
       : fail(401, 'Phiên đăng nhập không hợp lệ');
   }),
 
   http.post(apiUrl(Endpoints.Auth.REFRESH_TOKEN), async ({ request }) => {
     await delay(200);
     const body = (await request.json()) as { refreshToken?: string };
-    return body.refreshToken === mockTokens.refreshToken
-      ? ok(mockTokens)
+    const account = mockAccounts.find(
+      ({ refreshToken }) => refreshToken === body.refreshToken,
+    );
+    return account
+      ? ok({
+          accessToken: account.accessToken,
+          refreshToken: account.refreshToken,
+        })
       : fail(401, 'Refresh token không hợp lệ');
   }),
 
@@ -64,7 +93,12 @@ export const authHandlers = [
     await delay(300);
     const body = (await request.json()) as { name: string; email: string };
     return ok({
-      user: { ...mockUser, id: 'mock-user', role: Role.USER, ...body },
+      user: {
+        id: `mock-${Date.now()}`,
+        role: Role.USER,
+        isEmailVerified: false,
+        ...body,
+      },
     });
   }),
 ];

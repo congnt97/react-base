@@ -10,7 +10,7 @@ export function SettingsPage() {
     <>
       <PageHeader
         title="Cài đặt"
-        description="Ví dụ route chỉ dành cho admin (requireRole trong beforeLoad)."
+        description="Ví dụ route cần permission settings:manage (requirePermission trong beforeLoad)."
       />
 
       <Card className="app-card">

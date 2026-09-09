@@ -10,8 +10,9 @@ type ProjectsTableProps = {
   loading: boolean;
   pagination: { page: number; pageSize: number; total: number };
   onPageChange: (page: number, pageSize: number) => void;
-  onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
+  // undefined = không có quyền, ẩn nút tương ứng.
+  onEdit?: (project: Project) => void;
+  onDelete?: (project: Project) => void;
 };
 
 export function ProjectsTable({
@@ -52,32 +53,39 @@ export function ProjectsTable({
       width: 160,
       render: (value: string) => dayjs(value).format('DD/MM/YYYY HH:mm'),
     },
-    {
+  ];
+
+  if (onEdit || onDelete) {
+    columns.push({
       title: '',
       key: 'actions',
       width: 96,
       align: 'right',
       render: (_, project) => (
         <Space size={0}>
-          <Button
-            type="text"
-            size="small"
-            icon={<EditOutlined />}
-            aria-label={`Sửa ${project.name}`}
-            onClick={() => onEdit(project)}
-          />
-          <Button
-            danger
-            type="text"
-            size="small"
-            icon={<DeleteOutlined />}
-            aria-label={`Xoá ${project.name}`}
-            onClick={() => onDelete(project)}
-          />
+          {onEdit ? (
+            <Button
+              type="text"
+              size="small"
+              icon={<EditOutlined />}
+              aria-label={`Sửa ${project.name}`}
+              onClick={() => onEdit(project)}
+            />
+          ) : null}
+          {onDelete ? (
+            <Button
+              danger
+              type="text"
+              size="small"
+              icon={<DeleteOutlined />}
+              aria-label={`Xoá ${project.name}`}
+              onClick={() => onDelete(project)}
+            />
+          ) : null}
         </Space>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <Table<Project>

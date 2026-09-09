@@ -13,16 +13,20 @@
 
 Guard đọc `useAuthStore.getState()` chứ không đọc router context. `beforeLoad` chạy đồng bộ ngay khi `navigate()` được gọi trong `onSuccess`/`onSettled`, trước khi React re-render, nên đọc từ context sẽ thấy giá trị cũ và redirect sai.
 
-## Role Guard
+## Permission
 
-```ts
-export const Route = createFileRoute('/_app/settings')({
-  component: SettingsPage,
-  beforeLoad: () => requireRole(Role.ADMIN),
-});
-```
+Một cơ chế duy nhất: permission theo hành động `<resource>:<action>` trong `features/auth/permissions.ts`, map từ role qua `ROLE_PERMISSIONS`. Không check `user.role === 'admin'` rải rác.
 
-`requireRole` throw `ForbiddenError`; `defaultErrorComponent` (`components/feedback/route-error.tsx`) render 403. Sidebar ẩn menu theo `hasRole`. Frontend guard chỉ là UX, backend phải enforce.
+| Nơi dùng              | Cách dùng                                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------------------------- |
+| Route                 | `beforeLoad: () => requirePermission('settings:manage')` throw `ForbiddenError`, `RouteError` render 403 |
+| JSX                   | `<Can permission="projects:create">...</Can>`                                                            |
+| Logic trong component | `const { can } = usePermissions(); can('projects:delete')`                                               |
+| Ngoài React           | `can(user, 'projects:read')`                                                                             |
+
+Thêm permission mới: thêm vào `PERMISSIONS`, cấp cho role trong `ROLE_PERMISSIONS`, viết test trong `permissions.test.ts`. Frontend guard chỉ là UX, backend phải enforce.
+
+Mock có hai tài khoản để thấy khác biệt: `admin@example.com` (tất cả) và `user@example.com` (không xoá dự án, không vào Cài đặt), mật khẩu `123456`.
 
 ## Route Rules
 

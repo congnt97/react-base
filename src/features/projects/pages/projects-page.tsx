@@ -5,6 +5,8 @@ import { useState } from 'react';
 
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
+import { Can } from '@/features/auth/components/can';
+import { usePermissions } from '@/features/auth/hooks/use-permissions';
 import { ProjectFormModal } from '@/features/projects/components/project-form-modal';
 import { ProjectsFilter } from '@/features/projects/components/projects-filter';
 import { ProjectsTable } from '@/features/projects/components/projects-table';
@@ -23,6 +25,7 @@ type FormState = { open: boolean; project: Project | null };
 
 export function ProjectsPage() {
   const { modal } = App.useApp();
+  const { can } = usePermissions();
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
@@ -65,15 +68,17 @@ export function ProjectsPage() {
     <>
       <PageHeader
         title="Dự án"
-        description="Ví dụ CRUD đầy đủ: filter qua URL, phân trang server, form modal, xác nhận xoá."
+        description="Ví dụ CRUD đầy đủ: filter qua URL, phân trang server, form modal, xác nhận xoá, permission theo hành động."
         actions={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setForm({ open: true, project: null })}
-          >
-            Tạo dự án
-          </Button>
+          <Can permission="projects:create">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setForm({ open: true, project: null })}
+            >
+              Tạo dự án
+            </Button>
+          </Can>
         }
       />
 
@@ -102,8 +107,12 @@ export function ProjectsPage() {
               onPageChange={(page, pageSize) =>
                 updateSearch({ page, pageSize })
               }
-              onEdit={(project) => setForm({ open: true, project })}
-              onDelete={confirmDelete}
+              onEdit={
+                can('projects:update')
+                  ? (project) => setForm({ open: true, project })
+                  : undefined
+              }
+              onDelete={can('projects:delete') ? confirmDelete : undefined}
             />
           )}
         </div>

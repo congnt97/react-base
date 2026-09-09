@@ -56,7 +56,7 @@ Backend must enforce auth, permission, file validation, and data access.
 
 - Hide button trên UI không thay thế backend authorization.
 - Role guard frontend chỉ là UX guard; backend phải enforce.
-- Role guard dùng `requireRole`/`hasRole` trong `features/auth/guards.ts`, không tự viết lại.
+- Permission theo hành động trong `features/auth/permissions.ts`; dùng `requirePermission` (route), `<Can>`/`usePermissions` (UI). Không check role trực tiếp trong component.
 - Không duplicate permission logic rải rác trong component.
 
 ## Logging

@@ -14,7 +14,7 @@ yarn test
 yarn build
 ```
 
-Tài khoản mock: `admin@example.com` / `123456`.
+Tài khoản mock (mật khẩu `123456`): `admin@example.com` có mọi quyền, `user@example.com` không xoá dự án và không vào Cài đặt.
 
 Node `>=22` LTS (xem `.nvmrc`, `nvm use`). Node 20 đã hết hạn hỗ trợ. Pre-commit chạy lint-staged; CI chạy `validate`, `test`, `build`.
 
@@ -59,7 +59,7 @@ Ví dụ đầy đủ: `features/projects`.
 
 - Token: `lib/auth-storage.ts` là source of truth. Zustand (`features/auth/store.ts`) chỉ giữ `user`, `isAuthenticated`.
 - Guard: `routes/_app/route.tsx` đọc `useAuthStore.getState()`, gọi `/me` qua `queryClient.ensureQueryData`, hydrate user. `routes/auth/route.tsx` đẩy user đã đăng nhập về `/`.
-- Role: `requireRole(Role.ADMIN)` trong `beforeLoad` throw `ForbiddenError`, `RouteError` render trang 403.
+- Permission theo hành động (`features/auth/permissions.ts`): `requirePermission()` cho route (403 qua `RouteError`), `<Can>`/`usePermissions()` cho UI.
 - Refresh token: `lib/http.ts` gom các request 401 vào một lần refresh; thất bại thì clear storage và về login.
 
 ## Env

@@ -5,23 +5,35 @@ import {
 } from '@ant-design/icons';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Layout, Menu } from 'antd';
+import type { ReactNode } from 'react';
 
-import { hasRole } from '@/features/auth/guards';
-import { useAuthStore } from '@/features/auth/store';
-import { Role } from '@/features/auth/types';
+import { usePermissions } from '@/features/auth/hooks/use-permissions';
+import type { Permission } from '@/features/auth/permissions';
 
 const { Sider } = Layout;
 
-const NAV_ITEMS = [
+type NavItem = {
+  key: '/' | '/projects' | '/settings';
+  label: string;
+  icon: ReactNode;
+  permission?: Permission;
+};
+
+const NAV_ITEMS: NavItem[] = [
   { key: '/', label: 'Dashboard', icon: <DashboardOutlined /> },
-  { key: '/projects', label: 'Dự án', icon: <FolderOutlined /> },
+  {
+    key: '/projects',
+    label: 'Dự án',
+    icon: <FolderOutlined />,
+    permission: 'projects:read',
+  },
   {
     key: '/settings',
     label: 'Cài đặt',
     icon: <SettingOutlined />,
-    roles: [Role.ADMIN],
+    permission: 'settings:manage',
   },
-] as const;
+];
 
 const matchNavKey = (pathname: string) =>
   NAV_ITEMS.map((item) => item.key)
@@ -34,10 +46,10 @@ export function Sidebar() {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const user = useAuthStore((state) => state.user);
+  const { can } = usePermissions();
 
   const items = NAV_ITEMS.filter(
-    (item) => !('roles' in item) || hasRole(user, ...item.roles),
+    (item) => !item.permission || can(item.permission),
   ).map((item) => ({
     key: item.key,
     icon: item.icon,

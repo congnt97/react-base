@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { ForbiddenError, hasRole, requireRole } from '@/features/auth/guards';
+import { ForbiddenError, requirePermission } from '@/features/auth/guards';
 import { useAuthStore } from '@/features/auth/store';
 import { Role, type AuthUser } from '@/features/auth/types';
 
@@ -11,38 +11,25 @@ const admin: AuthUser = {
   isEmailVerified: true,
 };
 
-describe('hasRole', () => {
-  it('đúng khi user có một trong các role yêu cầu', () => {
-    expect(hasRole(admin, Role.ADMIN)).toBe(true);
-    expect(hasRole(admin, Role.USER, Role.ADMIN)).toBe(true);
-  });
-
-  it('sai khi user không có role yêu cầu', () => {
-    expect(hasRole(admin, Role.USER)).toBe(false);
-  });
-
-  it('sai khi không có user hoặc không truyền role nào', () => {
-    expect(hasRole(null, Role.ADMIN)).toBe(false);
-    expect(hasRole(undefined, Role.ADMIN)).toBe(false);
-    expect(hasRole(admin)).toBe(false);
-  });
-});
-
-describe('requireRole', () => {
+describe('requirePermission', () => {
   beforeEach(() => {
     useAuthStore.getState().clearAuth();
   });
 
-  it('không throw khi user trong store có role', () => {
+  it('không throw khi user trong store có permission', () => {
     useAuthStore.getState().setAuthenticated(admin);
 
-    expect(() => requireRole(Role.ADMIN)).not.toThrow();
+    expect(() => requirePermission('settings:manage')).not.toThrow();
   });
 
-  it('throw ForbiddenError khi user thiếu role hoặc chưa đăng nhập', () => {
-    expect(() => requireRole(Role.ADMIN)).toThrowError(ForbiddenError);
+  it('throw ForbiddenError khi thiếu permission hoặc chưa đăng nhập', () => {
+    expect(() => requirePermission('settings:manage')).toThrowError(
+      ForbiddenError,
+    );
 
     useAuthStore.getState().setAuthenticated({ ...admin, role: Role.USER });
-    expect(() => requireRole(Role.ADMIN)).toThrowError(ForbiddenError);
+    expect(() => requirePermission('settings:manage')).toThrowError(
+      ForbiddenError,
+    );
   });
 });
