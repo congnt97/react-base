@@ -190,6 +190,13 @@ Không hiện thẳng message backend chứa stack trace, SQL, tên field nội 
 
 Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. Router đã có `defaultErrorComponent` (`components/feedback/route-error.tsx`, set trong `app/router.tsx`) nên lỗi render/beforeLoad của một route chỉ thay phần Outlet của route đó, layout vẫn còn; feature phức tạp/rủi ro cao (editor, preview nặng) nên cân nhắc boundary riêng thay vì để lỗi propagate lên root.
 
+## Monitoring Và Analytics
+
+- `lib/monitoring.ts`: `monitoring.captureException(error, context)` và `setUser`. Đã tự nối vào `QueryCache`/`MutationCache` (mọi lỗi query/mutation), `RouteError` (lỗi render/loader), `window.error`/`unhandledrejection`, và auth store (`setUser`). Feature không cần gọi tay trừ khi bắt lỗi ở chỗ khác.
+- Lỗi 4xx (`ApiError` với `statusCode < 500`) không báo về monitoring vì là hành vi nghiệp vụ; 5xx, timeout, lỗi JS thì báo.
+- `lib/analytics.ts`: `analytics.track(event, props)`; page view tự gửi sau mỗi navigation trong `app/router.ts`.
+- Cắm SDK thật (Sentry, PostHog...) chỉ ở `app/monitoring.ts` qua `monitoring.use()`/`analytics.use()`. Không import SDK rải rác trong feature.
+
 ## Validation Trước Khi Kết Thúc
 
 Bắt buộc chạy:

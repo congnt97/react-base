@@ -3,6 +3,7 @@ import { createRouter } from '@tanstack/react-router';
 import { PageLoading } from '@/components/feedback/page-loading';
 import { RouteError } from '@/components/feedback/route-error';
 import { useAuthStore } from '@/features/auth/store';
+import { analytics } from '@/lib/analytics';
 import { subscribeSessionExpired } from '@/lib/auth-storage';
 import { queryClient } from '@/lib/query-client';
 import { routeTree } from '@/routeTree.gen';
@@ -35,4 +36,9 @@ subscribeSessionExpired(() => {
     search: { redirectTo: undefined },
     replace: true,
   });
+});
+
+// Page view cho analytics sau mỗi lần điều hướng xong.
+router.subscribe('onResolved', ({ toLocation }) => {
+  analytics.page(toLocation.pathname);
 });

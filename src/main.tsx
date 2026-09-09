@@ -2,6 +2,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { setupMonitoring } from '@/app/monitoring';
 import { AppProviders } from '@/app/providers';
 import { router } from '@/app/router';
 import { env } from '@/lib/env';
@@ -16,6 +17,8 @@ async function enableMocking() {
   const { worker } = await import('@/mocks/browser');
   await worker.start({ onUnhandledRequest: 'bypass' });
 }
+
+setupMonitoring();
 
 const rootElement = document.getElementById('app');
 

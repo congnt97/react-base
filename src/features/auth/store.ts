@@ -7,6 +7,7 @@ import {
   persistAuthTokens,
   type AuthTokens,
 } from '@/lib/auth-storage';
+import { monitoring } from '@/lib/monitoring';
 
 export type AuthState = {
   user: AuthUser | null;
@@ -23,6 +24,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (tokens) {
       persistAuthTokens(tokens);
     }
+    if (user) {
+      monitoring.setUser({ id: user.id, email: user.email });
+    }
     set((state) =>
       state.user === user && state.isAuthenticated
         ? state
@@ -31,6 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   clearAuth: () => {
     clearAuthStorage();
+    monitoring.setUser(null);
     set((state) =>
       !state.user && !state.isAuthenticated
         ? state
