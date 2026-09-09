@@ -46,7 +46,18 @@ Không phải feature nào cũng cần đủ file. Dashboard chỉ có `pages/`.
 
 `scripts/check-structure.mjs` (trong `pnpm validate`) fail khi có folder lạ ở `src/`, file sai chỗ trong feature, hoặc folder con trong `lib/`. Cần loại file mới thì sửa script kèm docs này, không tạo tạm rồi để đó.
 
-## Thứ Tự Làm Feature Mới
+## Sinh Feature Bằng Script
+
+```bash
+pnpm gen orders          # tạo features/orders + route + MSW + endpoint + i18n key
+pnpm exec vite build     # sinh lại routeTree.gen.ts
+```
+
+Script sinh CRUD chạy được ngay (list, filter/pagination qua URL, form modal, xoá có confirm) và pass `pnpm validate && pnpm test` không cần sửa. Sau đó: sửa type cho khớp backend, đổi nhãn tạm sang tiếng Việt thật, thêm menu và permission nếu cần.
+
+Dùng script thay vì copy tay để không lệch cấu trúc và naming.
+
+## Thứ Tự Làm Feature Mới (khi không dùng script)
 
 1. `rg` xem đã có chưa.
 2. `types.ts`.

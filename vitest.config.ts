@@ -9,10 +9,31 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    // e2e/*.spec.ts là Playwright, không chạy bằng Vitest.
-    include: ['src/**/*.test.{ts,tsx}'],
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    // e2e/*.spec.ts là Playwright, không chạy bằng Vitest.
+    include: ['src/**/*.test.{ts,tsx}'],
     css: false,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'html'],
+      // Chỉ tính coverage cho logic thuần dễ sai và đắt khi hỏng: helper dùng chung,
+      // parse query param, phân quyền. UI/page/mock đo bằng component test và E2E.
+      include: [
+        'src/lib/**/*.ts',
+        'src/features/*/search.ts',
+        'src/features/*/guards.ts',
+        'src/features/*/permissions.ts',
+      ],
+      exclude: ['src/lib/endpoints.ts', 'src/lib/query-client.ts'],
+      // Đặt sát mức đang đạt (98/94/97/98) để thêm code không test là fail ngay.
+      // Hạ ngưỡng phải có lý do trong PR, không hạ để cho qua.
+      thresholds: {
+        statements: 95,
+        branches: 90,
+        functions: 95,
+        lines: 95,
+      },
+    },
   },
 });

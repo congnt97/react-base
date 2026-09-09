@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiError } from '@/lib/api-error';
-import { monitoring, shouldReport, type ErrorReporter } from '@/lib/monitoring';
+import {
+  initMonitoring,
+  monitoring,
+  shouldReport,
+  type ErrorReporter,
+} from '@/lib/monitoring';
 
 const createReporter = (): ErrorReporter => ({
   captureException: vi.fn(),
@@ -60,5 +65,33 @@ describe('monitoring', () => {
     monitoring.captureException(new ApiError('Không có quyền', 403));
 
     expect(reporter.captureException).not.toHaveBeenCalled();
+  });
+
+  it('reset đưa về reporter mặc định', () => {
+    const reporter = createReporter();
+    monitoring.use(reporter);
+    monitoring.reset();
+
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    monitoring.captureException(new Error('boom'));
+
+    expect(reporter.captureException).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
+  it('initMonitoring bắt lỗi ngoài React tree', () => {
+    const reporter = createReporter();
+    monitoring.use(reporter);
+    initMonitoring();
+
+    const error = new Error('script lỗi');
+    window.dispatchEvent(new ErrorEvent('error', { error }));
+
+    expect(reporter.captureException).toHaveBeenCalledWith(error, {
+      source: 'window.error',
+    });
   });
 });

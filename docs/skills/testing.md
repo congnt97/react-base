@@ -31,6 +31,12 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 - CI chạy E2E ở job riêng sau job check; report upload khi fail.
 - `e2e/a11y.spec.ts` quét axe từng trang; trang mới phải thêm vào đây.
 
+## Coverage
+
+`pnpm test:coverage` (CI chạy thay `pnpm test`) đo `lib/**`, `features/*/search.ts`, `guards.ts`, `permissions.ts` — logic thuần dễ sai và đắt khi hỏng. UI, page, mock không tính vì đã có component test và E2E.
+
+Ngưỡng đặt sát mức đang đạt, nên thêm hàm mới vào các file đó mà không test là CI đỏ ngay. Hạ ngưỡng phải ghi lý do trong PR.
+
 ## Test Đối Chiếu (guard)
 
 Hai test chạy cùng `pnpm test`, không cần viết thêm, chỉ cần biết vì sao đỏ:

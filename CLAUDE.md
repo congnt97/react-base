@@ -4,7 +4,7 @@ Trước khi tạo hoặc sửa bất kỳ thứ gì trong `src/`, đọc [SKILL
 
 ## Bắt buộc
 
-- Cấu trúc feature-first: `features/<x>/{types,api,search}.ts`, `hooks/`, `components/`, `pages/`. Mẫu chuẩn để copy: `src/features/projects`.
+- Cấu trúc feature-first: `features/<x>/{types,api,search}.ts`, `hooks/`, `components/`, `pages/`. Mẫu chuẩn: `src/features/projects`. Feature CRUD mới nên sinh bằng `pnpm gen <tên>` rồi sửa, thay vì viết tay từ đầu.
 - Chiều phụ thuộc `routes → features → components → lib`. ESLint chặn vi phạm; không disable rule để né.
 - Feature không import feature khác (trừ `features/auth`). Code chung đưa xuống `components` hoặc `lib`.
 - Đặt tên theo `docs/skills/naming.md`: file kebab-case, component PascalCase, hook `useX`, hằng UPPER_SNAKE, boolean `is/has/can`, type không prefix `I`, API chỉ `list/detail/create/update/patch/remove`, không default export.
