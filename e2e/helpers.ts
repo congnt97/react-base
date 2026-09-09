@@ -22,6 +22,13 @@ export async function expectNoA11yViolations(
   page: Page,
   disableRules: string[] = [],
 ) {
+  // Chờ animation (modal/dropdown của AntD) xong; quét giữa chừng cho kết quả ngẫu nhiên.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every((animation) => animation.playState === 'finished'),
+  );
+
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .exclude('.TanStackRouterDevtools')
