@@ -133,8 +133,8 @@ const user = useAuthStore((state) => state.user);
 
 ### Bundle Budget
 
-- `yarn size` sau `yarn build` (CI chạy tự động) fail khi vượt ngân sách gzip trong `scripts/check-bundle-size.mjs`: framework, entry, chunk lẻ, CSS, tổng JS.
-- `yarn build:analyze` sinh `dist/stats.html` để soi chunk nào phình.
+- `pnpm size` sau `pnpm build` (CI chạy tự động) fail khi vượt ngân sách gzip trong `scripts/check-bundle-size.mjs`: framework, entry, chunk lẻ, CSS, tổng JS.
+- `pnpm build:analyze` sinh `dist/stats.html` để soi chunk nào phình.
 - Thêm lib lớn (chart, editor) thì lazy load theo route/nhu cầu; nếu vẫn vượt, nâng ngân sách có ghi lý do trong PR, không xoá check.
 
 ### Code Splitting And Assets
@@ -205,21 +205,21 @@ Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. 
 
 ## Code Chết
 
-`knip` chạy trong `yarn validate`: file không ai import, export không ai dùng, dependency không dùng đều làm fail. Xoá thay vì `export` "để sau này dùng"; cần thì thêm lại. Dependency dùng ngầm (qua CSS, plugin) khai báo trong `knip.json` `ignoreDependencies` kèm lý do trong PR.
+`knip` chạy trong `pnpm validate`: file không ai import, export không ai dùng, dependency không dùng đều làm fail. Xoá thay vì `export` "để sau này dùng"; cần thì thêm lại. Dependency dùng ngầm (qua CSS, plugin) khai báo trong `knip.json` `ignoreDependencies` kèm lý do trong PR.
 
 ## Validation Trước Khi Kết Thúc
 
 Bắt buộc chạy:
 
 ```bash
-yarn check:type
-yarn build
+pnpm check:type
+pnpm build
 ```
 
 Nên chạy thêm:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 Nếu có UI thay đổi:

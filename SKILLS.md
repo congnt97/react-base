@@ -36,7 +36,7 @@ Không thêm Next.js, shadcn/ui, MUI, Redux, React Router, thư viện toast kh�
 7. Không `any`, ép kiểu, `!` để né lỗi.
 8. Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`; không nuốt lỗi.
 9. File dưới 400 dòng; mỗi component/hook một việc.
-10. Trước khi kết thúc chạy `yarn validate`, `yarn test`, `yarn build`.
+10. Trước khi kết thúc chạy `pnpm validate`, `pnpm test`, `pnpm build`.
 
 ## Prompt Gợi Ý
 

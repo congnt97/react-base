@@ -11,7 +11,7 @@
 | File                         | Commit | Dùng khi                   |
 | ---------------------------- | ------ | -------------------------- |
 | `.env`                       | có     | mọi mode, production build |
-| `.env.development`           | có     | `yarn dev`                 |
+| `.env.development`           | có     | `pnpm dev`                 |
 | `.env.local`, `.env.*.local` | không  | override riêng máy         |
 
 Env hiện có: `VITE_API_BASE_URL`, `VITE_ENABLE_MOCK_API` (chỉ có tác dụng ở dev).

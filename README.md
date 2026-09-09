@@ -7,17 +7,19 @@ Base frontend cho CMS/admin: React 19 + React Compiler, TypeScript, Vite, Ant De
 ## Chạy
 
 ```bash
-yarn install
-yarn dev          # http://localhost:3001, mock API bật sẵn (MSW)
-yarn validate        # type + lint + format
-yarn test
-yarn test:e2e     # Playwright, lần đầu chạy: npx playwright install chromium
-yarn build
+pnpm install
+pnpm dev          # http://localhost:3001, mock API bật sẵn (MSW)
+pnpm validate        # type + lint + format
+pnpm test
+pnpm test:e2e     # Playwright, lần đầu chạy: npx playwright install chromium
+pnpm build
 ```
 
 Tài khoản mock (mật khẩu `123456`): `admin@example.com` có mọi quyền, `user@example.com` không xoá dự án và không vào Cài đặt.
 
-Node `>=22` LTS (xem `.nvmrc`, `nvm use`). Node 20 đã hết hạn hỗ trợ. Pre-commit chạy lint-staged; CI chạy `validate`, `test`, `build`.
+Node `>=22` LTS (xem `.nvmrc`, `nvm use`) và pnpm qua corepack (`corepack enable`). Pre-commit chạy lint-staged; CI chạy `validate`, `test`, `build`, `size` mỗi PR, còn E2E chỉ khi merge `main` hoặc PR gắn label `e2e`.
+
+`pnpm validate` gồm: typecheck, lint (ESLint + a11y + i18n + naming), format, cấu trúc thư mục, code chết (knip).
 
 ## Cấu Trúc
 
@@ -72,7 +74,7 @@ Validate ở `lib/env.ts`, thiếu là throw lúc khởi động.
 | File                         | Commit | Dùng khi                   |
 | ---------------------------- | ------ | -------------------------- |
 | `.env`                       | có     | mọi mode, production build |
-| `.env.development`           | có     | `yarn dev`                 |
+| `.env.development`           | có     | `pnpm dev`                 |
 | `.env.local`, `.env.*.local` | không  | override riêng máy         |
 
 `VITE_*` luôn public, không đặt secret.

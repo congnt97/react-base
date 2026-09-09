@@ -1,14 +1,16 @@
 # Build
 FROM node:22-alpine AS build
+RUN corepack enable
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --ignore-scripts
+# pnpm-workspace.yaml chứa chính sách supply-chain và allowBuilds, phải có trước khi install.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY . .
 # Env VITE_* được bake lúc build; truyền qua --build-arg khi cần đổi theo môi trường.
 ARG VITE_API_BASE_URL=/api
 ARG VITE_ENABLE_MOCK_API=false
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL VITE_ENABLE_MOCK_API=$VITE_ENABLE_MOCK_API
-RUN yarn build
+RUN pnpm build
 
 # Serve
 FROM nginx:1.27-alpine

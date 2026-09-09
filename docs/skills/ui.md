@@ -249,7 +249,7 @@ Validate frontend chỉ để UX tốt hơn; lỗi trả về từ backend vẫn
 
 Hai lớp kiểm tra tự động, không bỏ qua bằng cách disable rule:
 
-- `eslint-plugin-jsx-a11y` (recommended) chạy trong `yarn validate`: thiếu `alt`, label, role sai, click không có keyboard event.
+- `eslint-plugin-jsx-a11y` (recommended) chạy trong `pnpm validate`: thiếu `alt`, label, role sai, click không có keyboard event.
 - `e2e/a11y.spec.ts` quét axe WCAG 2.1 AA trên mọi trang chính; thêm trang mới thì thêm test. Helper `expectNoA11yViolations(page)`; `disableRules` chỉ khi có lý do ghi trong test.
 
 Ant Design đã xử lý phần lớn a11y (focus trap trong Modal/Drawer, keyboard nav trong Menu/Select). Vẫn cần tự đảm bảo:

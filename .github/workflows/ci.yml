@@ -8,20 +8,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Mỗi PR: nhanh (~1 phút). Bắt lỗi type, lint, format, unit/component test, build, bundle size.
+  # Mỗi PR: nhanh (~1 phút). Bắt lỗi type, lint, format, cấu trúc, code chết,
+  # unit/component test, build, bundle size.
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-      - run: yarn validate
-      - run: yarn test
-      - run: yarn build
-      - run: yarn size
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm validate
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm size
 
   # E2E nặng (cài Chromium, ~3 phút) nên chỉ chạy khi merge vào main, PR gắn label `e2e`,
   # hoặc chạy tay. Luồng chính vẫn được bảo vệ trước khi lên môi trường.
@@ -34,13 +36,14 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'e2e')
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-      - run: npx playwright install --with-deps chromium
-      - run: yarn test:e2e
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

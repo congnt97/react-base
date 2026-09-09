@@ -1,0 +1,9 @@
+# pnpm chặn postinstall của dependency theo mặc định (tránh chạy script lạ lúc cài).
+# Chỉ bật cho cái thực sự cần: msw đồng bộ public/mockServiceWorker.js với version đang dùng.
+allowBuilds:
+  msw: true
+
+# pnpm từ chối package phát hành dưới 24 giờ (chống publish độc hại). Muốn dùng bản
+# vừa ra thì khai báo tường minh ở đây kèm lý do, không tắt cả chính sách.
+minimumReleaseAgeExclude:
+  - knip@6.35.0

@@ -8,4 +8,4 @@ Tóm tắt:
 2. Chiều phụ thuộc `routes → features → components → lib`, ESLint enforce.
 3. File kebab-case, không cross-feature import (trừ `features/auth`).
 4. API qua `features/<x>/api.ts` + TanStack Query, kèm MSW handler.
-5. Kết thúc task bằng `yarn validate && yarn test && yarn build`.
+5. Kết thúc task bằng `pnpm validate && pnpm test && pnpm build`.

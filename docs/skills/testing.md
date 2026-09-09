@@ -24,7 +24,7 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 
 ## E2E (Playwright)
 
-- Test ở `e2e/*.spec.ts`, chạy `yarn test:e2e` (`test:e2e:ui` để debug). Config `playwright.config.ts` tự bật `yarn dev` với MSW nên không cần backend.
+- Test ở `e2e/*.spec.ts`, chạy `pnpm test:e2e` (`test:e2e:ui` để debug). Config `playwright.config.ts` tự bật `pnpm dev` với MSW nên không cần backend.
 - Chỉ E2E luồng quan trọng xuyên nhiều màn: login/logout/redirect, CRUD chính, permission. Không E2E từng nhánh validate (đã có component test).
 - Query theo role/label như component test. AntD: option của `Select` dùng `getByTitle`, modal dùng `getByRole('dialog')`, toast dùng `getByText`.
 - Helper dùng chung (`login`) đặt ở `e2e/helpers.ts`. Data MSW reset mỗi page load nên test độc lập nhau.
@@ -33,7 +33,7 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 
 ## Test Đối Chiếu (guard)
 
-Hai test chạy cùng `yarn test`, không cần viết thêm, chỉ cần biết vì sao đỏ:
+Hai test chạy cùng `pnpm test`, không cần viết thêm, chỉ cần biết vì sao đỏ:
 
 - `src/mocks/handlers.test.ts`: mọi path trong `lib/endpoints.ts` phải có MSW handler.
 - `src/app/i18n.test.ts`: mọi `t('...')` tĩnh trong `src` phải có key trong `locales/en.json`. Key động qua map (`t(PROJECT_STATUS_LABELS[x])`) không quét được, tự thêm.
