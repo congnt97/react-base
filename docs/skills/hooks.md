@@ -33,8 +33,10 @@ useEffect(() => {
 Nên làm — tính thẳng trong render, `useMemo` nếu tốn chi phí:
 
 ```tsx
-const filtered = useMemo(() => items.filter((item) => item.active), [items]);
+const filtered = items.filter((item) => item.active);
 ```
+
+React Compiler đã bật nên không cần `useMemo` cho derived value; xem `quality.md` mục React Re-render.
 
 ### 2. Đồng bộ props/query data sang state bằng effect
 

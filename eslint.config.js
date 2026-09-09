@@ -44,7 +44,17 @@ const crossFeatureRules = featureDirs.map((feature) => ({
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'public', 'src/routeTree.gen.ts'] },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  // Typed lint: bắt quên await, promise rơi vào onClick/JSX, so sánh vô nghĩa.
+  ...tseslint.configs.recommendedTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  { files: ['**/*.js', '**/*.mjs'], ...tseslint.configs.disableTypeChecked },
   ...pluginQuery.configs['flat/recommended'],
   // docs/skills/ui.md: a11y cơ bản bắt ngay lúc code (alt, label, role, key events).
   { ...jsxA11y.flatConfigs.recommended, files: ['src/**/*.tsx'] },
@@ -69,6 +79,26 @@ export default tseslint.config(
 
       // docs/skills/hooks.md
       'react-hooks/exhaustive-deps': 'error',
+      'react-hooks/no-deriving-state-in-effects': 'error',
+      // TanStack Router dùng throw redirect()/notFound() làm control flow trong beforeLoad/loader.
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        {
+          allow: [
+            {
+              from: 'package',
+              package: '@tanstack/router-core',
+              name: ['Redirect', 'NotFoundError'],
+            },
+          ],
+        },
+      ],
+      // Promise không await là lỗi cơ bản hay gặp nhất; muốn bỏ qua có chủ đích thì `void`.
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        { checksVoidReturn: { attributes: false } },
+      ],
 
       // docs/skills/quality.md, security.md
       'no-console': ['warn', { allow: ['warn', 'error'] }],

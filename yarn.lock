@@ -572,6 +572,101 @@
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.148.0.tgz#811d188a2e1af35784461b8a0490e13a3d76837c"
   integrity sha512-Nm4s/jB+4FpFsPhWGEC4h7rzksesmtnMXomo6rCMcg/b8zLQuOziRgkCS1fxDCXOlJB/6Q8oABOZ/OP6RIPj9A==
 
+"@oxc-transform-react/binding-android-arm-eabi@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-android-arm-eabi/-/binding-android-arm-eabi-0.149.0.tgz#d986e4142c8a2ba7768b5a0e204c2a0fe7e9100d"
+  integrity sha512-j9tB2Ug9rZMxBxE57nJJvB0QMXqrAYdPB5653DtAFCbp5WmuOPot2iz9Ctm64oMQchdutYwVoHKfZPC23ZpN+w==
+
+"@oxc-transform-react/binding-android-arm64@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-android-arm64/-/binding-android-arm64-0.149.0.tgz#f732dc7038bd1a0913c0ba926c4a56385a112f20"
+  integrity sha512-GE5jGUca23DbM6jsMccmrkBe7LlbKvO03JznFXMupKN3os2MrwNnT9bm3CxgC5ih0KKnpwdOhP6+gayaf/RsRQ==
+
+"@oxc-transform-react/binding-darwin-arm64@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-darwin-arm64/-/binding-darwin-arm64-0.149.0.tgz#b77a90d7d643e3c6710d14342d832fa35d14552f"
+  integrity sha512-3XWdu3umUjOyDWamugshtYYglZJR/TnP7gjnvGc3vI1ozqRrtS+QLjs73XOKU7KTkfuoBSh0lf0cF+Y8u8aqng==
+
+"@oxc-transform-react/binding-darwin-x64@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-darwin-x64/-/binding-darwin-x64-0.149.0.tgz#413aad122e7f0767cfc527fc51e93de4efa35e9d"
+  integrity sha512-qUcf+jK5c5uvSCH392AOSZKj6fwdYxMC9zwpshIzf0Kpj73RGZciN3E7OG77epVQvh+B/REurBTV+dmywmZwRQ==
+
+"@oxc-transform-react/binding-freebsd-x64@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-freebsd-x64/-/binding-freebsd-x64-0.149.0.tgz#8c6a95db66880e555782ff46ff0b37482a34e9c7"
+  integrity sha512-curcmpjfcjNJd+OcvnBAZGWbY5oWNmOduYMrIpRAt+2Vr85BOk6t++bjn1vIJ+0CIOSd86EPNh5H2uEGfrjUpg==
+
+"@oxc-transform-react/binding-linux-arm-gnueabihf@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.149.0.tgz#6d77a7713dc53e3196b0e292e8a9ba427c0a87f6"
+  integrity sha512-6PsFpEwOLCMLTCH7K9/UaUY9JXimAf3PaVrUKFEKZenBAVByV8Rpk5hK8xFk9+xWA4+a3EckqzgT7VHnTV8POQ==
+
+"@oxc-transform-react/binding-linux-arm-musleabihf@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.149.0.tgz#db28eb5966172c9087dc80193707b23d052d01f5"
+  integrity sha512-Jqnar7VWfwZovsfhJu0cXXOtypQYaEPSrhScNVtAPrWkb8bpuvF2JJ3BebxyvGcXi2MMRMaD9LyyVrBlGfeCFw==
+
+"@oxc-transform-react/binding-linux-arm64-gnu@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.149.0.tgz#2e5f86fdd5f9e662932ecb2b9eccf05c106b2450"
+  integrity sha512-c+pZ8PPe9KpaTvkASe1QK//YxghFVoPTvg/oOQqldBUje04kemIR7ThfvLDfMe36UQ/wm/KYSNmISDJis1DXZQ==
+
+"@oxc-transform-react/binding-linux-arm64-musl@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.149.0.tgz#d615f7a1bd5e9f2a090f132b30c6a300765f5676"
+  integrity sha512-EUxJd2xsFvNvfMGZIgssLXH7AcsRTCo/2BXUZZOUgyPB59KsnxhQ+KRwi9NeX7YhgLMx6fv+ZuYpCyPs6PIw4A==
+
+"@oxc-transform-react/binding-linux-ppc64-gnu@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.149.0.tgz#8ee3fd490066a939b18f6111f678108b234806cf"
+  integrity sha512-+DtOzO4MgQvubmmZRQPpUO6aWffXkrjv3XnenkC9Jf0UMW644o0TRADCfP0Qye+evLv9pEHpiLbI9aH5w6WzpQ==
+
+"@oxc-transform-react/binding-linux-riscv64-gnu@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.149.0.tgz#fe49e8641909019e259657db270e7da9b11f746f"
+  integrity sha512-8s2RVzHkUjDvGM1k9BdVxUvoJUcMQ2yUFH+vJWhb+T/Pwsr0EasHih5YN+zv+Wx/YviiH0gDkqxx2vpInAhQyA==
+
+"@oxc-transform-react/binding-linux-riscv64-musl@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.149.0.tgz#06ed0b050718bb394274d346ff1a5435f326a729"
+  integrity sha512-S/GBmspvYLfxbT6muuyaguA/9msJvZAaZ1fHrAt+moW6msZyokEnJ/3CvOX15gcXbj93+LSSsusReQpbovHZhQ==
+
+"@oxc-transform-react/binding-linux-s390x-gnu@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.149.0.tgz#3e5361b8aae94d8ab01ebcc129d0bda7580e5080"
+  integrity sha512-8U+ZC2sqpXxDptpvqQRtompH1ivacHiEUgtsMva8IugCvxcNmd+A7sDtxlOYfNrKPO8ToUPEuWA9qEzJtm6YAg==
+
+"@oxc-transform-react/binding-linux-x64-gnu@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.149.0.tgz#69aa64d25242b9b9710b609c0323f8bfe3f61ba1"
+  integrity sha512-RLMKO7f7c/lM5Q3Uw8SFyI7eJ7tPqPjo/3C2EgANvtY3/ySiRSoaxC5OozX/1ATvqO5X75r6TjjPx+lPKsJ11A==
+
+"@oxc-transform-react/binding-linux-x64-musl@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-linux-x64-musl/-/binding-linux-x64-musl-0.149.0.tgz#4ac4d922311e5d68d68eca7717728fbecd894959"
+  integrity sha512-F3iGtmHwRZa9OCQ43ccod3tQpfWaPiUGRSCjMV7EJK7qWsGqp8fgMxIUIRip/iEXBodIQ9iq4bA4vszhwohRkA==
+
+"@oxc-transform-react/binding-openharmony-arm64@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-openharmony-arm64/-/binding-openharmony-arm64-0.149.0.tgz#52eab92ab5d68bec87d4cda433a9dd17e0f2c25b"
+  integrity sha512-+DYaxAGwHkKVIf1+zRS3is8ay2ZADfreYRhLLJ7CbvJqmpE4tjJoIIqjcWmZnRIhZK2+u9GDOfV17byr0nitbw==
+
+"@oxc-transform-react/binding-win32-arm64-msvc@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.149.0.tgz#097f98aab055f66cbd930c90d5d4eb76a8b68ebd"
+  integrity sha512-F0x4PSnABQzrqjUBQgh5NOCj0uJnRkgeQoULsVADpS0DdKCO4qNIF8PABjAzmx1hl/6Mg/Cs07s5bvTfiRFOUw==
+
+"@oxc-transform-react/binding-win32-ia32-msvc@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.149.0.tgz#7a4b108beef2088497c4f93f44aceaaf7d612506"
+  integrity sha512-z5Idox/U/jAR5I+uCBgcEK49I0fXsA2+BaQ58xeKl//BDG4tFYnFSBBg24z/PaouDqXJHAi8koimLReFDwoG+A==
+
+"@oxc-transform-react/binding-win32-x64-msvc@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@oxc-transform-react/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.149.0.tgz#62fd740f4ea4cecc650c58f50c587ede95561ebc"
+  integrity sha512-g3v1prVeSrseqsRRU44lL8V64yWBkRxcdrY5j80b5OxUjFv643qXv80n1JcS4iH3RbqQylfJFldginKo8XOsIQ==
+
 "@playwright/test@^1.63.0":
   version "1.63.0"
   resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.63.0.tgz#808020c46e8b6b91f9d628cd0ebcbb32bdfd8b6c"
@@ -1090,99 +1185,6 @@
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz#e3fcee093fbb5ce765e1ad088ff4de2889f6f9be"
   integrity sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==
 
-"@swc/core-darwin-arm64@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-darwin-arm64/-/core-darwin-arm64-1.16.2.tgz#b180d8647923c75e5aabbf4ea6e543d113aa3c79"
-  integrity sha512-i/j0HNbnn79qnTVPicvay92Nark8fW8NQqn1e2mGERjUXNpBV0+SwQxlRpk2zBhn6laJ8PDI6Kn1nHZhnz3LCA==
-
-"@swc/core-darwin-x64@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-darwin-x64/-/core-darwin-x64-1.16.2.tgz#ae8286ddd5a6f1b0f1c540e3338682fed7ceb2ab"
-  integrity sha512-HrwqHyEyHVXO3qTk8EkNK7/b6sOZSEoNh+pot6RdE5x0LbNqfo8LtJUvi3UTXr+5ja/o5HbJdW80eCXo+NjbiA==
-
-"@swc/core-linux-arm-gnueabihf@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm-gnueabihf/-/core-linux-arm-gnueabihf-1.16.2.tgz#9879d6eb91d3663dfcae557cde866642b21b7590"
-  integrity sha512-MdXi83Z/gGp1LIrg+h7HKxiul/z/Bty/ZJSvYAFqDl9zteC1XLSAZdScquKtXPp50rdyXqritTDCqQBhwVfZKA==
-
-"@swc/core-linux-arm64-gnu@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-gnu/-/core-linux-arm64-gnu-1.16.2.tgz#9684df59917e4b0de8f528f04cf7f6e7526ca7b1"
-  integrity sha512-/jcTmK6Ktz3owM3YtiKvjofV6p3VpHnYzTIrOGwDIOsDigRAAVuZ8east33wYO/7UTdKYFlyHNnJNT0WJqOA3Q==
-
-"@swc/core-linux-arm64-musl@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-musl/-/core-linux-arm64-musl-1.16.2.tgz#36b59ed1a46795755e6d083e6693753c5ea1e7d0"
-  integrity sha512-4gFarKaFnlJTSlJYKmMhV4u+3YE4uYfiydpBoYjmgQhCf9lAieOq+WilZaK9vVSHeqLuQpTEiGULZqAdsRX5Dw==
-
-"@swc/core-linux-ppc64-gnu@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-ppc64-gnu/-/core-linux-ppc64-gnu-1.16.2.tgz#b0f648e760031e4674e0d07eb4991dfb468d21ee"
-  integrity sha512-syqSLGd6KlZ1PciNzs6bIUlhOuFztZufebOHaERjc4N4SqNZxyqYd4I+jj/EfOYnpe0kNjccn9HJLN1p5dz3+w==
-
-"@swc/core-linux-s390x-gnu@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-s390x-gnu/-/core-linux-s390x-gnu-1.16.2.tgz#7757e4999f4e236a8bb05bd04367574ce926d4cc"
-  integrity sha512-ZBBLK+ewGyXLzWeMS7wbKtWBdnif6etn7xvPY/iOfbdsjX/+bgkp1pQt2lWF2wlu2hXYZuhJ/tHZE/QR8/apzg==
-
-"@swc/core-linux-x64-gnu@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-gnu/-/core-linux-x64-gnu-1.16.2.tgz#a25271e8199c46e54f1042c9d98fbf38fdb4736c"
-  integrity sha512-LyHJgxCA4Tje0ysBMbEb0tt/ie8kgUKoFE3JAKFhpevmTmhYEoC0H9s47WuDsqiFckF1ITUguZIXJG6K5e0dvg==
-
-"@swc/core-linux-x64-musl@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.16.2.tgz#afc4e5f5e519e4e2ca75a560496fbc6b5164718d"
-  integrity sha512-PghXJlVM1cgtLfNUR1vxFo1z+PDRAe8cWAJlZZ7spmeiN7BospGXg/MHUg7oNSgwSX7Zo//YKv9P5yD9apsFJQ==
-
-"@swc/core-win32-arm64-msvc@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-win32-arm64-msvc/-/core-win32-arm64-msvc-1.16.2.tgz#98b936a9cf2faad87c92c979161f17f22c55b742"
-  integrity sha512-StTOSefYBxemvNYYUI3UmO1a8y+hSPjjfHogC2TEHL+Z1PlEBim/XtLas5rS04jAzT9RrNmbtX911SZ42H9jSQ==
-
-"@swc/core-win32-ia32-msvc@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-win32-ia32-msvc/-/core-win32-ia32-msvc-1.16.2.tgz#2e30f6a8f78b0c79268e6d39f0ae3b378919449c"
-  integrity sha512-fycER209DYIzsibpTMC+chND05OfOjgztWL9U8OE6/uUlsOUZH3eh98isBLEnOymYUhlJLEt5++W1+KL/FOh5Q==
-
-"@swc/core-win32-x64-msvc@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.16.2.tgz#a25e080ed09770e68c1dc5a2a7e973a01dc40b2f"
-  integrity sha512-cSd1z6ivSrJPVr+moVwOHWjeKy6TpO4/Shwcv5KCrKYXCccxwh4pRy1C3fDioNx2PF1jPZWHKZjtXt+Be9VbaQ==
-
-"@swc/core@^1.15.46":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.16.2.tgz#6cc0c7f27938bea7208467a18ab518fa23b78367"
-  integrity sha512-95I4kiSMeveI/Mhi+tE4fiWcWLUMfzfKrk0jtr8LRMqHgOgq+xHS+zExkDqoO4b5OeeuXHMWVdD5MeP3X6sULw==
-  dependencies:
-    "@swc/counter" "^0.1.3"
-    "@swc/types" "^0.1.28"
-  optionalDependencies:
-    "@swc/core-darwin-arm64" "1.16.2"
-    "@swc/core-darwin-x64" "1.16.2"
-    "@swc/core-linux-arm-gnueabihf" "1.16.2"
-    "@swc/core-linux-arm64-gnu" "1.16.2"
-    "@swc/core-linux-arm64-musl" "1.16.2"
-    "@swc/core-linux-ppc64-gnu" "1.16.2"
-    "@swc/core-linux-s390x-gnu" "1.16.2"
-    "@swc/core-linux-x64-gnu" "1.16.2"
-    "@swc/core-linux-x64-musl" "1.16.2"
-    "@swc/core-win32-arm64-msvc" "1.16.2"
-    "@swc/core-win32-ia32-msvc" "1.16.2"
-    "@swc/core-win32-x64-msvc" "1.16.2"
-
-"@swc/counter@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@swc/counter/-/counter-0.1.3.tgz#cc7463bd02949611c6329596fccd2b0ec782b0e9"
-  integrity sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==
-
-"@swc/types@^0.1.28":
-  version "0.1.28"
-  resolved "https://registry.yarnpkg.com/@swc/types/-/types-0.1.28.tgz#e3cd892383fba3b8904c40518bbe1265a50753f2"
-  integrity sha512-V6Mnml8v09QALx6K0elJ7o9K/MkVDtW3t6L+7Ou/JcWtb3xwId2AH4FeOceySd2JaO87IMw4+6vSZxLm34LPbw==
-  dependencies:
-    "@swc/counter" "^0.1.3"
-
 "@tailwindcss/node@4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@tailwindcss/node/-/node-4.3.3.tgz#38ff04309ff036ea3589a7bad9069c44ec9d3883"
@@ -1687,13 +1689,12 @@
     "@typescript-eslint/types" "8.70.0"
     eslint-visitor-keys "^5.0.0"
 
-"@vitejs/plugin-react-swc@^4.3.3":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-4.3.3.tgz#babf99c9a3d49ae4fffbb2d64f4f2c8f54abc9d1"
-  integrity sha512-bti8ZAcvz4Lh6/e4Uk2k3aa1TiUXbbMsahuqOHvd3MveFTkKDZOA6wQVkpj7J/+tepX/wGfe+lsGh/t24HTXMQ==
+"@vitejs/plugin-react@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-6.1.1.tgz#47fa1a2f956e88eaf778ebf65ddce8e2b36597e7"
+  integrity sha512-yxLaQV9gkhS8ezJqCM6+ndU7mDY6gqAg75NQ+0IjwEI8IYOmQCgkRwHKVSfWXW076DsqMo0Dk+0FK1U+M5RgFw==
   dependencies:
     "@rolldown/pluginutils" "^1.0.1"
-    "@swc/core" "^1.15.46"
 
 "@vitest/mocker@5.0.0":
   version "5.0.0"
@@ -3822,6 +3823,31 @@ own-keys@^1.0.1:
     get-intrinsic "^1.2.6"
     object-keys "^1.1.1"
     safe-push-apply "^1.0.0"
+
+oxc-transform-react@^0.149.0:
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/oxc-transform-react/-/oxc-transform-react-0.149.0.tgz#6ef56aa7fb3c21611d5d3e9f9763100702a26a30"
+  integrity sha512-ab3dxcPtkDSfIR9tNdxHUtmpdL0lhHndsBD9IUAU5BxtJtwGG/85NnRzs2f2KwouNkHl7caSswMLQeUvw3FERw==
+  optionalDependencies:
+    "@oxc-transform-react/binding-android-arm-eabi" "0.149.0"
+    "@oxc-transform-react/binding-android-arm64" "0.149.0"
+    "@oxc-transform-react/binding-darwin-arm64" "0.149.0"
+    "@oxc-transform-react/binding-darwin-x64" "0.149.0"
+    "@oxc-transform-react/binding-freebsd-x64" "0.149.0"
+    "@oxc-transform-react/binding-linux-arm-gnueabihf" "0.149.0"
+    "@oxc-transform-react/binding-linux-arm-musleabihf" "0.149.0"
+    "@oxc-transform-react/binding-linux-arm64-gnu" "0.149.0"
+    "@oxc-transform-react/binding-linux-arm64-musl" "0.149.0"
+    "@oxc-transform-react/binding-linux-ppc64-gnu" "0.149.0"
+    "@oxc-transform-react/binding-linux-riscv64-gnu" "0.149.0"
+    "@oxc-transform-react/binding-linux-riscv64-musl" "0.149.0"
+    "@oxc-transform-react/binding-linux-s390x-gnu" "0.149.0"
+    "@oxc-transform-react/binding-linux-x64-gnu" "0.149.0"
+    "@oxc-transform-react/binding-linux-x64-musl" "0.149.0"
+    "@oxc-transform-react/binding-openharmony-arm64" "0.149.0"
+    "@oxc-transform-react/binding-win32-arm64-msvc" "0.149.0"
+    "@oxc-transform-react/binding-win32-ia32-msvc" "0.149.0"
+    "@oxc-transform-react/binding-win32-x64-msvc" "0.149.0"
 
 p-limit@^3.0.2:
   version "3.1.0"

@@ -1,6 +1,6 @@
 # React Base
 
-Base frontend cho CMS/admin: React + TypeScript + Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW.
+Base frontend cho CMS/admin: React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW.
 
 Đọc [SKILLS.md](./SKILLS.md) trước khi tạo hoặc sửa feature. File đó là router rule cho AI và dev.
 

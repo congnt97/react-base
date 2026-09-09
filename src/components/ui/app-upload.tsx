@@ -47,22 +47,27 @@ export function AppUpload({
     return true;
   };
 
-  const customRequest: UploadProps['customRequest'] = async ({
-    file,
-    onSuccess,
-    onError,
-  }) => {
+  const handleUpload = async (
+    options: Parameters<NonNullable<UploadProps['customRequest']>>[0],
+  ) => {
     setUploading(true);
     try {
-      const uploaded = await upload(file as File);
+      const uploaded = await upload(options.file as File);
       onChange?.(uploaded.url);
-      onSuccess?.(uploaded);
+      options.onSuccess?.(uploaded);
     } catch (error) {
       message.error(t(getErrorMessage(error)));
-      onError?.(error instanceof Error ? error : new Error(String(error)));
+      options.onError?.(
+        error instanceof Error ? error : new Error(String(error)),
+      );
     } finally {
       setUploading(false);
     }
+  };
+
+  // AntD mong customRequest trả void; lỗi đã xử lý trong handleUpload.
+  const customRequest: UploadProps['customRequest'] = (options) => {
+    void handleUpload(options);
   };
 
   return (

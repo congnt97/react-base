@@ -88,12 +88,12 @@ Tối ưu performance theo độ đo, không tối ưu sớm vô căn. Nếu tha
 
 ### React Re-render
 
-- Không tạo component mới bên trong component cha.
-- Tách component lớn thành component nhỏ: filter bar, table, summary cards, drawer form, preview panel.
-- Không truyền object/array/function inline xuống child đã memoized nếu không cần.
-- Dùng `useMemo` cho derived data tốn chi phí: sort/filter/map data lớn, table columns phức tạp.
-- Dùng `useCallback` khi callback truyền xuống memoized child hoặc dependency của hook khác.
-- Không dùng `useMemo/useCallback` tràn lan cho logic rẻ, vì làm code rối hơn mà lợi ích thấp.
+React Compiler đã bật (`vite.config.ts`, `babel-plugin-react-compiler`): mọi component và hook được memo tự động ở build time, kể cả dev.
+
+- Không viết `useMemo`/`useCallback`/`memo()` tay nữa; compiler làm tốt hơn và ESLint `react-hooks/preserve-manual-memoization` sẽ báo nếu memo tay sai dependency.
+- Compiler chỉ memo component tuân thủ rule của React. Component bị `react-hooks/*` báo lỗi (mutate trong render, setState trong effect, đọc ref lúc render) sẽ bị bỏ qua, tức mất tối ưu. Sửa lỗi thay vì disable rule.
+- Vẫn phải tự làm: không tạo component bên trong component; tách component lớn (filter, table, form) để re-render cục bộ; Zustand selector hẹp.
+- Nghi ngờ re-render thừa thì dùng React DevTools Profiler đo trước, không đoán.
 
 ### Zustand Re-render
 
