@@ -30,13 +30,7 @@ export function ProjectsFilter({
         defaultValue={keyword}
         placeholder={t('Tìm theo tên dự án')}
         aria-label={t('Tìm theo tên dự án')}
-        onPressEnter={(event) =>
-          onChange({
-            keyword: event.currentTarget.value.trim() || undefined,
-            status,
-          })
-        }
-        onClear={() => onChange({ keyword: undefined, status })}
+        onSearch={(value) => onChange({ keyword: value, status })}
       />
       <Select
         allowClear

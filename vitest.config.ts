@@ -21,6 +21,7 @@ export default defineConfig({
       // parse query param, phân quyền. UI/page/mock đo bằng component test và E2E.
       include: [
         'src/lib/**/*.ts',
+        'src/components/hooks/**/*.ts',
         'src/features/*/search.ts',
         'src/features/*/guards.ts',
         'src/features/*/permissions.ts',

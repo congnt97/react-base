@@ -55,6 +55,17 @@ Ví dụ:
 - Loading/lỗi/404/403: reuse `components/feedback/*` (`PageLoading`, `ErrorState`, `NotFound`, `RouteError`).
 - Danh sách rỗng: `EmptyState` với title, mô tả và nút hành động (khác thông điệp khi rỗng do filter và rỗng thật). Không để "Trống" mặc định của AntD.
 - Ngày, số, tiền, kích thước file: `lib/format.ts` (`formatDate`, `formatDateTime`, `formatRelativeTime`, `formatNumber`, `formatCurrency`, `formatFileSize`). Không gọi `dayjs().format` hay `toLocaleString` trong component.
+- Ô tìm kiếm: `SearchInput` với prop `onSearch`, tự debounce 400ms và vẫn nhận Enter. Không tự viết `onChange` + `useState` cho ô tìm.
+- Bảng cuộn ngang: bọc trong `ScrollHint` để báo còn cột bị che trên màn hẹp.
+
+## Mobile
+
+Base là desktop-first nhưng phải dùng được ở 375px.
+
+- Dưới breakpoint `lg`, `Sidebar` chuyển thành `Drawer` mở bằng nút trong `Header`; chọn menu xong Drawer tự đóng. Thêm màn hình mới thì không được để nó là lối điều hướng duy nhất trên desktop.
+- Trang không được tràn ngang (`document.body.scrollWidth`); bảng cuộn trong khung riêng, không đẩy cả trang.
+- `e2e/mobile.spec.ts` chạy ở 375px, có cả quét axe. Màn hình mới nên thêm vào đó.
+- `AppShell` có skip link tới `#main-content` cho người dùng bàn phím.
 
 ## Common Component Extraction Rules
 

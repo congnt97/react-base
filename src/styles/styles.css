@@ -46,6 +46,31 @@ select {
   font: inherit;
 }
 
+/* Ẩn cho tới khi focus bằng bàn phím; không dùng display:none để screen reader vẫn thấy. */
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1001;
+  transform: translateY(-200%);
+  border-radius: 8px;
+  background: var(--content-bg);
+  padding: 8px 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 15%);
+  transition: transform 0.15s;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Drawer điều hướng trên mobile dùng cùng nền tối với Sider. */
+.app-sidebar-drawer {
+  padding: 0 !important;
+  background: var(--sidebar-bg);
+}
+
 .app-header {
   display: flex;
   height: 64px;
@@ -56,6 +81,17 @@ select {
   background: var(--content-bg);
   padding: 0 24px;
   line-height: normal;
+}
+
+/* Vệt mờ mép phải báo bảng còn cột bị che; không chặn click. */
+.scroll-hint-fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  background: linear-gradient(to right, transparent, var(--content-bg));
+  pointer-events: none;
 }
 
 .app-card {

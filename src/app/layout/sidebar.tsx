@@ -4,7 +4,7 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Layout, Menu } from 'antd';
+import { Drawer, Grid, Layout, Menu } from 'antd';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -43,7 +43,8 @@ const matchNavKey = (pathname: string) =>
     )
     .sort((a, b) => b.length - a.length)[0];
 
-export function Sidebar() {
+/** Dùng chung cho Sider (desktop) và Drawer (mobile). */
+function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -55,20 +56,22 @@ export function Sidebar() {
   ).map((item) => ({
     key: item.key,
     icon: item.icon,
-    label: <Link to={item.key}>{t(item.label)}</Link>,
+    label: (
+      <Link to={item.key} onClick={onNavigate}>
+        {t(item.label)}
+      </Link>
+    ),
   }));
 
   return (
-    // Dưới breakpoint lg thì thu gọn hẳn để nội dung không bị ép.
-    <Sider
-      width={260}
-      breakpoint="lg"
-      collapsedWidth={0}
-      className="overflow-auto"
-    >
+    <>
       <div className="flex h-16 items-center px-6">
         {/* text-white! vì AntD đặt màu link cho mọi <a>; nền sidebar tối cần chữ trắng. */}
-        <Link to="/" className="text-base font-semibold text-white!">
+        <Link
+          to="/"
+          onClick={onNavigate}
+          className="text-base font-semibold text-white!"
+        >
           React Base
         </Link>
       </div>
@@ -79,6 +82,40 @@ export function Sidebar() {
         selectedKeys={[matchNavKey(pathname) ?? '']}
         items={items}
       />
+    </>
+  );
+}
+
+type SidebarProps = {
+  /** Mobile: Drawer do Header điều khiển. Desktop: bỏ qua, dùng Sider cố định. */
+  open: boolean;
+  onClose: () => void;
+};
+
+export function Sidebar({ open, onClose }: SidebarProps) {
+  const { t } = useTranslation();
+  const isDesktop = Grid.useBreakpoint().lg;
+
+  if (!isDesktop) {
+    return (
+      <Drawer
+        open={open}
+        placement="left"
+        // AntD 6 deprecate `width` của Drawer; `size` nhận số px.
+        size={260}
+        closable={false}
+        onClose={onClose}
+        classNames={{ body: 'app-sidebar-drawer' }}
+        aria-label={t('Điều hướng')}
+      >
+        <SidebarContent onNavigate={onClose} />
+      </Drawer>
+    );
+  }
+
+  return (
+    <Sider width={260} className="overflow-auto">
+      <SidebarContent />
     </Sider>
   );
 }

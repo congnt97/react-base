@@ -1,5 +1,5 @@
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { App, Avatar, Button, Dropdown, Select } from 'antd';
+import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { App, Avatar, Button, Dropdown, Grid, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { changeLocale } from '@/app/i18n';
@@ -12,9 +12,10 @@ const LOCALE_LABELS: Record<Locale, string> = {
   en: 'Tiếng Anh',
 };
 
-export function Header() {
+export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
   const { t, i18n } = useTranslation();
   const { modal } = App.useApp();
+  const isDesktop = Grid.useBreakpoint().lg;
   const user = useAuthStore((state) => state.user);
   const logout = useLogout();
 
@@ -36,6 +37,17 @@ export function Header() {
 
   return (
     <header className="app-header">
+      {/* Dưới lg, Sider thu về 0 nên đây là lối vào điều hướng duy nhất. */}
+      {isDesktop ? null : (
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
+          aria-label={t('Mở menu')}
+          onClick={onOpenMenu}
+          className="mr-auto"
+        />
+      )}
+
       <Select<Locale>
         size="small"
         variant="borderless"

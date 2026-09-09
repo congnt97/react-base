@@ -22,7 +22,7 @@ routes -> features -> components -> lib
 app    -> features, components, lib
 ```
 
-- `lib` không import React, AntD, hay bất kỳ tầng trên nào.
+- `lib` không import React, AntD, hay bất kỳ tầng trên nào. Hook React dùng chung đặt ở `components/hooks/` (được dùng React, không biết feature).
 - `components` không import `features`/`app`. Component có logic feature thì đặt trong `features/<x>/components`.
 - `axios` chỉ xuất hiện trong `lib/http.ts`.
 - Feature không import feature khác trừ `features/auth` (store/guards/types là app-level). Nếu hai feature cần chung code, đưa xuống `components` hoặc `lib`. ESLint sinh rule này tự động cho từng folder trong `src/features`.

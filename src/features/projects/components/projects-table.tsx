@@ -8,6 +8,7 @@ import { Button, Space, Table, type TableProps } from 'antd';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ScrollHint } from '@/components/ui/scroll-hint';
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
 import type { Project, ProjectStatus } from '@/features/projects/types';
 import { formatDateTime } from '@/lib/format';
@@ -122,21 +123,23 @@ export function ProjectsTable({
   }
 
   return (
-    <Table<Project>
-      rowKey="id"
-      columns={columns}
-      dataSource={projects}
-      loading={loading}
-      locale={emptyState && !loading ? { emptyText: emptyState } : undefined}
-      scroll={{ x: 720 }}
-      pagination={{
-        current: pagination.page,
-        pageSize: pagination.pageSize,
-        total: pagination.total,
-        showSizeChanger: true,
-        showTotal: (total) => t('{{total}} dự án', { total }),
-        onChange: onPageChange,
-      }}
-    />
+    <ScrollHint>
+      <Table<Project>
+        rowKey="id"
+        columns={columns}
+        dataSource={projects}
+        loading={loading}
+        locale={emptyState && !loading ? { emptyText: emptyState } : undefined}
+        scroll={{ x: 720 }}
+        pagination={{
+          current: pagination.page,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
+          showSizeChanger: true,
+          showTotal: (total) => t('{{total}} dự án', { total }),
+          onChange: onPageChange,
+        }}
+      />
+    </ScrollHint>
   );
 }
