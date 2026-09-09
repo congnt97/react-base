@@ -9,6 +9,8 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // e2e/*.spec.ts là Playwright, không chạy bằng Vitest.
+    include: ['src/**/*.test.{ts,tsx}'],
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,

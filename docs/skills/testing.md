@@ -22,6 +22,14 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 - Mock ở boundary ngoài cùng. Cần mock API trong test thì dùng MSW với `setupServer(...handlers)` từ `mocks/handlers`, không mock module nội bộ.
 - Test edge case: rỗng, `0`/`''`/`false`, lỗi, data hỏng.
 
+## E2E (Playwright)
+
+- Test ở `e2e/*.spec.ts`, chạy `yarn test:e2e` (`test:e2e:ui` để debug). Config `playwright.config.ts` tự bật `yarn dev` với MSW nên không cần backend.
+- Chỉ E2E luồng quan trọng xuyên nhiều màn: login/logout/redirect, CRUD chính, permission. Không E2E từng nhánh validate (đã có component test).
+- Query theo role/label như component test. AntD: option của `Select` dùng `getByTitle`, modal dùng `getByRole('dialog')`, toast dùng `getByText`.
+- Helper dùng chung (`login`) đặt ở `e2e/helpers.ts`. Data MSW reset mỗi page load nên test độc lập nhau.
+- CI chạy E2E ở job riêng sau job check; report upload khi fail.
+
 ## Bắt Buộc Thêm Test Khi
 
 - Thêm/sửa pure function có rẽ nhánh.

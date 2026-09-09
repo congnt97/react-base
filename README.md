@@ -11,6 +11,7 @@ yarn install
 yarn dev          # http://localhost:3001, mock API bật sẵn (MSW)
 yarn validate        # type + lint + format
 yarn test
+yarn test:e2e     # Playwright, lần đầu chạy: npx playwright install chromium
 yarn build
 ```
 
@@ -36,6 +37,7 @@ src/
   routes/         TanStack Router file-based routes, chỉ khai báo route và import page
   styles/         Global CSS + design tokens
   test/           Vitest setup
+e2e/              Playwright E2E (auth, CRUD, permission)
 ```
 
 Quy tắc phụ thuộc (ESLint enforce): `lib` không import gì ở tầng trên; `components` không import `features`/`app`; `axios` chỉ trong `lib/http.ts`.

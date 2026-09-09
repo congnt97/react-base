@@ -18,6 +18,11 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
 # Logs
 *.log
 npm-debug.log*
