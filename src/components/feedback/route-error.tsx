@@ -1,14 +1,16 @@
 import { Link, type ErrorComponentProps } from '@tanstack/react-router';
 import { Button, Result } from 'antd';
 
+import { getErrorMessage } from '@/lib/api-error';
+
 // Dùng làm defaultErrorComponent của router: nhận diện lỗi 403 để hiện đúng trang.
 export function RouteError({ error }: ErrorComponentProps) {
-  if (error.name === 'ForbiddenError') {
+  if (error instanceof Error && error.name === 'ForbiddenError') {
     return (
       <Result
         status="403"
         title="Không có quyền truy cập"
-        subTitle={error.message}
+        subTitle={getErrorMessage(error)}
         extra={
           <Link to="/">
             <Button type="primary">Về dashboard</Button>

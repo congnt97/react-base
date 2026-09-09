@@ -16,7 +16,7 @@ yarn build
 
 Tài khoản mock: `admin@example.com` / `123456`.
 
-Node `>=20` (xem `.nvmrc`). Pre-commit chạy lint-staged; CI chạy `check`, `test`, `build`.
+Node `>=22` LTS (xem `.nvmrc`, `nvm use`). Node 20 đã hết hạn hỗ trợ. Pre-commit chạy lint-staged; CI chạy `check`, `test`, `build`.
 
 ## Cấu Trúc
 

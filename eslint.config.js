@@ -56,7 +56,8 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        // `Route` là export bắt buộc của TanStack Router file route.
+        { allowConstantExport: true, allowExportNames: ['Route'] },
       ],
 
       // docs/skills/typescript.md
