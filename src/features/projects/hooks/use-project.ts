@@ -6,7 +6,7 @@ import { projectKeys } from '@/features/projects/hooks/use-projects';
 export const projectDetailQueryOptions = (id: string) =>
   queryOptions({
     queryKey: projectKeys.detail(id),
-    queryFn: () => projectsApi.detail(id),
+    queryFn: ({ signal }) => projectsApi.detail(id, { signal }),
   });
 
 export function useProject(id: string | undefined) {

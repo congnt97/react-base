@@ -1,12 +1,10 @@
 import { Button, Card, Skeleton, Typography } from 'antd';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { useTranslation } from 'react-i18next';
 
+import { EmptyState } from '@/components/feedback/empty-state';
 import { ErrorState } from '@/components/feedback/error-state';
 import { useActivity } from '@/features/dashboard/hooks/use-activity';
-
-dayjs.extend(relativeTime);
+import { formatRelativeTime } from '@/lib/format';
 
 export function ActivityFeed() {
   const { t } = useTranslation();
@@ -19,6 +17,8 @@ export function ActivityFeed() {
         <ErrorState error={activity.error} onRetry={() => activity.refetch()} />
       ) : activity.isPending ? (
         <Skeleton active paragraph={{ rows: 4 }} />
+      ) : items.length === 0 ? (
+        <EmptyState title={t('Chưa có hoạt động nào')} />
       ) : (
         <ul
           aria-label={t('Hoạt động gần đây')}
@@ -31,7 +31,7 @@ export function ActivityFeed() {
                 {item.message}
               </Typography.Text>
               <Typography.Text type="secondary" className="text-xs">
-                {dayjs(item.createdAt).fromNow()}
+                {formatRelativeTime(item.createdAt)}
               </Typography.Text>
             </li>
           ))}

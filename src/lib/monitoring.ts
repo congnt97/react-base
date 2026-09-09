@@ -34,9 +34,15 @@ export const monitoring = {
     reporter = consoleReporter;
   },
   captureException: (error: unknown, context?: Record<string, unknown>) => {
-    if (shouldReport(error)) {
-      reporter.captureException(error, context);
+    if (!shouldReport(error)) {
+      return;
     }
+    // requestId đi kèm để tra đúng dòng log backend.
+    const requestId = error instanceof ApiError ? error.requestId : undefined;
+    reporter.captureException(
+      error,
+      requestId ? { ...context, requestId } : context,
+    );
   },
   setUser: (user: MonitoringUser) => {
     reporter.setUser(user);

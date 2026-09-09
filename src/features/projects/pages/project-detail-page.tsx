@@ -1,7 +1,6 @@
 import { EditOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
 import { Button, Card, Descriptions } from 'antd';
-import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +13,7 @@ import { ProjectStatusTag } from '@/features/projects/components/project-status-
 import { useProject } from '@/features/projects/hooks/use-project';
 import { useUpdateProject } from '@/features/projects/hooks/use-project-mutations';
 import type { ProjectPayload } from '@/features/projects/types';
+import { formatDateTime } from '@/lib/format';
 
 const route = getRouteApi('/_app/projects/$id');
 
@@ -86,12 +86,12 @@ export function ProjectDetailPage() {
             {
               key: 'createdAt',
               label: t('Ngày tạo'),
-              children: dayjs(data.createdAt).format('DD/MM/YYYY HH:mm'),
+              children: formatDateTime(data.createdAt),
             },
             {
               key: 'updatedAt',
               label: t('Cập nhật'),
-              children: dayjs(data.updatedAt).format('DD/MM/YYYY HH:mm'),
+              children: formatDateTime(data.updatedAt),
             },
           ]}
         />

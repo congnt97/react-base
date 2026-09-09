@@ -40,6 +40,19 @@ describe('monitoring', () => {
     expect(reporter.setUser).toHaveBeenCalledWith({ id: '1', email: 'a@b.c' });
   });
 
+  it('đính kèm requestId của ApiError vào context', () => {
+    const reporter = createReporter();
+    monitoring.use(reporter);
+
+    const error = new ApiError('Server lỗi', 500, 'req-123');
+    monitoring.captureException(error, { queryKey: ['projects'] });
+
+    expect(reporter.captureException).toHaveBeenCalledWith(error, {
+      queryKey: ['projects'],
+      requestId: 'req-123',
+    });
+  });
+
   it('không gọi reporter với lỗi 4xx', () => {
     const reporter = createReporter();
     monitoring.use(reporter);

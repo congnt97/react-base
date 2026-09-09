@@ -28,12 +28,17 @@ declare module '@tanstack/react-router' {
 }
 
 // lib/http.ts gọi notifySessionExpired khi refresh token thất bại.
+// Giữ redirectTo để đăng nhập lại xong quay về đúng màn; reason để login báo lý do.
 subscribeSessionExpired(() => {
   useAuthStore.getState().clearAuth();
   queryClient.clear();
+  const { href } = router.state.location;
   void router.navigate({
     to: '/auth/login',
-    search: { redirectTo: undefined },
+    search: {
+      redirectTo: href.startsWith('/auth') ? undefined : href,
+      reason: 'expired',
+    },
     replace: true,
   });
 });

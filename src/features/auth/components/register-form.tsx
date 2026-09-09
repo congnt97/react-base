@@ -59,7 +59,7 @@ export function RegisterForm() {
         {t('Đã có tài khoản?')}{' '}
         <Link
           to="/auth/login"
-          search={{ redirectTo: undefined }}
+          search={{ redirectTo: undefined, reason: undefined }}
           className="underline!"
         >
           {t('Đăng nhập')}

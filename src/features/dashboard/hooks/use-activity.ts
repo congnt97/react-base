@@ -14,8 +14,8 @@ const dashboardKeys = {
 export function useActivity() {
   return useInfiniteQuery({
     queryKey: dashboardKeys.activity(),
-    queryFn: ({ pageParam }) =>
-      dashboardApi.activity({ cursor: pageParam, limit: 10 }),
+    queryFn: ({ pageParam, signal }) =>
+      dashboardApi.activity({ cursor: pageParam, limit: 10 }, { signal }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });

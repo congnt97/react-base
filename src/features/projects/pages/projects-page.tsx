@@ -4,6 +4,7 @@ import { App, Button, Card } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { EmptyState } from '@/components/feedback/empty-state';
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { Can } from '@/features/auth/components/can';
@@ -69,6 +70,8 @@ export function ProjectsPage() {
   };
 
   const canUpdate = can('projects:update');
+  const hasFilter = Boolean(search.keyword || search.status);
+  const openCreate = () => setForm({ open: true, project: null });
 
   return (
     <>
@@ -79,11 +82,7 @@ export function ProjectsPage() {
         )}
         actions={
           <Can permission="projects:create">
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setForm({ open: true, project: null })}
-            >
+            <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
               {t('Tạo dự án')}
             </Button>
           </Can>
@@ -114,6 +113,29 @@ export function ProjectsPage() {
               }}
               onPageChange={(page, pageSize) =>
                 updateSearch({ page, pageSize })
+              }
+              emptyState={
+                <EmptyState
+                  title={
+                    hasFilter
+                      ? t('Không có dự án khớp bộ lọc')
+                      : t('Chưa có dự án nào')
+                  }
+                  description={
+                    hasFilter
+                      ? t('Thử đổi từ khoá hoặc trạng thái.')
+                      : t('Tạo dự án đầu tiên để bắt đầu.')
+                  }
+                  action={
+                    !hasFilter && can('projects:create')
+                      ? {
+                          label: t('Tạo dự án'),
+                          icon: <PlusOutlined />,
+                          onClick: openCreate,
+                        }
+                      : undefined
+                  }
+                />
               }
               onEdit={
                 canUpdate

@@ -18,7 +18,8 @@ export const projectKeys = {
 const projectsQueryOptions = (params: ProjectListParams) =>
   queryOptions({
     queryKey: projectKeys.list(params),
-    queryFn: () => projectsApi.list(params),
+    // `signal` huỷ request cũ khi user đổi trang/filter nhanh, tránh response lệch.
+    queryFn: ({ signal }) => projectsApi.list(params, { signal }),
     // Giữ data trang cũ khi đổi trang/filter để bảng không nháy trắng.
     placeholderData: keepPreviousData,
   });

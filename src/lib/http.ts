@@ -15,6 +15,8 @@ import { env } from '@/lib/env';
 import { Endpoints } from '@/lib/endpoints';
 import { buildUrl, type QueryParams, type UrlParams } from '@/lib/url';
 
+const REQUEST_ID_HEADER = 'X-Request-Id';
+
 type RetriableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
 };
@@ -28,6 +30,8 @@ type ErrorResponseBody = {
 export type HttpRequestOptions = {
   urlParams?: UrlParams;
   queryParams?: QueryParams;
+  /** Truyền `signal` của TanStack Query vào đây để huỷ request khi query bị bỏ. */
+  signal?: AbortSignal;
   config?: AxiosRequestConfig;
 };
 
@@ -43,6 +47,8 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // Mỗi request một id để đối chiếu log FE (monitoring) với log BE.
+  config.headers[REQUEST_ID_HEADER] = crypto.randomUUID();
 
   return config;
 });
@@ -107,10 +113,12 @@ axiosInstance.interceptors.response.use(
     const message = Array.isArray(body?.message)
       ? body.message.join(', ')
       : body?.message;
+    const requestId = originalRequest?.headers.get(REQUEST_ID_HEADER);
 
     throw new ApiError(
       message ?? error.message,
       body?.statusCode ?? error.response?.status,
+      typeof requestId === 'string' ? requestId : undefined,
     );
   },
 );
@@ -118,11 +126,16 @@ axiosInstance.interceptors.response.use(
 const resolveUrl = (endpoint: string, options?: HttpRequestOptions) =>
   buildUrl(endpoint, options?.urlParams, options?.queryParams);
 
+const resolveConfig = (options?: HttpRequestOptions): AxiosRequestConfig => ({
+  ...options?.config,
+  signal: options?.signal ?? options?.config?.signal,
+});
+
 export const http = {
   async get<TResponse>(endpoint: string, options?: HttpRequestOptions) {
     const response = await axiosInstance.get<TResponse>(
       resolveUrl(endpoint, options),
-      options?.config,
+      resolveConfig(options),
     );
     return response.data;
   },
@@ -135,7 +148,7 @@ export const http = {
     const response = await axiosInstance.post<TResponse>(
       resolveUrl(endpoint, options),
       body,
-      options?.config,
+      resolveConfig(options),
     );
     return response.data;
   },
@@ -148,7 +161,7 @@ export const http = {
     const response = await axiosInstance.put<TResponse>(
       resolveUrl(endpoint, options),
       body,
-      options?.config,
+      resolveConfig(options),
     );
     return response.data;
   },
@@ -161,7 +174,7 @@ export const http = {
     const response = await axiosInstance.patch<TResponse>(
       resolveUrl(endpoint, options),
       body,
-      options?.config,
+      resolveConfig(options),
     );
     return response.data;
   },
@@ -173,7 +186,7 @@ export const http = {
   ) {
     const response = await axiosInstance.delete<TResponse>(
       resolveUrl(endpoint, options),
-      { ...options?.config, data: body },
+      { ...resolveConfig(options), data: body },
     );
     return response.data;
   },

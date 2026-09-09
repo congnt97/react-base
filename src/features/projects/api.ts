@@ -9,12 +9,18 @@ import {
   type PaginatedResponse,
 } from '@/lib/api-response';
 import { Endpoints } from '@/lib/endpoints';
-import { http } from '@/lib/http';
+import { http, type HttpRequestOptions } from '@/lib/http';
+
+type ReadOptions = Pick<HttpRequestOptions, 'signal'>;
 
 // Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
+// Method đọc nhận `signal` để TanStack Query huỷ request cũ khi đổi trang/filter.
 export interface ProjectsApi {
-  list: (params: ProjectListParams) => Promise<PaginatedResponse<Project>>;
-  detail: (id: string) => Promise<Project>;
+  list: (
+    params: ProjectListParams,
+    options?: ReadOptions,
+  ) => Promise<PaginatedResponse<Project>>;
+  detail: (id: string, options?: ReadOptions) => Promise<Project>;
   create: (body: ProjectPayload) => Promise<Project>;
   update: (id: string, body: ProjectPayload) => Promise<Project>;
   patch: (id: string, body: Partial<ProjectPayload>) => Promise<Project>;
@@ -22,18 +28,19 @@ export interface ProjectsApi {
 }
 
 export const projectsApi: ProjectsApi = {
-  list: async (params) =>
+  list: async (params, options) =>
     unwrapResponse(
       await http.get<ApiResponse<PaginatedResponse<Project>>>(
         Endpoints.Projects.LIST,
-        { queryParams: params },
+        { queryParams: params, signal: options?.signal },
       ),
     ),
 
-  detail: async (id) =>
+  detail: async (id, options) =>
     unwrapResponse(
       await http.get<ApiResponse<Project>>(Endpoints.Projects.DETAIL, {
         urlParams: { id },
+        signal: options?.signal,
       }),
     ),
 

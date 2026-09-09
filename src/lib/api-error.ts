@@ -1,10 +1,13 @@
 export class ApiError extends Error {
   readonly statusCode?: number;
+  /** X-Request-Id gửi kèm request, dùng tra log backend khi báo lỗi. */
+  readonly requestId?: string;
 
-  constructor(message: string, statusCode?: number) {
+  constructor(message: string, statusCode?: number, requestId?: string) {
     super(message);
     this.name = 'ApiError';
     this.statusCode = statusCode;
+    this.requestId = requestId;
   }
 }
 

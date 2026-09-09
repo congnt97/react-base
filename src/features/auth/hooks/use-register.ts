@@ -15,7 +15,10 @@ export function useRegister() {
     mutationFn: authApi.register,
     onSuccess: () => {
       message.success(t('Đăng ký thành công'));
-      void navigate({ to: '/auth/login', search: { redirectTo: undefined } });
+      void navigate({
+        to: '/auth/login',
+        search: { redirectTo: undefined, reason: undefined },
+      });
     },
     onError: (error) => {
       message.error(t(getErrorMessage(error)));

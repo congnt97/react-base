@@ -51,6 +51,8 @@ Ví dụ:
 - Button: dùng Ant Design `Button` trực tiếp; chỉ tạo common button khi có variant/behavior chung.
 - Page header: reuse `components/layout/page-header.tsx`.
 - Loading/lỗi/404/403: reuse `components/feedback/*` (`PageLoading`, `ErrorState`, `NotFound`, `RouteError`).
+- Danh sách rỗng: `EmptyState` với title, mô tả và nút hành động (khác thông điệp khi rỗng do filter và rỗng thật). Không để "Trống" mặc định của AntD.
+- Ngày, số, tiền, kích thước file: `lib/format.ts` (`formatDate`, `formatDateTime`, `formatRelativeTime`, `formatNumber`, `formatCurrency`, `formatFileSize`). Không gọi `dayjs().format` hay `toLocaleString` trong component.
 
 ## Common Component Extraction Rules
 

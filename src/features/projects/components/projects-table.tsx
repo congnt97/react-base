@@ -5,17 +5,20 @@ import {
 } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
 import { Button, Space, Table, type TableProps } from 'antd';
-import dayjs from 'dayjs';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
 import type { Project, ProjectStatus } from '@/features/projects/types';
+import { formatDateTime } from '@/lib/format';
 
 type ProjectsTableProps = {
   projects: Project[];
   loading: boolean;
   pagination: { page: number; pageSize: number; total: number };
   onPageChange: (page: number, pageSize: number) => void;
+  /** Hiện khi không có dòng nào và không loading. */
+  emptyState?: ReactNode;
   // undefined = không có quyền, ẩn control tương ứng.
   onEdit?: (project: Project) => void;
   onDelete?: (project: Project) => void;
@@ -27,6 +30,7 @@ export function ProjectsTable({
   loading,
   pagination,
   onPageChange,
+  emptyState,
   onEdit,
   onDelete,
   onStatusChange,
@@ -81,7 +85,7 @@ export function ProjectsTable({
       title: t('Cập nhật'),
       dataIndex: 'updatedAt',
       width: 160,
-      render: (value: string) => dayjs(value).format('DD/MM/YYYY HH:mm'),
+      render: (value: string) => formatDateTime(value),
     },
   ];
 
@@ -123,6 +127,7 @@ export function ProjectsTable({
       columns={columns}
       dataSource={projects}
       loading={loading}
+      locale={emptyState && !loading ? { emptyText: emptyState } : undefined}
       scroll={{ x: 720 }}
       pagination={{
         current: pagination.page,

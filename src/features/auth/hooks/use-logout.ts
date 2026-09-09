@@ -17,7 +17,7 @@ export function useLogout() {
       queryClient.clear();
       void navigate({
         to: '/auth/login',
-        search: { redirectTo: undefined },
+        search: { redirectTo: undefined, reason: undefined },
         replace: true,
       });
     },
