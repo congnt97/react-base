@@ -57,7 +57,8 @@ export const projectKeys = {
     [...projectKeys.all, 'list', params] as const,
 };
 
-export const projectsQueryOptions = (params: ProjectListParams) =>
+// `export` chỉ khi route loader dùng (như projectDetailQueryOptions); không thì để nội bộ, knip sẽ báo export thừa.
+const projectsQueryOptions = (params: ProjectListParams) =>
   queryOptions({
     queryKey: projectKeys.list(params),
     queryFn: () => projectsApi.list(params),

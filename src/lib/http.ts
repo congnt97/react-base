@@ -33,7 +33,7 @@ export type HttpRequestOptions = {
 
 let refreshTokenRequest: Promise<AuthTokens | null> | null = null;
 
-export const axiosInstance = axios.create({
+const axiosInstance = axios.create({
   baseURL: env.VITE_API_BASE_URL,
   timeout: 30_000,
 });

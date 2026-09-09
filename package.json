@@ -21,6 +21,7 @@
     "check:type": "tsc --noEmit",
     "check:format": "prettier --check .",
     "check:structure": "node scripts/check-structure.mjs",
+    "check:unused": "knip",
     "validate": "run-p check:*",
     "fix:lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "fix:format": "prettier --write .",

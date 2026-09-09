@@ -1,18 +1,15 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 
 import { authApi } from '@/features/auth/api';
 
-export const authKeys = {
+const authKeys = {
   me: ['auth', 'me'] as const,
 };
 
+// Dùng trong beforeLoad của routes/_app/route.tsx; user sau đó nằm trong auth store.
 export const meQueryOptions = () =>
   queryOptions({
     queryKey: authKeys.me,
     queryFn: authApi.me,
     retry: false,
   });
-
-export function useMe({ enabled = true }: { enabled?: boolean } = {}) {
-  return useQuery({ ...meQueryOptions(), enabled });
-}

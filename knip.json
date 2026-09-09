@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["src/routes/**/*.tsx", "e2e/**/*.ts", "scripts/*.mjs"],
+  "project": ["src/**/*.{ts,tsx}", "e2e/**/*.ts", "scripts/**/*.mjs"],
+  "ignoreDependencies": ["tailwindcss", "@fontsource/inter"]
+}

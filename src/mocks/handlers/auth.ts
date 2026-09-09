@@ -13,7 +13,7 @@ type MockAccount = {
 
 // Hai tài khoản để thấy khác biệt permission: admin có tất cả, user không xoá
 // dự án và không vào Cài đặt.
-export const mockAccounts: MockAccount[] = [
+const mockAccounts: MockAccount[] = [
   {
     user: {
       id: 'mock-admin',

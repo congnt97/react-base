@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { dashboardApi } from '@/features/dashboard/api';
 
-export const dashboardKeys = {
+const dashboardKeys = {
   all: ['dashboard'] as const,
   activity: () => [...dashboardKeys.all, 'activity'] as const,
 };

@@ -203,6 +203,10 @@ Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. 
 - `lib/analytics.ts`: `analytics.track(event, props)`; page view tự gửi sau mỗi navigation trong `app/router.ts`.
 - Cắm SDK thật (Sentry, PostHog...) chỉ ở `app/monitoring.ts` qua `monitoring.use()`/`analytics.use()`. Không import SDK rải rác trong feature.
 
+## Code Chết
+
+`knip` chạy trong `yarn validate`: file không ai import, export không ai dùng, dependency không dùng đều làm fail. Xoá thay vì `export` "để sau này dùng"; cần thì thêm lại. Dependency dùng ngầm (qua CSS, plugin) khai báo trong `knip.json` `ignoreDependencies` kèm lý do trong PR.
+
 ## Validation Trước Khi Kết Thúc
 
 Bắt buộc chạy:

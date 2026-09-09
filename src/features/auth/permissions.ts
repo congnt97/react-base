@@ -1,7 +1,7 @@
 import { Role, type AuthUser } from '@/features/auth/types';
 
 // Permission theo hành động trên resource: `<resource>:<action>`.
-export const PERMISSIONS = [
+const PERMISSIONS = [
   'projects:read',
   'projects:create',
   'projects:update',
@@ -12,7 +12,7 @@ export const PERMISSIONS = [
 export type Permission = (typeof PERMISSIONS)[number];
 
 // Frontend chỉ dùng để ẩn/hiện UI và guard route; backend vẫn phải enforce.
-export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
+const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
   [Role.ADMIN]: PERMISSIONS,
   [Role.USER]: ['projects:read', 'projects:create', 'projects:update'],
 };

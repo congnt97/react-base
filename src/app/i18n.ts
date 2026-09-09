@@ -33,5 +33,3 @@ export const changeLocale = async (locale: Locale) => {
   dayjs.locale(locale);
   await i18n.changeLanguage(locale);
 };
-
-export { i18n };

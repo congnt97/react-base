@@ -15,7 +15,7 @@ export const projectKeys = {
   detail: (id: string) => [...projectKeys.all, 'detail', id] as const,
 };
 
-export const projectsQueryOptions = (params: ProjectListParams) =>
+const projectsQueryOptions = (params: ProjectListParams) =>
   queryOptions({
     queryKey: projectKeys.list(params),
     queryFn: () => projectsApi.list(params),

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { Breadcrumb } from 'antd';
 import type { ReactNode } from 'react';
 
-export type BreadcrumbItem = {
+type BreadcrumbItem = {
   label: string;
   /** Có `to` thì là link, không thì là mục hiện tại. */
   to?: string;
