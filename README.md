@@ -40,9 +40,9 @@ src/
 
 ## Auth Và Mock Login
 
-Auth token không lưu làm source of truth trong Zustand. Token nằm ở `src/shared/auth-storage.ts`; Zustand chỉ giữ UI state như `user`, `isAuthenticated`, `isLoading`.
+Auth token không lưu làm source of truth trong Zustand. Token nằm ở `src/shared/auth-storage.ts`; Zustand chỉ giữ UI state `user`, `isAuthenticated`. Route guard (`_app/route.tsx`, `auth/route.tsx`) đọc thẳng `useAuthStore.getState()` để luôn thấy giá trị mới nhất ngay sau login/logout.
 
-Mock auth mặc định tắt trong `.env` để tránh nhầm khi build production:
+Mock auth mặc định tắt trong `.env` (file này được commit vì chỉ chứa public config) để tránh nhầm khi build production:
 
 ```env
 VITE_ENABLE_MOCK_AUTH=false
@@ -101,7 +101,15 @@ VITE_API_BASE_URL=/api
 VITE_ENABLE_MOCK_AUTH=false
 ```
 
-Không đọc `import.meta.env` rải rác trong feature/component. Thêm env mới thì khai báo required trong `src/env.ts` và cập nhật `.env.example`. Giá trị riêng cho dev local đặt trong `.env.development`.
+Không đọc `import.meta.env` rải rác trong feature/component. Thêm env mới thì khai báo required trong `src/env.ts` và cập nhật cả `.env`, `.env.development`, `.env.example`. Env thiếu sẽ throw ngay lúc khởi động (fail fast).
+
+File env và cách load của Vite:
+
+- `.env`: giá trị mặc định cho mọi mode, được commit (production build dùng file này).
+- `.env.development`: override khi `yarn dev`, được commit.
+- `.env.local`, `.env.*.local`: override riêng máy, không commit. Secret thật không được đặt trong bất kỳ `VITE_*` nào vì đều bị bundle ra client.
+
+Lỗi API được chuẩn hoá thành `ApiError` (`src/application/exceptions/ApiError.ts`) ở `HttpClient` và `unwrapResponse`; presentation lấy message an toàn qua `getFormattedErrorMessage`.
 
 ## Thêm Feature Mới
 
@@ -117,8 +125,8 @@ Không đọc `import.meta.env` rải rác trong feature/component. Thêm env m�
 ```bash
 yarn install
 yarn dev
-yarn check:type
-yarn check:lint
+yarn check        # chạy song song check:type, check:lint, check:format
+yarn fix          # fix:lint + fix:format
 yarn test
 yarn build
 ```

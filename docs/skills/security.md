@@ -14,7 +14,7 @@ Backend must enforce auth, permission, file validation, and data access.
 - Không log token, refresh token, password, API key, full auth response.
 - Không lưu token làm source of truth trong Zustand.
 - Token source of truth là `src/shared/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
-- Zustand chỉ giữ UI auth state: `user`, `isAuthenticated`, `isLoading`.
+- Zustand chỉ giữ UI auth state: `user`, `isAuthenticated`.
 - HttpClient đọc token từ storage/cookie, component không đọc token trực tiếp.
 - Logout phải clear auth storage, Zustand, và query cache liên quan.
 - Protected route phải nằm dưới `src/routes/_app`.

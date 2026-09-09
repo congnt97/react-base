@@ -9,8 +9,11 @@
 - Storage: `src/shared/auth-storage.ts`.
 - Public routes: `src/routes/auth/*`.
 - Protected routes: `src/routes/_app/*`.
-- Guard + hydrate user: `src/routes/_app/route.tsx` (`beforeLoad` gọi `/me` qua `context.repositories`, hydrate user vào Zustand).
+- Guard + hydrate user: `src/routes/_app/route.tsx` (`beforeLoad` đọc `useAuthStore.getState()`, gọi `/me` qua `context.repositories`, hydrate user vào Zustand).
+- Guard ngược cho trang public: `src/routes/auth/route.tsx` (đã đăng nhập thì về `/`).
 - Role guard helper: `src/shared/route-guards.ts` (`hasRole`).
+
+Guard đọc store qua `useAuthStore.getState()` thay vì router context. Lý do: `beforeLoad` chạy đồng bộ ngay khi `navigate()` được gọi trong `onSuccess`/`onSettled`, trước khi React re-render; nếu đọc từ context sẽ thấy giá trị cũ và redirect sai (login xong bị đẩy lại login, logout bị bounce qua `/`).
 
 ## Auth Token Rules
 
@@ -19,7 +22,7 @@ Auth token không được lưu làm source of truth trong Zustand.
 Source of truth:
 
 - Token: `src/shared/auth-storage.ts` hoặc httpOnly cookie nếu backend hỗ trợ.
-- Zustand: chỉ giữ UI auth state như `user`, `isAuthenticated`, `isLoading`, và actions `setAuthenticated`, `clearAuth`.
+- Zustand: chỉ giữ UI auth state `user`, `isAuthenticated`, và actions `setAuthenticated`, `clearAuth`.
 - HttpClient: đọc token từ `auth-storage` hoặc gửi cookie credential, không đọc token từ component.
 - Hydrate user: `_app/route.tsx` `beforeLoad` validate token qua `/me` và hydrate user vào Zustand; session hết hạn giữa phiên do listener trong `main.tsx` xử lý.
 - Logout: clear cả `auth-storage` và Zustand; clear query client nếu cần.
@@ -35,7 +38,7 @@ Nếu backend support httpOnly cookie:
 
 - Frontend không đọc access token trực tiếp.
 - HttpClient gửi request với credential config.
-- Zustand vẫn chỉ giữ `user/isAuthenticated/isLoading`.
+- Zustand vẫn chỉ giữ `user/isAuthenticated`.
 
 ## Route Rules
 

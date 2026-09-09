@@ -176,6 +176,12 @@ Nên làm:
 throw new Error('Không tìm thấy user');
 ```
 
+Lỗi thuộc tầng API/repository/mock dùng `ApiError` để có `statusCode`:
+
+```ts
+throw new ApiError('Phiên đăng nhập không hợp lệ', 401);
+```
+
 ### Không hiện raw error kỹ thuật lên UI
 
 Không hiện thẳng message backend chứa stack trace, SQL, tên field nội bộ. Dùng `getFormattedErrorMessage`/message an toàn theo `docs/skills/api.md`.

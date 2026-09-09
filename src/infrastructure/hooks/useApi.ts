@@ -6,9 +6,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import type { FormattedError } from '@/application/dto/response/ErrorResponse';
-
-export type ApiError = FormattedError;
+import type { ApiError } from '@/application/exceptions/ApiError';
 
 export type ApiQueryOptions<TResponse> = Omit<
   UseQueryOptions<TResponse, ApiError>,

@@ -1,4 +1,4 @@
-# AI Video Factory CMS Skill Router
+# React Base Skill Router
 
 Bắt buộc đọc file này trước khi làm bất kỳ feature, page, API flow, UI component, auth/route, store, repository, env/config, hoặc refactor nào trong `src/`.
 

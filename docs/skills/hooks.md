@@ -33,10 +33,7 @@ useEffect(() => {
 Nên làm — tính thẳng trong render, `useMemo` nếu tốn chi phí:
 
 ```tsx
-const filtered = useMemo(
-  () => items.filter((item) => item.active),
-  [items],
-);
+const filtered = useMemo(() => items.filter((item) => item.active), [items]);
 ```
 
 ### 2. Đồng bộ props/query data sang state bằng effect
@@ -74,7 +71,7 @@ useEffect(() => {
 Nên làm — gọi thẳng trong handler:
 
 ```tsx
-<Button onClick={() => submit()} />;
+<Button onClick={() => submit()} />
 ```
 
 ### 4. Fetch API bằng `useEffect` + axios

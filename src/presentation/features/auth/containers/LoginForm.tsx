@@ -33,12 +33,7 @@ export function LoginForm() {
         <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" />
       </Form.Item>
 
-      <Button
-        block
-        type="primary"
-        htmlType="submit"
-        loading={login.isPending}
-      >
+      <Button block type="primary" htmlType="submit" loading={login.isPending}>
         Đăng nhập
       </Button>
 

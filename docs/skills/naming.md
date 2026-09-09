@@ -33,12 +33,11 @@ Dùng camelCase cho hook/store bắt đầu bằng `use`:
 
 Dùng kebab-case/lowercase cho page/layout/route style hiện tại:
 
-- `overview-page.tsx`
-- `presets-page.tsx`
+- `dashboard-page.tsx`
+- `login-page.tsx`
 - `auth-layout.tsx`
 - `app-shell.tsx`
-- `render-queue.tsx`
-- `batch-studio.tsx`
+- `general-error.tsx`
 
 Không trộn naming trong cùng một nhóm file.
 

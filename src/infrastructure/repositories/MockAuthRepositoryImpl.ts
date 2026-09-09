@@ -1,3 +1,4 @@
+import { ApiError } from '@/application/exceptions/ApiError';
 import type { AuthRepository } from '@/application/repositories/AuthRepository';
 import type {
   AuthMessageResponse,
@@ -28,10 +29,7 @@ export const MockAuthRepositoryImpl = (): AuthRepository => ({
       payload.email !== mockAuthCredentials.email ||
       payload.password !== mockAuthCredentials.password
     ) {
-      return Promise.reject({
-        message: 'Email hoặc mật khẩu không đúng',
-        statusCode: 401,
-      });
+      throw new ApiError('Email hoặc mật khẩu không đúng', 401);
     }
 
     return mockLoginResponse;
@@ -58,10 +56,7 @@ export const MockAuthRepositoryImpl = (): AuthRepository => ({
     await delay(100);
 
     if (getStoredAccessToken() !== mockAuthTokens.accessToken) {
-      return Promise.reject({
-        message: 'Phiên đăng nhập không hợp lệ',
-        statusCode: 401,
-      });
+      throw new ApiError('Phiên đăng nhập không hợp lệ', 401);
     }
 
     return mockAuthUser;

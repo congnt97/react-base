@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
@@ -24,10 +23,6 @@ const router = createRouter({
   routeTree,
   context: {
     ...queryContext,
-    // Router yêu cầu context đủ shape lúc khởi tạo; giá trị auth thật được
-    // truyền vào ngay dưới qua RouterProvider trước khi bất kỳ route nào render.
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    auth: undefined!,
     repositories,
   },
   defaultPreload: 'intent',
@@ -51,21 +46,6 @@ subscribeSessionExpired(() => {
   });
 });
 
-function InnerApp() {
-  const auth = useAuthStore();
-
-  return (
-    <RouterProvider
-      router={router}
-      context={{
-        ...queryContext,
-        auth,
-        repositories,
-      }}
-    />
-  );
-}
-
 const rootElement = document.getElementById('app');
 
 if (rootElement && !rootElement.innerHTML) {
@@ -75,7 +55,7 @@ if (rootElement && !rootElement.innerHTML) {
         <AntdApp>
           <RepositoriesProvider container={repositories}>
             <QueryProvider queryClient={queryContext.queryClient}>
-              <InnerApp />
+              <RouterProvider router={router} />
             </QueryProvider>
           </RepositoriesProvider>
         </AntdApp>

@@ -26,17 +26,17 @@
 
 - Chứa contract và rule ứng dụng.
 - `repositories`: interface repository, không implement API.
-- `dto`: response/request DTO dùng chung.
-- `exceptions`: exception class.
-- `services`: service interface.
+- `dto`: response/request DTO dùng chung (`ResponseCommon`, `unwrapResponse`, `getFormattedErrorMessage`).
+- `exceptions`: exception class (`ApiError`). Lỗi API/mock phải throw `ApiError`, không throw plain object.
+- `services`: service interface, tạo khi có use case cần.
 
 ### `src/infrastructure`
 
 - Chứa implementation kết nối bên ngoài.
-- `http/HttpClient.ts`: axios instance, interceptor, base URL, token.
-- `hooks/useApi.ts`: hook API dùng TanStack Query.
-- `repositories/*Impl.ts`: implement repository bằng API hooks.
-- `services/*Impl.ts`: implement service.
+- `http/HttpClient.ts`: axios instance, interceptor, base URL, token, chuẩn hoá lỗi thành `ApiError`.
+- `hooks/useApi.ts`: `useApiQuery`/`useApiMutation` wrap TanStack Query với error type `ApiError`.
+- `repositories/*Impl.ts`: implement repository bằng `httpClient`; `Mock*Impl.ts` cho dev-only.
+- `services/*Impl.ts`: implement service, tạo khi có use case cần.
 - Không gọi axios trực tiếp trong component/container/page.
 
 ### `src/presentation`
@@ -48,8 +48,7 @@
 - `hooks/<feature>`: hook presentation dùng repository/query/mutation.
 - `layouts`: layout của app/auth/dashboard.
 - `stores`: Zustand store.
-- `provider`: root providers/theme/query.
-- `pages`: page đặc biệt dạng route-level hiện có.
+- `provider`: root providers/theme/query/devtools.
 - Presentation gọi hook, hook gọi repository.
 
 ### `src/routes`
@@ -93,7 +92,7 @@ Nếu state không cần dùng ở page/component khác, không đưa vào Zusta
 
 Dùng Zustand cho shared client state, app-level state, hoặc module-level state cần nhiều component/page cùng đọc/ghi:
 
-- Auth UI state: `user`, `isAuthenticated`, `isLoading`.
+- Auth UI state: `user`, `isAuthenticated`.
 - Sidebar collapsed/layout setting.
 - Selected workspace/project đang active toàn app.
 - Queue panel/editor state phức tạp chia nhiều component.

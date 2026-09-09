@@ -5,7 +5,9 @@ import { Layout, Menu } from 'antd';
 const { Sider } = Layout;
 
 export function Sidebar() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
 
   return (
     <Sider className="app-sidebar" width={260}>

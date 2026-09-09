@@ -1,4 +1,4 @@
-import type { FormattedError } from '@/application/dto/response/ErrorResponse';
+import { ApiError } from '@/application/exceptions/ApiError';
 
 export type ResponseCommon<T = unknown> = {
   success?: boolean;
@@ -11,9 +11,7 @@ export const unwrapResponse = <T>(response: ResponseCommon<T>): T => {
   const value = response.data ?? response.result;
 
   if (value === undefined) {
-    throw {
-      message: response.message ?? 'Phản hồi không hợp lệ từ máy chủ',
-    } satisfies FormattedError;
+    throw new ApiError(response.message ?? 'Phản hồi không hợp lệ từ máy chủ');
   }
 
   return value;

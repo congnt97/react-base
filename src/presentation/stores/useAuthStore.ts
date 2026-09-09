@@ -11,7 +11,6 @@ import {
 export type AuthState = {
   user: AuthUser | null;
   isAuthenticated: boolean;
-  isLoading: boolean;
   setAuthenticated: (user?: AuthUser | null, tokens?: AuthTokenPayload) => void;
   clearAuth: () => void;
 };
@@ -19,23 +18,22 @@ export type AuthState = {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: hasStoredAccessToken(),
-  isLoading: hasStoredAccessToken(),
   setAuthenticated: (user = null, tokens) => {
     if (tokens) {
       persistAuthTokens(tokens);
     }
     set((state) =>
-      state.user === user && state.isAuthenticated && !state.isLoading
+      state.user === user && state.isAuthenticated
         ? state
-        : { user, isAuthenticated: true, isLoading: false },
+        : { user, isAuthenticated: true },
     );
   },
   clearAuth: () => {
     clearAuthStorage();
     set((state) =>
-      !state.user && !state.isAuthenticated && !state.isLoading
+      !state.user && !state.isAuthenticated
         ? state
-        : { user: null, isAuthenticated: false, isLoading: false },
+        : { user: null, isAuthenticated: false },
     );
   },
 }));

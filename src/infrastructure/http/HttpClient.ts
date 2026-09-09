@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-import type { FormattedError } from '@/application/dto/response/ErrorResponse';
 import type { ResponseCommon } from '@/application/dto/response/ResponseCommon';
+import { ApiError } from '@/application/exceptions/ApiError';
 import type { LoginResponse } from '@/domain/models/Auth';
 import {
   clearAuthStorage,
@@ -17,6 +17,12 @@ import { buildUrl } from '@/shared/url';
 
 type RetriableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
+};
+
+type ErrorResponseBody = {
+  error?: string;
+  statusCode?: number;
+  message?: string | string[];
 };
 
 let refreshTokenRequest: Promise<LoginResponse | null> | null = null;
@@ -73,8 +79,10 @@ const refreshAuthTokens = (refreshToken: string) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
-    if (axios.isAxiosError(error)) {
-      const originalRequest = error.config as RetriableRequestConfig | undefined;
+    if (axios.isAxiosError<ErrorResponseBody>(error)) {
+      const originalRequest = error.config as
+        | RetriableRequestConfig
+        | undefined;
       const refreshToken = getStoredRefreshToken();
 
       if (
@@ -94,24 +102,18 @@ axiosInstance.interceptors.response.use(
         }
       }
 
-      const responseData = error.response?.data as
-        | Partial<FormattedError> & {
-            error?: string;
-            statusCode?: number;
-            message?: string | string[];
-          }
-        | undefined;
+      const responseData = error.response?.data;
       const message = Array.isArray(responseData?.message)
         ? responseData.message.join(', ')
         : responseData?.message;
 
-      return Promise.reject({
-        message: message ?? error.message,
-        statusCode: responseData?.statusCode ?? error.response?.status,
-      } satisfies FormattedError);
+      throw new ApiError(
+        message ?? error.message,
+        responseData?.statusCode ?? error.response?.status,
+      );
     }
 
-    return Promise.reject(error);
+    throw error;
   },
 );
 

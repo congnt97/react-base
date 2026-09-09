@@ -5,11 +5,9 @@ import { lazy, Suspense } from 'react';
 import type { RepositoryContainer } from '@/di/RepositoriesProvider';
 import { GeneralError } from '@/presentation/features/errors/general-error';
 import { NotFoundError } from '@/presentation/features/errors/not-found-error';
-import type { AuthState } from '@/presentation/stores/useAuthStore';
 
 interface RouterContext {
   queryClient: QueryClient;
-  auth: AuthState;
   repositories: RepositoryContainer;
 }
 

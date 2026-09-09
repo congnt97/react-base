@@ -39,7 +39,7 @@ presentation/features/projects/containers/ProjectsContainer.tsx
 
 ## Repository Impl
 
-- Dùng `useGetApi`, `usePostApi`, `usePutApi`, `usePatchApi`, `useDeleteApi` nếu dự án có các helper này; nếu không, dùng `httpClient`/`useApiQuery`/`useApiMutation` theo base hiện tại.
+- Repository impl gọi `httpClient.get/post/put/patch/delete` với generic `ResponseCommon<T>` rồi `unwrapResponse` (xem `AuthRepositoryImpl.ts`). Presentation hook dùng `useApiQuery`/`useApiMutation`.
 - Endpoint lấy từ `src/shared/endpoints.ts`.
 - Return type phải có generic rõ ràng.
 - Không hardcode URL trong hook/component.
@@ -86,7 +86,8 @@ Mutation rules:
 
 ## Error Handling
 
-- Dùng `FormattedError`/`getFormattedErrorMessage` nếu phù hợp.
+- Mọi lỗi từ API/mock đều là `ApiError` (`src/application/exceptions/ApiError.ts`, có `message` và `statusCode`). `HttpClient` interceptor và `unwrapResponse` đã chuẩn hoá; mock repository phải `throw new ApiError(...)`, không reject plain object.
+- Presentation lấy message an toàn qua `getFormattedErrorMessage(error)`, không tự đọc `error.response.data`.
 - Toast ở presentation hook/container, không ở repository impl.
 - Toast dùng `App.useApp().message` của Ant Design (đã setup qua `<AntdApp>` trong `main.tsx`). Không thêm thư viện toast khác (`sonner`, `react-hot-toast`...) — base đã gỡ `sonner` vì gây 2 hệ thống toast song song không nhất quán.
 
@@ -150,7 +151,7 @@ Không dùng `useEffect` để tự fetch rồi tự quản `isLoading`/`data`/`
 Không làm — chỉ check `data &&` rồi im lặng khi lỗi hoặc đang tải:
 
 ```tsx
-{data && <ProjectList projects={data} />}
+return data && <ProjectList projects={data} />;
 ```
 
 Nên làm — xử lý đủ 3 trạng thái:

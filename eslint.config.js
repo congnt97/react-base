@@ -53,9 +53,15 @@ export default tseslint.config(
         {
           paths: [
             { name: 'react', message: 'domain không được phụ thuộc React.' },
-            { name: 'antd', message: 'domain không được phụ thuộc Ant Design.' },
+            {
+              name: 'antd',
+              message: 'domain không được phụ thuộc Ant Design.',
+            },
             { name: 'axios', message: 'domain không được phụ thuộc Axios.' },
-            { name: 'zustand', message: 'domain không được phụ thuộc Zustand.' },
+            {
+              name: 'zustand',
+              message: 'domain không được phụ thuộc Zustand.',
+            },
           ],
           patterns: [
             {
