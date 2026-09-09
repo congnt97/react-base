@@ -84,7 +84,7 @@ docker build -t react-base --build-arg VITE_API_BASE_URL=/api .
 docker run -p 8080:80 -e API_UPSTREAM=http://api:3000 react-base
 ```
 
-Image nginx serve `dist/`, SPA fallback, cache dài cho `/assets/`, proxy `/api/` sang `API_UPSTREAM` (đổi lúc chạy, không cần build lại). Healthcheck `/healthz`. Config ở `deploy/nginx.conf.template`.
+Image nginx serve `dist/`, SPA fallback, cache dài cho `/assets/`, proxy `/api/...` nguyên path sang `API_UPSTREAM` (đổi lúc chạy, không cần build lại; nginx resolve host lúc có request nên backend chưa lên vẫn start được). Healthcheck `/healthz`. Config ở `deploy/nginx.conf.template`; backend không có prefix `/api` thì thêm `rewrite` như comment trong file.
 
 Dependabot mở PR hàng tuần cho npm (gộp minor/patch), hàng tháng cho GitHub Actions và Docker.
 
