@@ -4,11 +4,12 @@
 @import '@fontsource/inter/700.css';
 @import 'tailwindcss';
 
-/* Design tokens. Ant Design tokens tương ứng ở src/app/theme.ts. */
+/* Giá trị phải khớp src/app/tokens.ts (nguồn duy nhất); tokens.test.ts kiểm tra.
+   Khai báo ở đây vì AntD scope biến của nó vào class hash, Tailwind không dùng được. */
 :root {
   --app-bg: #f8fafc;
-  --sidebar-bg: #0f172a;
   --content-bg: #ffffff;
+  --sidebar-bg: #0f172a;
   --border-subtle: #e2e8f0;
   --border-strong: #cbd5e1;
   --text-main: #0f172a;
@@ -16,8 +17,11 @@
   --primary: #2563eb;
   --link: #1d4ed8;
   --success: #166534;
+  --success-bg: #dcfce7;
   --warning: #92400e;
+  --warning-bg: #fef3c7;
   --danger: #dc2626;
+  --danger-bg: #fee2e2;
 }
 
 html,
@@ -72,17 +76,17 @@ select {
 
 .stat-icon-blue {
   background: #dbeafe;
-  color: #1d4ed8;
+  color: var(--link);
 }
 
 .stat-icon-amber {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--warning-bg);
+  color: var(--warning);
 }
 
 .stat-icon-green {
-  background: #dcfce7;
-  color: #16a34a;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .stat-icon-slate {

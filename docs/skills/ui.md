@@ -13,6 +13,8 @@ Chỉnh Ant Design qua token trong `app/theme.ts` (`token`, `components.<Tên>`)
 
 ## Design Tokens
 
+Nguồn duy nhất: `src/app/tokens.ts`. `app/theme.ts` map sang tên của AntD; `styles/styles.css` khai báo lại cùng giá trị ở `:root` cho Tailwind (AntD scope biến của nó vào class hash nên không dùng chung được). `src/app/tokens.test.ts` fail nếu hai nơi lệch, nên đổi màu thì sửa `tokens.ts` rồi cập nhật `styles.css` theo thông báo test.
+
 - Font family: Inter.
 - App background: `#f8fafc`.
 - Sidebar background: `#0f172a`.
