@@ -3,8 +3,11 @@
   "configurations": [
     {
       "name": "react-base-dev",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source \"$HOME/.nvm/nvm.sh\" && nvm use >/dev/null && yarn dev"
+      ],
       "port": 3001
     }
   ]

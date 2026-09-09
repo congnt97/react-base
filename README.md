@@ -9,14 +9,14 @@ Base frontend cho CMS/admin: React + TypeScript + Vite, Ant Design, Tailwind, Ta
 ```bash
 yarn install
 yarn dev          # http://localhost:3001, mock API bật sẵn (MSW)
-yarn check        # type + lint + format
+yarn validate        # type + lint + format
 yarn test
 yarn build
 ```
 
 Tài khoản mock: `admin@example.com` / `123456`.
 
-Node `>=22` LTS (xem `.nvmrc`, `nvm use`). Node 20 đã hết hạn hỗ trợ. Pre-commit chạy lint-staged; CI chạy `check`, `test`, `build`.
+Node `>=22` LTS (xem `.nvmrc`, `nvm use`). Node 20 đã hết hạn hỗ trợ. Pre-commit chạy lint-staged; CI chạy `validate`, `test`, `build`.
 
 ## Cấu Trúc
 

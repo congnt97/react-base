@@ -12,7 +12,7 @@ Trước khi tạo hoặc sửa bất kỳ thứ gì trong `src/`, đọc [SKILL
 - Filter/pagination của list nằm trên URL qua `validateSearch` (zod `.catch`).
 - Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`; không nuốt lỗi.
 - UI text tiếng Việt có dấu. Ant Design chỉnh qua token trong `app/theme.ts`, không `!important`.
-- Trước khi kết thúc: `yarn check`, `yarn test`, `yarn build` phải pass. Nếu không chạy được, nói rõ lý do.
+- Trước khi kết thúc: `yarn validate`, `yarn test`, `yarn build` phải pass. Nếu không chạy được, nói rõ lý do.
 
 ## Không làm
 

@@ -5,7 +5,11 @@ import { meQueryOptions } from '@/features/auth/hooks/use-me';
 import { useAuthStore } from '@/features/auth/store';
 
 export const Route = createFileRoute('/_app')({
-  component: RouteComponent,
+  component: () => (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  ),
   beforeLoad: async ({ context, location }) => {
     // Đọc store trực tiếp để guard thấy giá trị mới nhất ngay sau login/logout,
     // không phụ thuộc React re-render.
@@ -30,11 +34,3 @@ export const Route = createFileRoute('/_app')({
     }
   },
 });
-
-function RouteComponent() {
-  return (
-    <AppShell>
-      <Outlet />
-    </AppShell>
-  );
-}
