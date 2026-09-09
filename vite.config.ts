@@ -2,6 +2,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -28,6 +29,10 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
+    // `yarn build:analyze` -> dist/stats.html để soi chunk nào phình.
+    process.env.ANALYZE
+      ? visualizer({ filename: 'dist/stats.html', gzipSize: true })
+      : undefined,
   ],
   resolve: {
     alias: {

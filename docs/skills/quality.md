@@ -131,6 +131,12 @@ const user = useAuthStore((state) => state.user);
 - Đặt submit/business handler trong hook/container, không nhét logic dài vào JSX.
 - Không watch quá nhiều field nếu không cần.
 
+### Bundle Budget
+
+- `yarn size` sau `yarn build` (CI chạy tự động) fail khi vượt ngân sách gzip trong `scripts/check-bundle-size.mjs`: framework, entry, chunk lẻ, CSS, tổng JS.
+- `yarn build:analyze` sinh `dist/stats.html` để soi chunk nào phình.
+- Thêm lib lớn (chart, editor) thì lazy load theo route/nhu cầu; nếu vẫn vượt, nâng ngân sách có ghi lý do trong PR, không xoá check.
+
 ### Code Splitting And Assets
 
 - Route-level code splitting đã có qua TanStack Router.
