@@ -10,6 +10,7 @@ React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind (layout/spacin
 
 | Task chạm tới                                                          | Đọc                           |
 | ---------------------------------------------------------------------- | ----------------------------- |
+| Mọi task viết/sửa code: logic đúng, code sạch, tối ưu, cú pháp         | `docs/skills/craft.md`        |
 | Folder, feature mới, state, store                                      | `docs/skills/architecture.md` |
 | Đặt tên file, biến, type, hook, API, query key, event, branch, commit  | `docs/skills/naming.md`       |
 | API, endpoint, query/mutation, cache, response/error, pagination, mock | `docs/skills/api.md`          |

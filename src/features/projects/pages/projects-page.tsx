@@ -1,30 +1,26 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
 import { App, Button, Card } from 'antd';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { EmptyState } from '@/components/feedback/empty-state';
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { Can } from '@/features/auth/components/can';
 import { usePermissions } from '@/features/auth/hooks/use-permissions';
 import { ProjectFormModal } from '@/features/projects/components/project-form-modal';
+import { ProjectsEmptyState } from '@/features/projects/components/projects-empty-state';
 import { ProjectsFilter } from '@/features/projects/components/projects-filter';
 import { ProjectsTable } from '@/features/projects/components/projects-table';
+import { useProjectForm } from '@/features/projects/hooks/use-project-form';
 import {
-  useCreateProject,
   useDeleteProject,
-  useUpdateProject,
   useUpdateProjectStatus,
 } from '@/features/projects/hooks/use-project-mutations';
 import { useProjects } from '@/features/projects/hooks/use-projects';
 import type { ProjectsSearch } from '@/features/projects/search';
-import type { Project, ProjectPayload } from '@/features/projects/types';
+import type { Project } from '@/features/projects/types';
 
 const route = getRouteApi('/_app/projects/');
-
-type FormState = { open: boolean; project: Project | null };
 
 export function ProjectsPage() {
   const { t } = useTranslation();
@@ -38,21 +34,14 @@ export function ProjectsPage() {
     navigate({ search: (prev) => ({ ...prev, ...patch }) });
 
   const projects = useProjects(search);
-  const createProject = useCreateProject();
-  const updateProject = useUpdateProject();
+  const form = useProjectForm();
   const updateStatus = useUpdateProjectStatus();
   const deleteProject = useDeleteProject();
 
-  const [form, setForm] = useState<FormState>({ open: false, project: null });
-  const closeForm = () => setForm({ open: false, project: null });
-
-  const handleSubmit = (values: ProjectPayload) => {
-    const mutation = form.project
-      ? updateProject.mutateAsync({ id: form.project.id, ...values })
-      : createProject.mutateAsync(values);
-    // Lỗi đã được toast trong hook; ở đây chỉ cần giữ modal mở khi thất bại.
-    void mutation.then(closeForm, () => undefined);
-  };
+  const canCreate = can('projects:create');
+  const canUpdate = can('projects:update');
+  const canDelete = can('projects:delete');
+  const hasFilter = Boolean(search.keyword ?? search.status);
 
   const confirmDelete = (project: Project) => {
     modal.confirm({
@@ -69,10 +58,6 @@ export function ProjectsPage() {
     });
   };
 
-  const canUpdate = can('projects:update');
-  const hasFilter = Boolean(search.keyword || search.status);
-  const openCreate = () => setForm({ open: true, project: null });
-
   return (
     <>
       <PageHeader
@@ -82,7 +67,11 @@ export function ProjectsPage() {
         )}
         actions={
           <Can permission="projects:create">
-            <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={form.openCreate}
+            >
               {t('Tạo dự án')}
             </Button>
           </Can>
@@ -115,40 +104,19 @@ export function ProjectsPage() {
                 updateSearch({ page, pageSize })
               }
               emptyState={
-                <EmptyState
-                  title={
-                    hasFilter
-                      ? t('Không có dự án khớp bộ lọc')
-                      : t('Chưa có dự án nào')
-                  }
-                  description={
-                    hasFilter
-                      ? t('Thử đổi từ khoá hoặc trạng thái.')
-                      : t('Tạo dự án đầu tiên để bắt đầu.')
-                  }
-                  action={
-                    !hasFilter && can('projects:create')
-                      ? {
-                          label: t('Tạo dự án'),
-                          icon: <PlusOutlined />,
-                          onClick: openCreate,
-                        }
-                      : undefined
-                  }
+                <ProjectsEmptyState
+                  hasFilter={hasFilter}
+                  onCreate={canCreate ? form.openCreate : undefined}
                 />
               }
-              onEdit={
-                canUpdate
-                  ? (project) => setForm({ open: true, project })
-                  : undefined
-              }
+              onEdit={canUpdate ? form.openEdit : undefined}
               onStatusChange={
                 canUpdate
                   ? (project, status) =>
                       updateStatus.mutate({ id: project.id, status })
                   : undefined
               }
-              onDelete={can('projects:delete') ? confirmDelete : undefined}
+              onDelete={canDelete ? confirmDelete : undefined}
             />
           )}
         </div>
@@ -157,9 +125,9 @@ export function ProjectsPage() {
       <ProjectFormModal
         open={form.open}
         project={form.project}
-        submitting={createProject.isPending || updateProject.isPending}
-        onCancel={closeForm}
-        onSubmit={handleSubmit}
+        submitting={form.submitting}
+        onCancel={form.close}
+        onSubmit={form.submit}
       />
     </>
   );

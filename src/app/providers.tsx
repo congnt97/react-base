@@ -8,12 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { antdTheme } from '@/app/theme';
 import { queryClient } from '@/lib/query-client';
 
-const ANTD_LOCALES = { vi: viVN, en: enUS };
+// Partial vì i18n.language là string bất kỳ; thiếu thì về vi.
+const ANTD_LOCALES: Partial<Record<string, typeof viVN>> = {
+  vi: viVN,
+  en: enUS,
+};
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation();
-  const antdLocale =
-    ANTD_LOCALES[i18n.language as keyof typeof ANTD_LOCALES] ?? viVN;
+  const antdLocale = ANTD_LOCALES[i18n.language] ?? viVN;
 
   return (
     <ConfigProvider locale={antdLocale} theme={antdTheme}>

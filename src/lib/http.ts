@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
 import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 import { ApiError } from '@/lib/api-error';
@@ -83,6 +83,34 @@ const refreshAuthTokens = (refreshToken: string) => {
   return refreshTokenRequest;
 };
 
+/** 401 lần đầu, không phải chính request refresh, và đang có refresh token. */
+const canRetryWithRefresh = (
+  error: AxiosError<ErrorResponseBody>,
+  request: RetriableRequestConfig | undefined,
+): request is RetriableRequestConfig =>
+  error.response?.status === 401 &&
+  request !== undefined &&
+  !request._retry &&
+  request.url !== Endpoints.Auth.REFRESH_TOKEN &&
+  getStoredRefreshToken() !== null;
+
+const toApiError = (
+  error: AxiosError<ErrorResponseBody>,
+  request: RetriableRequestConfig | undefined,
+) => {
+  const body = error.response?.data;
+  const message = Array.isArray(body?.message)
+    ? body.message.join(', ')
+    : body?.message;
+  const requestId = request?.headers.get(REQUEST_ID_HEADER);
+
+  return new ApiError(
+    message ?? error.message,
+    body?.statusCode ?? error.response?.status,
+    typeof requestId === 'string' ? requestId : undefined,
+  );
+};
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
@@ -91,17 +119,10 @@ axiosInstance.interceptors.response.use(
     }
 
     const originalRequest = error.config as RetriableRequestConfig | undefined;
-    const refreshToken = getStoredRefreshToken();
 
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest._retry &&
-      originalRequest.url !== Endpoints.Auth.REFRESH_TOKEN &&
-      refreshToken
-    ) {
+    if (canRetryWithRefresh(error, originalRequest)) {
       originalRequest._retry = true;
-      const tokens = await refreshAuthTokens(refreshToken);
+      const tokens = await refreshAuthTokens(getStoredRefreshToken() ?? '');
 
       if (tokens) {
         originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
@@ -109,17 +130,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    const body = error.response?.data;
-    const message = Array.isArray(body?.message)
-      ? body.message.join(', ')
-      : body?.message;
-    const requestId = originalRequest?.headers.get(REQUEST_ID_HEADER);
-
-    throw new ApiError(
-      message ?? error.message,
-      body?.statusCode ?? error.response?.status,
-      typeof requestId === 'string' ? requestId : undefined,
-    );
+    throw toApiError(error, originalRequest);
   },
 );
 

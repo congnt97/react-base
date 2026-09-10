@@ -148,6 +148,34 @@ export default tseslint.config(
         },
       ],
 
+      // docs/skills/craft.md: tay nghề lập trình viên, phần máy bắt được.
+      eqeqeq: ['error', 'always'],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-template': 'error',
+      'object-shorthand': 'error',
+      'no-nested-ternary': 'error',
+      'no-else-return': ['error', { allowElseIf: false }],
+      'no-param-reassign': ['error', { props: false }],
+      'no-lonely-if': 'error',
+      'default-case-last': 'error',
+      complexity: ['error', 12],
+      'max-depth': ['error', 3],
+      'max-params': ['error', 4],
+      'max-lines': [
+        'error',
+        { max: 400, skipBlankLines: true, skipComments: true },
+      ],
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      // `||` với string vẫn hợp lệ khi muốn coi '' là rỗng (tên user, từ khoá tìm).
+      '@typescript-eslint/prefer-nullish-coalescing': [
+        'error',
+        { ignorePrimitives: { string: true } },
+      ],
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/array-type': ['error', { default: 'array' }],
+
       // docs/skills/naming.md
       '@typescript-eslint/naming-convention': [
         'error',

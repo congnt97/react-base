@@ -4,7 +4,7 @@
 
 ## Cách làm một task
 
-1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả.
+1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả. Riêng `docs/skills/craft.md` (logic đúng, code sạch, tối ưu, cú pháp) áp dụng cho mọi task viết code.
 2. Tìm cái có sẵn trước khi tạo mới: `rg` trong `src/components`, `src/features`, `src/lib`.
 3. Feature CRUD mới: `pnpm gen <tên>` rồi sửa, không viết tay từ đầu. Mẫu để đối chiếu: `src/features/projects`.
 4. Sửa xong chạy `pnpm validate && pnpm test`. Đổi UI thì chạy thêm `pnpm test:e2e` (hoặc file spec liên quan) và xem thật trên browser.
