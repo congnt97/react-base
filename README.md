@@ -1,83 +1,57 @@
 # React Base
 
-Base frontend cho CMS/admin: React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW.
+Base frontend cho CMS/admin: React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW, pnpm.
 
-Đọc [SKILLS.md](./SKILLS.md) trước khi tạo hoặc sửa feature. File đó là router rule cho AI và dev.
+Rule cho người và AI: [AGENTS.md](./AGENTS.md) (cách làm task, định nghĩa xong) và [SKILLS.md](./SKILLS.md) (chọn rule phụ).
 
 ## Chạy
 
 ```bash
+corepack enable && nvm use   # Node 22, pnpm theo packageManager
 pnpm install
-pnpm dev          # http://localhost:3001, mock API bật sẵn (MSW)
-pnpm validate        # type + lint + format
-pnpm test
-pnpm test:e2e     # Playwright, lần đầu chạy: npx playwright install chromium
-pnpm build
+pnpm dev                      # http://localhost:3001, mock API bật sẵn (MSW)
+pnpm validate                 # type, lint, format, cấu trúc, code chết
+pnpm test                     # unit + component (test:coverage để xem ngưỡng)
+pnpm test:e2e                 # Playwright; lần đầu: pnpm exec playwright install chromium
+pnpm build && pnpm size       # build + bundle budget
+pnpm gen <tên>                # sinh feature CRUD mới
 ```
 
 Tài khoản mock (mật khẩu `123456`): `admin@example.com` có mọi quyền, `user@example.com` không xoá dự án và không vào Cài đặt.
 
-Node `>=22` LTS (xem `.nvmrc`, `nvm use`) và pnpm qua corepack (`corepack enable`). Pre-commit chạy lint-staged; CI chạy `validate`, `test`, `build`, `size` mỗi PR, còn E2E chỉ khi merge `main` hoặc PR gắn label `e2e`.
+CI: mỗi PR chạy validate, test có coverage, build, size. E2E chỉ khi merge `main`, PR gắn label `e2e`, hoặc chạy tay.
 
-`pnpm validate` gồm: typecheck, lint (ESLint + a11y + i18n + naming), format, cấu trúc thư mục, code chết (knip).
-
-## Cấu Trúc
-
-Feature-first: mỗi feature tự chứa mọi thứ của nó, tầng chung mỏng.
+## Cấu trúc
 
 ```text
 src/
-  app/            Bootstrap: router, providers, theme, devtools, layout (AppShell/Header/Sidebar)
-  components/     UI dùng chung, không biết feature: layout/, ui/, feedback/
-  features/       Mỗi feature: api.ts, types.ts, hooks/, components/, pages/ (+ store, search, guards nếu cần)
-    auth/         Login/register/me, store, role guard
-    projects/     CRUD mẫu: filter qua URL, phân trang server, form modal, xoá có confirm, optimistic update trạng thái, upload đính kèm
-    dashboard/    Cards + infinite list hoạt động theo cursor
-    settings/     Route chỉ admin (ví dụ requireRole)
-  lib/            Tầng thấp nhất: http, env, api-error, api-response, auth-storage, url, endpoints, query-client, monitoring, analytics
-  locales/        Bản dịch (en.json); tiếng Việt là key nên không cần file
-  mocks/          MSW handlers + data, chỉ load ở dev khi VITE_ENABLE_MOCK_API=true
-  routes/         TanStack Router file-based routes, chỉ khai báo route và import page
-  styles/         Global CSS + design tokens
-  test/           Vitest setup
-e2e/              Playwright E2E (auth, CRUD, permission)
+  app/            Bootstrap: router, providers, tokens, theme, i18n, monitoring, layout
+  components/     UI dùng chung, không biết feature: layout/, ui/, feedback/, hooks/
+  features/       Mỗi feature: types, api, search, hooks/, components/, pages/
+    auth/         Login, store, permission theo hành động, guard
+    projects/     CRUD mẫu đầy đủ, copy pattern từ đây
+    dashboard/    Cards + infinite list theo cursor
+    settings/     Route cần permission
+  lib/            Tầng thấp nhất, không React: http, env, format, storage, monitoring...
+  locales/        en.json; tiếng Việt là key nên không cần file
+  mocks/          MSW handlers, chỉ load ở dev khi VITE_ENABLE_MOCK_API=true
+  routes/         TanStack file routes, chỉ khai báo route
+e2e/              Playwright: auth, CRUD, permission, i18n, mobile, a11y
+scripts/          gen feature, check cấu trúc, bundle size
+deploy/           nginx template + security headers
 ```
 
-Quy tắc phụ thuộc (ESLint enforce): `lib` không import gì ở tầng trên; `components` không import `features`/`app`; `axios` chỉ trong `lib/http.ts`.
-
-## Luồng Thêm Feature Có API
-
-```text
-features/<x>/types.ts        model + payload + list params
-lib/endpoints.ts             thêm endpoint
-features/<x>/api.ts          gọi http + unwrapResponse
-features/<x>/hooks/          queryOptions/useQuery/useMutation, key factory, toast
-features/<x>/components/     UI riêng của feature
-features/<x>/pages/          compose page
-routes/_app/<x>.tsx          createFileRoute + validateSearch nếu có query param
-mocks/handlers/<x>.ts        handler MSW để chạy local
-```
-
-Ví dụ đầy đủ: `features/projects`.
-
-## Auth
-
-- Token: `lib/auth-storage.ts` là source of truth. Zustand (`features/auth/store.ts`) chỉ giữ `user`, `isAuthenticated`.
-- Guard: `routes/_app/route.tsx` đọc `useAuthStore.getState()`, gọi `/me` qua `queryClient.ensureQueryData`, hydrate user. `routes/auth/route.tsx` đẩy user đã đăng nhập về `/`.
-- Permission theo hành động (`features/auth/permissions.ts`): `requirePermission()` cho route (403 qua `RouteError`), `<Can>`/`usePermissions()` cho UI.
-- Refresh token: `lib/http.ts` gom các request 401 vào một lần refresh; thất bại thì clear storage và về login.
+Chiều phụ thuộc `routes → features → components → lib`, ESLint chặn vi phạm. Chi tiết: `docs/skills/architecture.md`.
 
 ## Env
 
-Validate ở `lib/env.ts`, thiếu là throw lúc khởi động.
+Validate ở `lib/env.ts`, thiếu là throw lúc khởi động. `VITE_*` luôn public, không đặt secret.
 
 | File                         | Commit | Dùng khi                   |
 | ---------------------------- | ------ | -------------------------- |
 | `.env`                       | có     | mọi mode, production build |
 | `.env.development`           | có     | `pnpm dev`                 |
 | `.env.local`, `.env.*.local` | không  | override riêng máy         |
-
-`VITE_*` luôn public, không đặt secret.
 
 ## Deploy
 
@@ -86,14 +60,8 @@ docker build -t react-base --build-arg VITE_API_BASE_URL=/api .
 docker run -p 8080:80 -e API_UPSTREAM=http://api:3000 react-base
 ```
 
-Image nginx serve `dist/`, SPA fallback, cache dài cho `/assets/`, proxy `/api/...` nguyên path sang `API_UPSTREAM` (đổi lúc chạy, không cần build lại; nginx resolve host lúc có request nên backend chưa lên vẫn start được). Healthcheck `/healthz`. Security headers (CSP, nosniff, frame DENY, referrer, permissions) ở `deploy/security-headers.conf`; gọi domain ngoài thì nới `connect-src`/`img-src` ở đó. Config ở `deploy/nginx.conf.template`; backend không có prefix `/api` thì thêm `rewrite` như comment trong file.
+nginx serve `dist/`, SPA fallback, cache dài cho `/assets/`, proxy `/api/` sang `API_UPSTREAM` đổi lúc chạy, security headers (CSP, nosniff, frame DENY) ở `deploy/security-headers.conf`, healthcheck `/healthz`.
 
-Dependabot mở PR hàng tuần cho npm (gộp minor/patch), hàng tháng cho GitHub Actions và Docker.
+## Monitoring
 
-## Quy Ước Nhanh
-
-- File kebab-case, component/hook export PascalCase/`useX`.
-- UI text tiếng Việt có dấu, đi qua `t()` với key là chính câu tiếng Việt; bản dịch tiếng Anh ở `locales/en.json`, đổi ngôn ngữ ở header.
-- Monitoring/analytics cắm SDK thật ở `app/monitoring.ts`; lỗi query/route/window đã tự báo qua `lib/monitoring.ts`.
-- Ant Design trước, Tailwind cho layout/spacing. Chỉnh AntD qua token trong `app/theme.ts`, không override CSS bằng `!important`.
-- Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`.
+`lib/monitoring.ts` và `lib/analytics.ts` là điểm cắm, không kéo SDK để giữ bundle nhẹ. Dự án thật thêm Sentry/PostHog ở `app/monitoring.ts`. Lỗi query, route, window và `X-Request-Id` đã tự đi qua đó.

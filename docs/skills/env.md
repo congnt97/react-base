@@ -2,10 +2,14 @@
 
 Đọc khi có env, config, base URL, secret.
 
-- Khai báo required trong `lib/env.ts` bằng zod. Thiếu là throw lúc khởi động (fail fast).
-- Import `env` từ `lib/env.ts`, không đọc `import.meta.env` rải rác.
-- Không fallback ngầm: không `import.meta.env.X ?? 'default'`.
-- Thêm env mới thì cập nhật cả `.env`, `.env.development`, `.env.example` và khai báo kiểu trong `src/vite-env.d.ts`.
+## Máy đã ép
+
+`lib/env.ts` validate bằng zod, thiếu là throw lúc khởi động. `src/vite-env.d.ts` khai kiểu nên `import.meta.env.X` không phải `any`.
+
+## Rule
+
+- Import `env` từ `lib/env.ts`, không đọc `import.meta.env` rải rác, không fallback ngầm kiểu `?? 'default'`.
+- Thêm env mới: schema trong `lib/env.ts`, kiểu trong `src/vite-env.d.ts`, giá trị trong `.env` và `.env.development`.
 - `VITE_*` luôn bundle ra client. Không đặt secret.
 
 | File                         | Commit | Dùng khi                   |
@@ -13,5 +17,3 @@
 | `.env`                       | có     | mọi mode, production build |
 | `.env.development`           | có     | `pnpm dev`                 |
 | `.env.local`, `.env.*.local` | không  | override riêng máy         |
-
-Env hiện có: `VITE_API_BASE_URL`, `VITE_ENABLE_MOCK_API` (chỉ có tác dụng ở dev).

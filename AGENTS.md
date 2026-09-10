@@ -1,11 +1,42 @@
-# Agent Instructions
+# Rule cho AI agent
 
-Áp dụng cho mọi AI agent (Cursor, Codex, Copilot, Claude Code). Nội dung chuẩn nằm ở [CLAUDE.md](./CLAUDE.md) và [SKILLS.md](./SKILLS.md); đọc hai file đó trước khi sửa `src/`.
+Áp dụng cho Claude Code, Cursor, Codex, Copilot. `CLAUDE.md` import file này, không có rule riêng.
 
-Tóm tắt:
+## Cách làm một task
 
-1. Feature-first, mẫu chuẩn `src/features/projects`.
-2. Chiều phụ thuộc `routes → features → components → lib`, ESLint enforce.
-3. File kebab-case, không cross-feature import (trừ `features/auth`).
-4. API qua `features/<x>/api.ts` + TanStack Query, kèm MSW handler.
-5. Kết thúc task bằng `pnpm validate && pnpm test && pnpm build`.
+1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả.
+2. Tìm cái có sẵn trước khi tạo mới: `rg` trong `src/components`, `src/features`, `src/lib`.
+3. Feature CRUD mới: `pnpm gen <tên>` rồi sửa, không viết tay từ đầu. Mẫu để đối chiếu: `src/features/projects`.
+4. Sửa xong chạy `pnpm validate && pnpm test`. Đổi UI thì chạy thêm `pnpm test:e2e` (hoặc file spec liên quan) và xem thật trên browser.
+5. Khi kết thúc, báo: đã làm gì, lệnh nào đã chạy và kết quả, còn gì chưa làm và vì sao.
+
+## Định nghĩa "xong"
+
+- `pnpm validate` sạch: type, lint (không warning), format, cấu trúc thư mục, code chết.
+- `pnpm test` xanh, coverage không tụt dưới ngưỡng trong `vitest.config.ts`.
+- Text mới có key trong `src/locales/en.json`; endpoint mới có MSW handler. Hai test đối chiếu sẽ đỏ nếu thiếu.
+- Không còn chuỗi nhãn tạm từ `pnpm gen`.
+- Không chạy được lệnh nào thì nói rõ, không tự cho là pass.
+
+## Khi guard báo lỗi
+
+Guard (ESLint, test đối chiếu, check cấu trúc, knip, coverage, bundle size) tồn tại để bắt đúng loại lỗi hay gặp. Gặp lỗi thì sửa nguyên nhân. Không `eslint-disable`, không `@ts-ignore`, không hạ ngưỡng, không thêm exclude, trừ khi có lý do ghi rõ trong PR.
+
+## Không làm
+
+- Không thêm thư viện UI, state, router, toast, form, CSS mới khi chưa được yêu cầu rõ.
+- Không tạo folder ngoài `app/ components/ features/ lib/ locales/ mocks/ routes/ styles/ test/`.
+- Không import feature từ feature khác (trừ `features/auth`). Code chung đưa xuống `components/` hoặc `lib/`.
+- Không gọi `axios`/`http` trong component hay page. Đi qua `features/<x>/api.ts` và hook TanStack Query.
+- Không `useMemo`/`useCallback` tay (React Compiler lo), không `useEffect` để tính derived state hay sync data từ Query.
+- Không hardcode text hiển thị; mọi chuỗi qua `t()` với key là câu tiếng Việt có dấu.
+- Không `!important`, không hex màu trong component; token ở `src/app/tokens.ts`.
+- Không refactor ngoài phạm vi task. Không xoá test để cho qua.
+
+## Quy ước nhanh
+
+- File kebab-case; component PascalCase; hook `useX`; hằng UPPER_SNAKE; type không prefix `I`.
+- API method chỉ `list/detail/create/update/patch/remove`; `interface <X>Api` khai báo trước implementation.
+- Filter và pagination của list nằm trên URL qua `validateSearch` (zod `.catch`).
+- Lỗi API là `ApiError`; UI hiện qua `getErrorMessage`; không nuốt lỗi.
+- Commit: tiếng Việt, động từ đầu câu, dưới 72 ký tự.

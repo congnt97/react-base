@@ -7,7 +7,7 @@ dist/
 # Generated
 .tanstack/
 
-# Env override local (không commit secret). `.env`, `.env.development`, `.env.example`
+# Env override local (không commit secret). `.env`, `.env.development`
 # là public config (VITE_* luôn public) nên được commit để clone mới build/chạy được ngay.
 .env.local
 .env.*.local

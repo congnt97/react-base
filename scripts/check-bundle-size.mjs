@@ -1,4 +1,4 @@
-// Gate bundle size sau `yarn build`. Fail CI khi vượt ngân sách (gzip).
+// Gate bundle size sau `pnpm build`. Fail CI khi vượt ngân sách (gzip).
 // Đổi ngân sách ở đây khi có lý do (thêm lib lớn có chủ đích), kèm ghi chú trong PR.
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -67,7 +67,7 @@ for (const { name, file, kb, budget } of checks) {
 
 if (failed) {
   console.error(
-    '\nBundle vượt ngân sách. Xem scripts/check-bundle-size.mjs, chạy `yarn build:analyze` để soi dist/stats.html.',
+    '\nBundle vượt ngân sách. Xem scripts/check-bundle-size.mjs, chạy `pnpm build:analyze` để soi dist/stats.html.',
   );
   process.exit(1);
 }

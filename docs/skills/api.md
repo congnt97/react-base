@@ -2,6 +2,13 @@
 
 Đọc khi có API, endpoint, query/mutation, cache, response/error, pagination, mock.
 
+## Máy đã ép
+
+- Endpoint trong `lib/endpoints.ts` không có MSW handler: `src/mocks/handlers.test.ts` đỏ.
+- Promise bỏ lửng, `await` thiếu, throw không phải Error: typed lint.
+- Query key/hook sai cách dùng: `@tanstack/eslint-plugin-query`.
+- `axios` ngoài `lib/http.ts`: ESLint chặn.
+
 Không gọi `axios` hay `http` trong component/page. Component gọi hook, hook gọi `api.ts`.
 
 ## Flow

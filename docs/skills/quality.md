@@ -1,232 +1,45 @@
 # Quality Rules
 
-Đọc file này khi task liên quan clean code, tách file, performance, function vs arrow, error handling, try/catch, error boundary, validation/build/test.
+Đọc khi có fallback/default value, tách file, performance, error handling, monitoring.
 
-## File Size
+## Máy đã ép
 
-- Mỗi file không được quá 500-600 dòng.
-- Nếu file gần 400 dòng, cần cân nhắc tách:
-  - constants/mock data
-  - sub component
-  - hook
-  - table columns
-  - form schema/validation
-  - utility function
-- Không đặt nhiều component lớn trong cùng một file.
-- Không viết logic API, transform data lớn, validation lớn trực tiếp trong JSX.
-- Không thêm comment nếu code tự giải thích được.
-- Không refactor ngoài phạm vi feature.
+- Không `console.log`, không throw string, không promise bỏ lửng, không empty catch: ESLint.
+- Code chết (file/export/dependency không dùng): knip trong `validate`.
+- Bundle vượt ngân sách: `pnpm size` trong CI. Ngân sách ở `scripts/check-bundle-size.mjs`.
+- Coverage `lib/**`, `search/guards/permissions` dưới ngưỡng: `pnpm test:coverage` trong CI.
+- Memo tay sai dependency, setState trong effect, mutate trong render: `react-hooks/*`.
 
-## Runtime Fallback Rules
+## Fallback
 
-Không dùng fallback giả/demo cho runtime data quan trọng.
+Không dùng giá trị giả để che data required thiếu. Fallback giả làm UI trông đúng trong khi production đang hỏng.
 
-Không làm:
+- Required thiếu: hiện `ErrorState`, redirect, hoặc throw theo flow.
+- Optional thiếu: text trung thực, `user?.name ?? t('Chưa cập nhật')`.
+- `??` chứ không `||` khi `0`, `''`, `false` là giá trị hợp lệ.
+- Data demo chỉ trong `src/mocks`.
 
-```ts
-label: user?.email || 'admin@aivideofactory.local';
-title: project?.name || 'Demo Project';
-count: response?.total || 0;
-```
+## Tách file
 
-Lý do: fallback giả che lỗi production, làm UI trông có vẻ đúng trong khi data required đang thiếu.
+File gần 400 dòng thì tách: columns, form, filter, sub-component, hook. Không định nghĩa component bên trong component khác. Logic dài để trong hook hoặc page, không nhét trong JSX.
 
-Rule:
+## Performance
 
-- Required data thiếu thì fail rõ, hiện error state, skeleton/error boundary, redirect, logout, hoặc throw error theo flow.
-- Optional data thiếu thì hiện empty state trung thực: `Chưa có email`, `Chưa cập nhật`, `Không có dữ liệu`.
-- Mock/default demo chỉ được nằm trong mock/dev layer: `src/mocks`, fake repository dev-only, story/test.
-- Không đặt email, tên user, tên project, token, URL, ID demo trong component production.
-- Không dùng `||` cho fallback nếu giá trị hợp lệ có thể là `0`, `''`, hoặc `false`; cân nhắc `??` cho optional display.
-- Với data từ API required, ưu tiên validate/normalize ở hook hoặc repository boundary trước khi render.
+React Compiler đã memo mọi component và hook. Việc còn lại là của người viết:
 
-Chấp nhận được:
+- Tách component lớn (filter, table, form) để re-render cục bộ.
+- Zustand selector hẹp: `useAuthStore((s) => s.user)`, không lấy cả store.
+- Bảng lớn: pagination server-side, `rowKey` ổn định. Chỉ tính virtualization khi thật sự cần.
+- Component nặng (editor, chart, preview) lazy load theo nhu cầu.
+- Nghi ngờ re-render thừa thì đo bằng React DevTools Profiler, không đoán.
+- Thêm lib lớn thì chạy `pnpm build:analyze` soi `dist/stats.html` trước khi merge.
 
-```ts
-label: user?.email ?? 'Chưa có email';
-```
+## Error handling
 
-Tốt hơn nếu user là required:
+- Lỗi API là `ApiError`; UI lấy message qua `getErrorMessage`. Chi tiết ở `api.md`.
+- Không hiện raw message backend chứa stack trace hay tên field nội bộ.
+- Router có `defaultErrorComponent` nên lỗi một route không làm trắng cả app. Feature rủi ro cao (editor, preview) cân nhắc boundary riêng.
 
-```ts
-if (!user) {
-  return <ErrorState message="Không tải được thông tin user" />;
-}
-```
+## Monitoring
 
-## Function vs Arrow Function
-
-Không chọn `function` hay arrow function vì performance trừ khi có benchmark rõ ràng. Khác biệt hiệu năng thường rất nhỏ; ưu tiên ý nghĩa và consistency.
-
-Dùng `function` cho export public và đơn vị code độc lập:
-
-- React component: `export function LoginForm() {}`
-- Custom hook: `export function useLogin() {}`
-- Helper shared: `export function buildUrl() {}`
-- Route component nội bộ nếu cần tách riêng.
-- Function cần hoist hoặc cần name rõ trong stack trace.
-
-Dùng arrow function cho callback/handler ngắn:
-
-- Event handler trong component: `const handleSubmit = async () => {}`
-- Callback của `map`, `filter`, `render`, `onClick`, `onFinish`.
-- Table column render: `render: (status) => <Tag>{status}</Tag>`.
-- Config/object literal callback ngắn cần closure.
-
-Không tạo component mới bên trong component cha. Nếu JSX/block lớn, tách thành component riêng bằng `function`.
-
-Performance React ưu tiên:
-
-- Tách component lớn.
-- Tránh object/array/function lớn tạo lại trong render nếu truyền xuống memoized child.
-- Dùng `useMemo`/`useCallback` khi có lý do rõ, không dùng tràn lan.
-- Dùng `key` ổn định cho list.
-
-## Performance And Re-render Rules
-
-Tối ưu performance theo độ đo, không tối ưu sớm vô căn. Nếu thay đổi UI/data flow có khả năng gây re-render lớn, đọc mục này trước khi code.
-
-### React Re-render
-
-React Compiler đã bật (`vite.config.ts`, `babel-plugin-react-compiler`): mọi component và hook được memo tự động ở build time, kể cả dev.
-
-- Không viết `useMemo`/`useCallback`/`memo()` tay nữa; compiler làm tốt hơn và ESLint `react-hooks/preserve-manual-memoization` sẽ báo nếu memo tay sai dependency.
-- Compiler chỉ memo component tuân thủ rule của React. Component bị `react-hooks/*` báo lỗi (mutate trong render, setState trong effect, đọc ref lúc render) sẽ bị bỏ qua, tức mất tối ưu. Sửa lỗi thay vì disable rule.
-- Vẫn phải tự làm: không tạo component bên trong component; tách component lớn (filter, table, form) để re-render cục bộ; Zustand selector hẹp.
-- Nghi ngờ re-render thừa thì dùng React DevTools Profiler đo trước, không đoán.
-
-### Zustand Re-render
-
-- Selector phải hẹp:
-
-```ts
-const user = useAuthStore((state) => state.user);
-```
-
-- Không lấy cả store nếu chỉ cần một field.
-- Không đưa server/API data vào Zustand để render list/detail.
-- Tách action và state rõ ràng nếu store phình to.
-
-### TanStack Query Performance
-
-- Query key phải ổn định.
-- Set `staleTime` phù hợp cho data ít đổi.
-- Không refetch liên tục khi không cần.
-- Sau mutation chỉ invalidate query liên quan.
-- Không clear toàn bộ cache trừ auth/logout.
-- Không copy query data sang local state/Zustand chỉ để render.
-
-### Table/List
-
-- Table/list lớn phải có pagination; ưu tiên server-side pagination khi data lớn.
-- `rowKey` phải ổn định.
-- Column config phức tạp nên tách ra hook hoặc `useMemo`.
-- Tránh render cell quá nặng trong AntD Table.
-- Nếu list rất lớn mới tính virtualization.
-
-### Form
-
-- Không để toàn bộ page re-render theo từng field nếu form lớn.
-- Tách form lớn thành section component.
-- Đặt submit/business handler trong hook/container, không nhét logic dài vào JSX.
-- Không watch quá nhiều field nếu không cần.
-
-### Bundle Budget
-
-- `pnpm size` sau `pnpm build` (CI chạy tự động) fail khi vượt ngân sách gzip trong `scripts/check-bundle-size.mjs`: framework, entry, chunk lẻ, CSS, tổng JS.
-- `pnpm build:analyze` sinh `dist/stats.html` để soi chunk nào phình.
-- Thêm lib lớn (chart, editor) thì lazy load theo route/nhu cầu; nếu vẫn vượt, nâng ngân sách có ghi lý do trong PR, không xoá check.
-
-### Code Splitting And Assets
-
-- Route-level code splitting đã có qua TanStack Router.
-- Component nặng như editor, video preview, asset picker, chart nên lazy load khi chỉ mở theo nhu cầu.
-- Không import ảnh/video lớn vào bundle nếu không cần.
-- Preview asset/video nên lazy load.
-
-## Error Handling Rules
-
-### Không nuốt lỗi im lặng
-
-Không làm:
-
-```ts
-try {
-  await doSomething();
-} catch {
-  // bỏ qua
-}
-```
-
-Nên làm — xử lý rõ ràng: hiện message an toàn cho user, hoặc log có kiểm soát, hoặc rethrow theo flow rõ:
-
-```ts
-try {
-  await doSomething();
-} catch (error) {
-  message.error(getErrorMessage(error));
-}
-```
-
-### Throw `Error` object, không throw string
-
-Không làm:
-
-```ts
-throw 'Không tìm thấy user';
-```
-
-Nên làm:
-
-```ts
-throw new Error('Không tìm thấy user');
-```
-
-Lỗi thuộc tầng API/repository/mock dùng `ApiError` để có `statusCode`:
-
-```ts
-throw new ApiError('Phiên đăng nhập không hợp lệ', 401);
-```
-
-### Không hiện raw error kỹ thuật lên UI
-
-Không hiện thẳng message backend chứa stack trace, SQL, tên field nội bộ. Dùng `getErrorMessage`/message an toàn theo `docs/skills/api.md`.
-
-### Error Boundary theo route/feature
-
-Lỗi render trong 1 feature không được làm crash trắng toàn bộ app. Router đã có `defaultErrorComponent` (`components/feedback/route-error.tsx`, set trong `app/router.tsx`) nên lỗi render/beforeLoad của một route chỉ thay phần Outlet của route đó, layout vẫn còn; feature phức tạp/rủi ro cao (editor, preview nặng) nên cân nhắc boundary riêng thay vì để lỗi propagate lên root.
-
-## Monitoring Và Analytics
-
-- `lib/monitoring.ts`: `monitoring.captureException(error, context)` và `setUser`. Đã tự nối vào `QueryCache`/`MutationCache` (mọi lỗi query/mutation), `RouteError` (lỗi render/loader), `window.error`/`unhandledrejection`, và auth store (`setUser`). Feature không cần gọi tay trừ khi bắt lỗi ở chỗ khác.
-- Lỗi 4xx (`ApiError` với `statusCode < 500`) không báo về monitoring vì là hành vi nghiệp vụ; 5xx, timeout, lỗi JS thì báo.
-- `lib/analytics.ts`: `analytics.track(event, props)`; page view tự gửi sau mỗi navigation trong `app/router.ts`.
-- Cắm SDK thật (Sentry, PostHog...) chỉ ở `app/monitoring.ts` qua `monitoring.use()`/`analytics.use()`. Không import SDK rải rác trong feature.
-
-## Code Chết
-
-`knip` chạy trong `pnpm validate`: file không ai import, export không ai dùng, dependency không dùng đều làm fail. Xoá thay vì `export` "để sau này dùng"; cần thì thêm lại. Dependency dùng ngầm (qua CSS, plugin) khai báo trong `knip.json` `ignoreDependencies` kèm lý do trong PR.
-
-## Validation Trước Khi Kết Thúc
-
-Bắt buộc chạy:
-
-```bash
-pnpm check:type
-pnpm build
-```
-
-Nên chạy thêm:
-
-```bash
-pnpm test
-```
-
-Nếu có UI thay đổi:
-
-- Mở local app.
-- Kiểm tra route mới render không trắng.
-- Kiểm tra console error.
-- Kiểm tra layout không vỡ trên desktop.
-
-Nếu không chạy được lệnh nào, phải báo rõ lý do.
+`lib/monitoring.ts` đã tự nối vào QueryCache, MutationCache, RouteError, `window.error`, auth store. Lỗi 4xx không báo (nghiệp vụ), 5xx và lỗi JS thì báo, kèm `requestId`. Feature không cần gọi tay. Cắm SDK thật chỉ ở `app/monitoring.ts`.

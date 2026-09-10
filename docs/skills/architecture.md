@@ -2,6 +2,13 @@
 
 Đọc khi tạo/sửa folder, feature, model, hook, component, page, route, store, hoặc refactor.
 
+## Máy đã ép
+
+- Chiều phụ thuộc giữa tầng, cross-feature import, `axios` ngoài `lib/http.ts`: ESLint `no-restricted-imports`.
+- Folder lạ ở `src/`, file sai chỗ trong feature, folder con trong `lib/`: `scripts/check-structure.mjs` trong `validate`.
+- File/folder kebab-case, default export: ESLint.
+- Code chết: knip.
+
 ## Cấu Trúc Feature-First
 
 ```text

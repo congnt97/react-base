@@ -2,6 +2,13 @@
 
 Đọc khi có auth, token, route, guard, role, protected page, query param.
 
+## Máy đã ép
+
+- `throw redirect()`/`throw notFound()` được ESLint cho phép riêng; throw thứ khác không phải Error là lỗi.
+- Luồng refresh token (401 → refresh một lần → retry, thất bại → clear + báo hết phiên): `lib/http.test.ts`.
+- Permission và `requirePermission`: `permissions.test.ts`, `guards.test.ts`; E2E kiểm user thường không thấy nút xoá và bị 403.
+- Chưa ép được: route có query param mà quên `validateSearch`. Tự kiểm khi thêm route list.
+
 ## Auth Flow
 
 - Token: `lib/auth-storage.ts` là source of truth. Zustand `features/auth/store.ts` chỉ giữ `user`, `isAuthenticated`.

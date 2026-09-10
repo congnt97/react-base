@@ -1,4 +1,4 @@
-// Kiểm tra cấu trúc src/ theo docs/skills/architecture.md. Chạy trong `yarn validate`.
+// Kiểm tra cấu trúc src/ theo docs/skills/architecture.md. Chạy trong `pnpm validate`.
 // Mục đích: chặn folder lạ (utils/, services/, helpers/) và file đặt sai chỗ trong feature,
 // lỗi AI/dev mới hay mắc mà ESLint không nhìn thấy.
 import { readdirSync, statSync } from 'node:fs';

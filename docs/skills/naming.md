@@ -4,6 +4,10 @@
 
 Mục tiêu: nhìn tên là biết nó là gì, nằm ở đâu, làm gì. Grep một từ ra đúng chỗ. Stack trace và React DevTools hiện đúng tên.
 
+## Máy đã ép
+
+File/folder kebab-case (`check-file`), type PascalCase, interface không prefix `I`, enum member UPPER_CASE, biến/hàm đúng format (`naming-convention`), cấm default export. Phần còn lại trong file này là quy ước, ESLint không hiểu ngữ nghĩa.
+
 ## Tổng Quan
 
 | Thứ                           | Quy tắc                                       | Ví dụ                                       |

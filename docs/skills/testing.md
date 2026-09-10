@@ -2,6 +2,12 @@
 
 Đọc khi viết/sửa test hoặc quyết định có nên test.
 
+## Máy đã ép
+
+- Coverage `lib/**`, `components/hooks/**`, `features/*/search|guards|permissions` dưới ngưỡng: CI đỏ.
+- Vitest chỉ chạy `src/**/*.test.{ts,tsx}`; `e2e/*.spec.ts` là Playwright.
+- Hai test đối chiếu (endpoint↔MSW, `t()`↔`en.json`) chạy cùng `pnpm test`.
+
 Stack: Vitest + Testing Library + jsdom. Setup `src/test/setup.ts` đã polyfill `matchMedia`, `ResizeObserver` cho Ant Design.
 
 ## Ưu Tiên
