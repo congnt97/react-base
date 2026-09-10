@@ -114,11 +114,19 @@ Mỗi mục: quyết định, bối cảnh, lựa chọn đã cân nhắc, hệ 
 
 ## 15. Ngân sách bundle là con số cứng
 
-**Quyết định**: `scripts/check-bundle-size.mjs` fail CI khi framework chunk quá 180 KB, entry quá 60 KB, chunk lẻ quá 250 KB, CSS quá 30 KB, tổng JS quá 750 KB (gzip).
+**Quyết định**: `scripts/check-bundle-size.mjs` fail CI khi framework chunk quá 180 KB, entry quá 40 KB, chunk lẻ quá 250 KB, CSS quá 30 KB, tổng JS quá 750 KB (gzip).
 
 **Bối cảnh**: gộp cả Ant Design vào một chunk từng tạo chunk 1.1 MB; không có con số thì không ai nhận ra.
 
 **Hệ quả**: nâng ngân sách là thay đổi có label `guards` và lý do.
+
+## 16. Mỗi route một chunk, kiểm bằng manifest
+
+**Quyết định**: bật `autoCodeSplitting` của TanStack Router thay vì viết file `.lazy.tsx` tay; `pnpm size` đọc `dist/.vite/manifest.json` và fail nếu route nào không phải dynamic entry. Bản dịch tải động theo ngôn ngữ, không nằm trong chunk đầu.
+
+**Bối cảnh**: 100 màn hình mà route import page thẳng thì chunk đầu lớn theo số feature. Tách tay bằng `.lazy.tsx` phụ thuộc vào người nhớ; tách tự động thì `pnpm gen` và mọi route sau đều được hưởng.
+
+**Hệ quả**: `vite.config.ts` là file guard (label `guards`). Ngân sách entry hạ xuống 40 KB để page hay file dịch lọt vào chunk đầu là đỏ.
 
 ## Chưa quyết định
 

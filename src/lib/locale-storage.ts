@@ -1,6 +1,7 @@
 export const LOCALES = ['vi', 'en'] as const;
 export type Locale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = 'vi';
+// Kiểu literal để chỗ khác loại trừ được ngôn ngữ mặc định (Exclude<Locale, 'vi'>).
+export const DEFAULT_LOCALE = 'vi' satisfies Locale;
 
 const LOCALE_KEY = 'react_base_locale';
 

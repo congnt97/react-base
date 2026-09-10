@@ -20,7 +20,7 @@
 
 ## Khi guard báo lỗi
 
-Guard (ESLint, test đối chiếu, test hành vi core/adapter, check cấu trúc, knip, coverage, bundle size) tồn tại để bắt đúng loại lỗi hay gặp. Gặp lỗi thì sửa nguyên nhân. Không `eslint-disable`, không `@ts-ignore`, không hạ ngưỡng, không thêm exclude, trừ khi có lý do ghi rõ trong PR. Sửa file guard (`eslint.config.js`, `vitest.config.ts`, `tsconfig.json`, `scripts/`, `.github/`) thì PR phải gắn label `guards`; CI đỏ nếu thiếu.
+Guard (ESLint, test đối chiếu, test hành vi core/adapter, check cấu trúc, knip, coverage, bundle size) tồn tại để bắt đúng loại lỗi hay gặp. Gặp lỗi thì sửa nguyên nhân. Không `eslint-disable`, không `@ts-ignore`, không hạ ngưỡng, không thêm exclude, trừ khi có lý do ghi rõ trong PR. Sửa file guard (`eslint.config.js`, `vitest.config.ts`, `vite.config.ts`, `tsconfig.json`, `scripts/`, `.github/`) thì PR phải gắn label `guards`; CI đỏ nếu thiếu.
 
 Sửa một bug thật thì để lại guard chặn nó (test hành vi, rule lint, test đối chiếu) và một dòng trong `docs/skills/pitfalls.md`.
 

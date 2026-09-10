@@ -2,7 +2,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import '@/app/i18n';
+import { initLocale } from '@/app/i18n';
 import { setupMonitoring } from '@/app/monitoring';
 import { AppProviders } from '@/app/providers';
 import { router } from '@/app/router';
@@ -24,7 +24,7 @@ setupMonitoring();
 const rootElement = document.getElementById('app');
 
 if (rootElement && !rootElement.innerHTML) {
-  void enableMocking().then(() => {
+  void Promise.all([enableMocking(), initLocale()]).then(() => {
     ReactDOM.createRoot(rootElement).render(
       <StrictMode>
         <AppProviders>

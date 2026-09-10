@@ -29,7 +29,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
-          changed=$(git diff --name-only "$BASE_SHA" HEAD -- eslint.config.js vitest.config.ts tsconfig.json scripts/ .github/ knip.json pnpm-workspace.yaml)
+          changed=$(git diff --name-only "$BASE_SHA" HEAD -- eslint.config.js vitest.config.ts vite.config.ts tsconfig.json scripts/ .github/ knip.json pnpm-workspace.yaml)
           if [ -n "$changed" ] && [ "$HAS_LABEL" != "true" ]; then
             echo "PR sửa file guard nhưng thiếu label 'guards':"
             echo "$changed"

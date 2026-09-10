@@ -7,6 +7,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
+    // Manifest để scripts/check-bundle-size.mjs kiểm tra mỗi route có chunk riêng.
+    manifest: true,
     rolldownOptions: {
       output: {
         // Gom framework ổn định vào một chunk để cache lâu giữa các lần deploy.
