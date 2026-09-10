@@ -4,6 +4,4 @@ allowBuilds:
   msw: true
 
 # pnpm từ chối package phát hành dưới 24 giờ (chống publish độc hại). Muốn dùng bản
-# vừa ra thì khai báo tường minh ở đây kèm lý do, không tắt cả chính sách.
-minimumReleaseAgeExclude:
-  - knip@6.35.0
+# vừa ra thì thêm vào minimumReleaseAgeExclude kèm lý do trong PR, không tắt chính sách.
