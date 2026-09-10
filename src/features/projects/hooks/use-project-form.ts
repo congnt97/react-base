@@ -22,12 +22,12 @@ export function useProjectForm() {
 
   const close = () => setState({ open: false, project: null });
 
+  // Lỗi đã được toast trong hook mutation; Form bọc gắn lỗi field và giữ modal mở.
   const submit = (values: ProjectPayload) => {
     const mutation = state.project
       ? updateProject.mutateAsync({ id: state.project.id, ...values })
       : createProject.mutateAsync(values);
-    // Lỗi đã được toast trong hook mutation; ở đây chỉ giữ modal mở khi thất bại.
-    void mutation.then(close, () => undefined);
+    return mutation.then(close);
   };
 
   return {

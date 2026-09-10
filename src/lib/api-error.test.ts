@@ -4,9 +4,9 @@ import { ApiError, getErrorMessage } from '@/lib/api-error';
 
 describe('getErrorMessage', () => {
   it('lấy message từ ApiError', () => {
-    expect(getErrorMessage(new ApiError('Sai mật khẩu', 401))).toBe(
-      'Sai mật khẩu',
-    );
+    expect(
+      getErrorMessage(new ApiError('Sai mật khẩu', { statusCode: 401 })),
+    ).toBe('Sai mật khẩu');
   });
 
   it('lấy message từ Error thường', () => {

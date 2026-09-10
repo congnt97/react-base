@@ -15,12 +15,18 @@ const createReporter = (): ErrorReporter => ({
 
 describe('shouldReport', () => {
   it('bỏ qua lỗi nghiệp vụ 4xx', () => {
-    expect(shouldReport(new ApiError('Không tìm thấy', 404))).toBe(false);
-    expect(shouldReport(new ApiError('Sai mật khẩu', 401))).toBe(false);
+    expect(
+      shouldReport(new ApiError('Không tìm thấy', { statusCode: 404 })),
+    ).toBe(false);
+    expect(
+      shouldReport(new ApiError('Sai mật khẩu', { statusCode: 401 })),
+    ).toBe(false);
   });
 
   it('báo lỗi 5xx, lỗi mạng và lỗi không phải ApiError', () => {
-    expect(shouldReport(new ApiError('Server lỗi', 500))).toBe(true);
+    expect(shouldReport(new ApiError('Server lỗi', { statusCode: 500 }))).toBe(
+      true,
+    );
     expect(shouldReport(new ApiError('timeout'))).toBe(true);
     expect(shouldReport(new TypeError('x is undefined'))).toBe(true);
   });
@@ -49,7 +55,10 @@ describe('monitoring', () => {
     const reporter = createReporter();
     monitoring.use(reporter);
 
-    const error = new ApiError('Server lỗi', 500, 'req-123');
+    const error = new ApiError('Server lỗi', {
+      statusCode: 500,
+      requestId: 'req-123',
+    });
     monitoring.captureException(error, { queryKey: ['projects'] });
 
     expect(reporter.captureException).toHaveBeenCalledWith(error, {
@@ -62,7 +71,9 @@ describe('monitoring', () => {
     const reporter = createReporter();
     monitoring.use(reporter);
 
-    monitoring.captureException(new ApiError('Không có quyền', 403));
+    monitoring.captureException(
+      new ApiError('Không có quyền', { statusCode: 403 }),
+    );
 
     expect(reporter.captureException).not.toHaveBeenCalled();
   });

@@ -1,9 +1,10 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
-import { Form, Input } from 'antd';
+import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
 import type { LoginRequest } from '@/features/auth/types';
@@ -16,7 +17,8 @@ export function LoginForm() {
     <Form<LoginRequest>
       layout="vertical"
       requiredMark={false}
-      onFinish={(values) => login.mutate(values)}
+      // Form bọc: khoá field và chặn submit trùng tới khi mutateAsync xong.
+      onSubmit={(values) => login.mutateAsync(values)}
     >
       <Form.Item
         label={t('Email')}

@@ -350,9 +350,10 @@ export function ${pascal}Table({
 
 files.set(
   `src/features/${kebab}/components/${entityCamel}-form-modal.tsx`,
-  `import { Form, Input } from 'antd';
+  `import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { Form } from '@/components/ui/form';
 import { Modal } from '@/components/ui/modal';
 import type { ${entity}, ${entity}Payload } from '@/features/${kebab}/types';
 
@@ -361,7 +362,8 @@ type ${entity}FormModalProps = {
   item: ${entity} | null;
   submitting: boolean;
   onCancel: () => void;
-  onSubmit: (values: ${entity}Payload) => void;
+  /** Trả Promise: Form bọc khoá field, gắn lỗi field từ backend nếu có. */
+  onSubmit: (values: ${entity}Payload) => Promise<unknown>;
 };
 
 const DEFAULT_VALUES: ${entity}Payload = { name: '' };
@@ -393,7 +395,7 @@ export function ${entity}FormModal({
         layout="vertical"
         requiredMark={false}
         initialValues={item ?? DEFAULT_VALUES}
-        onFinish={onSubmit}
+        onSubmit={onSubmit}
       >
         <Form.Item
           label={t('${labels.name}')}
@@ -458,12 +460,12 @@ export function ${pascal}Page() {
   const closeForm = () => setForm({ open: false, item: null });
   const openCreate = () => setForm({ open: true, item: null });
 
+  // Lỗi đã được toast trong hook; Form bọc gắn lỗi field và giữ modal mở.
   const handleSubmit = (values: ${entity}Payload) => {
     const mutation = form.item
       ? update${entity}.mutateAsync({ id: form.item.id, ...values })
       : create${entity}.mutateAsync(values);
-    // Lỗi đã được toast trong hook; ở đây chỉ cần giữ modal mở khi thất bại.
-    void mutation.then(closeForm, () => undefined);
+    return mutation.then(closeForm);
   };
 
   const confirmDelete = (item: ${entity}) =>

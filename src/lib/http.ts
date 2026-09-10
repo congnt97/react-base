@@ -25,6 +25,23 @@ type ErrorResponseBody = {
   error?: string;
   statusCode?: number;
   message?: string | string[];
+  /** Lỗi theo field: `{ email: 'Email đã tồn tại' }` hoặc `{ email: ['...'] }`. */
+  errors?: Record<string, string | string[]>;
+};
+
+const joinMessages = (value: string | string[]) =>
+  Array.isArray(value) ? value.join(', ') : value;
+
+const toFieldErrors = (errors: ErrorResponseBody['errors']) => {
+  if (!errors || Object.keys(errors).length === 0) {
+    return undefined;
+  }
+  return Object.fromEntries(
+    Object.entries(errors).map(([field, value]) => [
+      field,
+      joinMessages(value),
+    ]),
+  );
 };
 
 export type HttpRequestOptions = {
@@ -99,16 +116,14 @@ const toApiError = (
   request: RetriableRequestConfig | undefined,
 ) => {
   const body = error.response?.data;
-  const message = Array.isArray(body?.message)
-    ? body.message.join(', ')
-    : body?.message;
+  const message = body?.message ? joinMessages(body.message) : undefined;
   const requestId = request?.headers.get(REQUEST_ID_HEADER);
 
-  return new ApiError(
-    message ?? error.message,
-    body?.statusCode ?? error.response?.status,
-    typeof requestId === 'string' ? requestId : undefined,
-  );
+  return new ApiError(message ?? error.message, {
+    statusCode: body?.statusCode ?? error.response?.status,
+    requestId: typeof requestId === 'string' ? requestId : undefined,
+    fieldErrors: toFieldErrors(body?.errors),
+  });
 };
 
 axiosInstance.interceptors.response.use(

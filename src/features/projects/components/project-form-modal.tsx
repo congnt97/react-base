@@ -1,6 +1,7 @@
-import { Form, Input, Select } from 'antd';
+import { Input, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { Form } from '@/components/ui/form';
 import { Modal } from '@/components/ui/modal';
 import { Upload } from '@/components/ui/upload';
 import {
@@ -16,7 +17,8 @@ type ProjectFormModalProps = {
   project: Project | null;
   submitting: boolean;
   onCancel: () => void;
-  onSubmit: (values: ProjectPayload) => void;
+  /** Trả Promise: Form bọc khoá field, gắn lỗi field từ backend nếu có. */
+  onSubmit: (values: ProjectPayload) => Promise<unknown>;
 };
 
 const DEFAULT_VALUES: ProjectPayload = {
@@ -54,7 +56,7 @@ export function ProjectFormModal({
         layout="vertical"
         requiredMark={false}
         initialValues={project ?? DEFAULT_VALUES}
-        onFinish={onSubmit}
+        onSubmit={onSubmit}
       >
         <Form.Item
           label={t('Tên dự án')}

@@ -1,9 +1,10 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
-import { Form, Input } from 'antd';
+import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 
 import { useRegister } from '@/features/auth/hooks/use-register';
 import type { RegisterRequest } from '@/features/auth/types';
@@ -16,7 +17,8 @@ export function RegisterForm() {
     <Form<RegisterRequest>
       layout="vertical"
       requiredMark={false}
-      onFinish={(values) => register.mutate(values)}
+      // Form bọc: khoá field và chặn submit trùng tới khi mutateAsync xong.
+      onSubmit={(values) => register.mutateAsync(values)}
     >
       <Form.Item
         label={t('Tên')}

@@ -39,12 +39,11 @@ export function ProjectDetailPage() {
     return <PageLoading />;
   }
 
-  const handleSubmit = (values: ProjectPayload) => {
-    void updateProject.mutateAsync({ id: data.id, ...values }).then(
-      () => setEditing(false),
-      () => undefined,
-    );
-  };
+  // Lỗi đã toast ở mutation; Form bọc gắn lỗi field và giữ modal mở.
+  const handleSubmit = (values: ProjectPayload) =>
+    updateProject
+      .mutateAsync({ id: data.id, ...values })
+      .then(() => setEditing(false));
 
   return (
     <>

@@ -24,6 +24,7 @@ const WRAPPED_UI = [
   'Popconfirm',
   'Upload',
   'Drawer',
+  'Form',
 ];
 
 // Thư viện UI: core/ và lib/ không được biết. Đổi UI lib chỉ sửa components/.
@@ -108,9 +109,12 @@ export default tseslint.config(
     // Lỗi JSX cơ bản TypeScript không bắt được.
     files: ['src/**/*.tsx'],
     plugins: { react },
-    settings: { react: { version: 'detect' } },
+    // Ghi cứng thay vì 'detect': detect gọi API đã bỏ ở ESLint 10 và làm vỡ rule.
+    settings: { react: { version: '19.2' } },
     rules: {
       'react/jsx-key': ['error', { checkFragmentShorthand: true }],
+      // Component khai báo trong component: remount mỗi render, mất state và focus.
+      'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       'react/jsx-no-target-blank': 'error',
       'react/no-array-index-key': 'error',
       'react/self-closing-comp': 'error',
@@ -263,6 +267,20 @@ export default tseslint.config(
           selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
           message:
             'dangerouslySetInnerHTML cần sanitize trước khi dùng (xem docs/skills/security.md).',
+        },
+        {
+          // useAuthStore() không selector: mọi field đổi đều re-render component.
+          selector:
+            'CallExpression[callee.name=/^use[A-Z]\\w*Store$/][arguments.length=0]',
+          message:
+            'Lấy đúng field qua selector: useXStore((state) => state.field). Xem docs/skills/pitfalls.md #24.',
+        },
+        {
+          // VITE_* luôn vào bundle client; tên gợi secret là sai chỗ.
+          selector:
+            '[name=/^VITE_.*(SECRET|PRIVATE|PASSWORD|TOKEN)/], [key.name=/^VITE_.*(SECRET|PRIVATE|PASSWORD|TOKEN)/], [property.name=/^VITE_.*(SECRET|PRIVATE|PASSWORD|TOKEN)/]',
+          message:
+            'VITE_* nằm trong bundle client, không được chứa secret. Xem docs/skills/env.md.',
         },
       ],
     },

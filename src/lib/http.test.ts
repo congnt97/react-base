@@ -67,6 +67,32 @@ describe('http', () => {
     );
   });
 
+  it('đưa lỗi theo field của backend vào ApiError.fieldErrors', async () => {
+    server.use(
+      mswHttp.post('/api/members', () =>
+        HttpResponse.json(
+          {
+            message: 'Dữ liệu không hợp lệ',
+            statusCode: 422,
+            errors: {
+              email: 'Email đã tồn tại',
+              name: ['Thiếu tên', 'Quá ngắn'],
+            },
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+
+    const error = await http.post('/members', {}).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(ApiError);
+    expect((error as ApiError).fieldErrors).toEqual({
+      email: 'Email đã tồn tại',
+      name: 'Thiếu tên, Quá ngắn',
+    });
+  });
+
   it('truyền signal để huỷ được request', async () => {
     server.use(
       mswHttp.get('/api/slow', async () => {
