@@ -20,6 +20,21 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Sửa guard (lint, ngưỡng coverage, script kiểm tra, CI) phải là quyết định có chủ đích:
+      # PR đụng các file này bắt buộc gắn label `guards` để reviewer nhìn thấy.
+      - name: Sửa guard phải có label guards
+        if: github.event_name == 'pull_request'
+        env:
+          HAS_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'guards') }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          changed=$(git diff --name-only "$BASE_SHA" HEAD -- eslint.config.js vitest.config.ts tsconfig.json scripts/ .github/ knip.json pnpm-workspace.yaml)
+          if [ -n "$changed" ] && [ "$HAS_LABEL" != "true" ]; then
+            echo "PR sửa file guard nhưng thiếu label 'guards':"
+            echo "$changed"
+            exit 1
+          fi
       - run: pnpm validate
       - run: pnpm test:coverage
       - run: pnpm build

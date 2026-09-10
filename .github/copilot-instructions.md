@@ -1,0 +1,1 @@
+Đọc `AGENTS.md` ở gốc repo trước khi sửa bất kỳ file nào; nó là nguồn duy nhất cho quy trình, định nghĩa xong và những gì không được làm. Chọn rule phụ theo bảng trong `SKILLS.md`. Sau mỗi lần sửa code chạy `pnpm validate && pnpm test`.
