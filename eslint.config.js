@@ -1,5 +1,6 @@
 import { readdirSync } from 'node:fs';
 
+import eslintComments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import checkFile from 'eslint-plugin-check-file';
@@ -13,6 +14,27 @@ import tseslint from 'typescript-eslint';
 // Feature được phép import từ mọi nơi (store/guards/types là app-level).
 const SHARED_FEATURES = ['auth'];
 
+// Component có hành vi async/phá huỷ: feature phải dùng bản bọc ở components/ui/
+// (khoá click spam, khoá modal khi gửi, loading trễ 200ms, tự lùi trang tràn).
+// Thêm tên vào đây khi bọc thêm component; các component khác import antd thẳng.
+const WRAPPED_UI = [
+  'Button',
+  'Modal',
+  'Table',
+  'Popconfirm',
+  'Upload',
+  'Drawer',
+];
+
+// Thư viện UI: core/ và lib/ không được biết. Đổi UI lib chỉ sửa components/.
+const UI_LIBS = [
+  'antd',
+  '@ant-design/*',
+  '@mui/*',
+  '@radix-ui/*',
+  '@chakra-ui/*',
+];
+
 const featureDirs = readdirSync('src/features', { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name);
@@ -24,6 +46,20 @@ const crossFeatureRules = featureDirs.map((feature) => ({
     'no-restricted-imports': [
       'error',
       {
+        paths: [
+          {
+            name: 'antd',
+            importNames: WRAPPED_UI,
+            message:
+              'Dùng bản bọc ở @/components/ui/<tên> (khoá click, khoá modal khi gửi, tự sửa trang tràn). Xem docs/skills/pitfalls.md.',
+          },
+          {
+            name: '@tanstack/react-query',
+            importNames: ['useQuery'],
+            message:
+              'Dùng useListQuery/useDetailQuery ở @/core/hooks để không kẹt loading và tự lùi trang tràn. Xem docs/skills/pitfalls.md.',
+          },
+        ],
         patterns: [
           {
             group: [
@@ -57,6 +93,14 @@ export default tseslint.config(
     },
   },
   { files: ['**/*.js', '**/*.mjs'], ...tseslint.configs.disableTypeChecked },
+  // Tắt rule phải ghi lý do; disable thừa là lỗi. Không có "disable cho qua".
+  eslintComments.recommended,
+  {
+    rules: {
+      '@eslint-community/eslint-comments/require-description': 'error',
+      '@eslint-community/eslint-comments/no-unused-disable': 'error',
+    },
+  },
   ...pluginQuery.configs['flat/recommended'],
   // docs/skills/ui.md: a11y cơ bản bắt ngay lúc code (alt, label, role, key events).
   { ...jsxA11y.flatConfigs.recommended, files: ['src/**/*.tsx'] },
@@ -132,9 +176,11 @@ export default tseslint.config(
       ],
       // Promise không await là lỗi cơ bản hay gặp nhất; muốn bỏ qua có chủ đích thì `void`.
       '@typescript-eslint/no-floating-promises': 'error',
+      // attributes: true để `onClick={async…}` trên nút thường bị bắt: hành động async
+      // phải qua useAsyncAction/AsyncButton để khoá click spam.
       '@typescript-eslint/no-misused-promises': [
         'error',
-        { checksVoidReturn: { attributes: false } },
+        { checksVoidReturn: { attributes: true } },
       ],
 
       // docs/skills/quality.md, security.md
@@ -264,11 +310,41 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            { name: 'react', message: 'lib không phụ thuộc React.' },
-            { name: 'antd', message: 'lib không phụ thuộc Ant Design.' },
-          ],
+          paths: [{ name: 'react', message: 'lib không phụ thuộc React.' }],
           patterns: [
+            {
+              group: UI_LIBS,
+              message: 'lib không phụ thuộc thư viện UI.',
+            },
+            {
+              group: [
+                '@/features/*',
+                '@/app/*',
+                '@/components/*',
+                '@/core/*',
+                '@/routes/*',
+              ],
+              message: 'lib không được import tầng trên.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // core là hành vi headless (hook, contract): biết React và lib, không biết
+    // thư viện UI hay feature. Đổi từ antd sang lib khác không phải sửa core.
+    files: ['src/core/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: UI_LIBS,
+              message:
+                'core không phụ thuộc thư viện UI. Hành vi ở core, giao diện ở components/ui.',
+            },
             {
               group: [
                 '@/features/*',
@@ -276,7 +352,7 @@ export default tseslint.config(
                 '@/components/*',
                 '@/routes/*',
               ],
-              message: 'lib không được import tầng trên.',
+              message: 'core chỉ được import @/lib.',
             },
           ],
         },

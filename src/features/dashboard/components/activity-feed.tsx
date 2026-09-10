@@ -1,8 +1,9 @@
-import { Button, Card, Skeleton, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { EmptyState } from '@/components/feedback/empty-state';
-import { ErrorState } from '@/components/feedback/error-state';
+import { QueryBoundary } from '@/components/feedback/query-boundary';
+import { Button } from '@/components/ui/button';
 import { useActivity } from '@/features/dashboard/hooks/use-activity';
 import type { Activity } from '@/features/dashboard/types';
 import { formatRelativeTime } from '@/lib/format';
@@ -35,30 +36,11 @@ export function ActivityFeed() {
   const activity = useActivity();
   const items = activity.data?.pages.flatMap((page) => page.items) ?? [];
 
-  // Mỗi trạng thái một nhánh rõ ràng thay vì ternary lồng nhau.
-  const renderBody = () => {
-    if (activity.isError) {
-      return (
-        <ErrorState error={activity.error} onRetry={() => activity.refetch()} />
-      );
-    }
-    if (activity.isPending) {
-      return <Skeleton active paragraph={{ rows: 4 }} />;
-    }
-    if (items.length === 0) {
-      return <EmptyState title={t('Chưa có hoạt động nào')} />;
-    }
-    return <ActivityList items={items} />;
-  };
-
   const renderFooter = () => {
     if (activity.hasNextPage) {
       return (
         <div className="mt-4 text-center">
-          <Button
-            onClick={() => activity.fetchNextPage()}
-            loading={activity.isFetchingNextPage}
-          >
+          <Button onClick={() => activity.fetchNextPage()}>
             {t('Tải thêm')}
           </Button>
         </div>
@@ -76,7 +58,16 @@ export function ActivityFeed() {
 
   return (
     <Card className="app-card" title={t('Hoạt động gần đây')}>
-      {renderBody()}
+      <QueryBoundary
+        isLoading={activity.isPending && activity.isFetching}
+        isError={activity.isError}
+        error={activity.error}
+        isEmpty={items.length === 0}
+        onRetry={() => void activity.refetch()}
+        emptyState={<EmptyState title={t('Chưa có hoạt động nào')} />}
+      >
+        <ActivityList items={items} />
+      </QueryBoundary>
       {renderFooter()}
     </Card>
   );

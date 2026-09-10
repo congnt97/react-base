@@ -4,22 +4,24 @@ import {
   PaperClipOutlined,
 } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
-import { Button, Space, Table, type TableProps } from 'antd';
+import { Space, type TableProps } from 'antd';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ScrollHint } from '@/components/ui/scroll-hint';
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import type { ListState } from '@/core/contracts';
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
 import type { Project, ProjectStatus } from '@/features/projects/types';
 import { formatDateTime } from '@/lib/format';
 
 type ProjectsTableProps = {
-  projects: Project[];
-  loading: boolean;
-  pagination: { page: number; pageSize: number; total: number };
+  list: ListState<Project>;
+  page: number;
+  pageSize: number;
   onPageChange: (page: number, pageSize: number) => void;
   /** Hiện khi không có dòng nào và không loading. */
-  emptyState?: ReactNode;
+  emptyState: ReactNode;
   // undefined = không có quyền, ẩn control tương ứng.
   onEdit?: (project: Project) => void;
   onDelete?: (project: Project) => void;
@@ -27,9 +29,9 @@ type ProjectsTableProps = {
 };
 
 export function ProjectsTable({
-  projects,
-  loading,
-  pagination,
+  list,
+  page,
+  pageSize,
   onPageChange,
   emptyState,
   onEdit,
@@ -123,23 +125,15 @@ export function ProjectsTable({
   }
 
   return (
-    <ScrollHint>
-      <Table<Project>
-        rowKey="id"
-        columns={columns}
-        dataSource={projects}
-        loading={loading}
-        locale={emptyState && !loading ? { emptyText: emptyState } : undefined}
-        scroll={{ x: 720 }}
-        pagination={{
-          current: pagination.page,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          showTotal: (total) => t('{{total}} dự án', { total }),
-          onChange: onPageChange,
-        }}
-      />
-    </ScrollHint>
+    <DataTable<Project>
+      rowKey="id"
+      columns={columns}
+      list={list}
+      page={page}
+      pageSize={pageSize}
+      onPageChange={onPageChange}
+      emptyState={emptyState}
+      showTotal={(total) => t('{{total}} dự án', { total })}
+    />
   );
 }

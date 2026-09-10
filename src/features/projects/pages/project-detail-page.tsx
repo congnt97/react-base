@@ -1,12 +1,13 @@
 import { EditOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
-import { Button, Card, Descriptions } from 'antd';
+import { Card, Descriptions } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageLoading } from '@/components/feedback/page-loading';
 import { PageHeader } from '@/components/layout/page-header';
+import { Button } from '@/components/ui/button';
 import { Can } from '@/features/auth/components/can';
 import { ProjectFormModal } from '@/features/projects/components/project-form-modal';
 import { ProjectStatusTag } from '@/features/projects/components/project-status-tag';
@@ -25,17 +26,18 @@ export function ProjectDetailPage() {
   const updateProject = useUpdateProject();
   const [editing, setEditing] = useState(false);
 
-  if (project.isPending) {
+  if (project.isLoading) {
     return <PageLoading />;
   }
 
   if (project.isError) {
-    return (
-      <ErrorState error={project.error} onRetry={() => project.refetch()} />
-    );
+    return <ErrorState error={project.error} onRetry={project.refetch} />;
   }
 
   const data = project.data;
+  if (!data) {
+    return <PageLoading />;
+  }
 
   const handleSubmit = (values: ProjectPayload) => {
     void updateProject.mutateAsync({ id: data.id, ...values }).then(

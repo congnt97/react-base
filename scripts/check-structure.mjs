@@ -9,6 +9,7 @@ const SRC = path.resolve('src');
 const ALLOWED_TOP_LEVEL = new Set([
   'app',
   'components',
+  'core',
   'features',
   'lib',
   'locales',

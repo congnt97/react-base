@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Input, type InputProps } from 'antd';
 
-import { useDebouncedCallback } from '@/components/hooks/use-debounced-callback';
+import { useDebouncedCallback } from '@/core/hooks/use-debounced-callback';
 
 type SearchInputProps = Omit<InputProps, 'onChange' | 'value'> & {
   defaultValue?: string;

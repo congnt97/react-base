@@ -1,7 +1,9 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
-import { Button, Form, Input } from 'antd';
+import { Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
+
+import { Button } from '@/components/ui/button';
 
 import { useRegister } from '@/features/auth/hooks/use-register';
 import type { RegisterRequest } from '@/features/auth/types';

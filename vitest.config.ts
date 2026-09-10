@@ -18,10 +18,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text-summary', 'html'],
       // Chỉ tính coverage cho logic thuần dễ sai và đắt khi hỏng: helper dùng chung,
-      // parse query param, phân quyền. UI/page/mock đo bằng component test và E2E.
+      // parse query param, phân quyền, hook hành vi trong core. UI/page/mock đo bằng component test.
       include: [
         'src/lib/**/*.ts',
-        'src/components/hooks/**/*.ts',
+        'src/core/**/*.{ts,tsx}',
         'src/features/*/search.ts',
         'src/features/*/guards.ts',
         'src/features/*/permissions.ts',

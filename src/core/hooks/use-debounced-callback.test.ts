@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDebouncedCallback } from '@/components/hooks/use-debounced-callback';
+import { useDebouncedCallback } from '@/core/hooks/use-debounced-callback';
 
 describe('useDebouncedCallback', () => {
   beforeEach(() => {

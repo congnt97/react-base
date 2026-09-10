@@ -172,12 +172,7 @@ describe('${camel}SearchSchema', () => {
 
 files.set(
   `src/features/${kebab}/hooks/use-${kebab}.ts`,
-  `import {
-  keepPreviousData,
-  queryOptions,
-  useQuery,
-} from '@tanstack/react-query';
-
+  `import { useListQuery } from '@/core/hooks/use-list-query';
 import { ${camel}Api } from '@/features/${kebab}/api';
 import type { ${entity}ListParams } from '@/features/${kebab}/types';
 
@@ -188,16 +183,23 @@ export const ${entityCamel}Keys = {
     [...${entityCamel}Keys.all, 'list', params] as const,
 };
 
-const ${camel}QueryOptions = (params: ${entity}ListParams) =>
-  queryOptions({
-    queryKey: ${entityCamel}Keys.list(params),
-    // \`signal\` huỷ request cũ khi đổi trang/filter nhanh, tránh response lệch.
-    queryFn: ({ signal }) => ${camel}Api.list(params, { signal }),
-    placeholderData: keepPreviousData,
-  });
+type Use${pascal}Options = {
+  /** Xoá dòng cuối của trang cuối thì lùi về trang còn dữ liệu. */
+  onPageOverflow: (lastPage: number) => void;
+};
 
-export function use${pascal}(params: ${entity}ListParams) {
-  return useQuery(${camel}QueryOptions(params));
+// useListQuery lo: isLoading đúng nghĩa, giữ data cũ khi đổi trang, huỷ request cũ.
+export function use${pascal}(
+  params: ${entity}ListParams,
+  { onPageOverflow }: Use${pascal}Options,
+) {
+  return useListQuery({
+    queryKey: ${entityCamel}Keys.list(params),
+    queryFn: ({ signal }) => ${camel}Api.list(params, { signal }),
+    page: params.page,
+    pageSize: params.pageSize,
+    onPageOverflow,
+  });
 }
 `,
 );
@@ -256,28 +258,31 @@ export function useDelete${entity}() {
 files.set(
   `src/features/${kebab}/components/${kebab}-table.tsx`,
   `import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Space, Table, type TableProps } from 'antd';
+import { Space, type TableProps } from 'antd';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import type { ListState } from '@/core/contracts';
 import type { ${entity} } from '@/features/${kebab}/types';
 import { formatDateTime } from '@/lib/format';
 
 type ${pascal}TableProps = {
-  items: ${entity}[];
-  loading: boolean;
-  pagination: { page: number; pageSize: number; total: number };
+  list: ListState<${entity}>;
+  page: number;
+  pageSize: number;
   onPageChange: (page: number, pageSize: number) => void;
-  emptyState?: ReactNode;
+  emptyState: ReactNode;
   // undefined = không có quyền, ẩn control tương ứng.
   onEdit?: (item: ${entity}) => void;
   onDelete?: (item: ${entity}) => void;
 };
 
 export function ${pascal}Table({
-  items,
-  loading,
-  pagination,
+  list,
+  page,
+  pageSize,
   onPageChange,
   emptyState,
   onEdit,
@@ -328,21 +333,15 @@ export function ${pascal}Table({
   }
 
   return (
-    <Table<${entity}>
+    <DataTable<${entity}>
       rowKey="id"
       columns={columns}
-      dataSource={items}
-      loading={loading}
-      locale={emptyState && !loading ? { emptyText: emptyState } : undefined}
-      scroll={{ x: 720 }}
-      pagination={{
-        current: pagination.page,
-        pageSize: pagination.pageSize,
-        total: pagination.total,
-        showSizeChanger: true,
-        showTotal: (total) => t('${labels.total}', { total }),
-        onChange: onPageChange,
-      }}
+      list={list}
+      page={page}
+      pageSize={pageSize}
+      onPageChange={onPageChange}
+      emptyState={emptyState}
+      showTotal={(total) => t('${labels.total}', { total })}
     />
   );
 }
@@ -351,9 +350,10 @@ export function ${pascal}Table({
 
 files.set(
   `src/features/${kebab}/components/${entityCamel}-form-modal.tsx`,
-  `import { Form, Input, Modal } from 'antd';
+  `import { Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { Modal } from '@/components/ui/modal';
 import type { ${entity}, ${entity}Payload } from '@/features/${kebab}/types';
 
 type ${entity}FormModalProps = {
@@ -383,11 +383,10 @@ export function ${entity}FormModal({
       title={isEdit ? t('${labels.edit}') : t('${labels.create}')}
       okText={isEdit ? t('Lưu') : t('${labels.create}')}
       cancelText={t('Huỷ')}
-      confirmLoading={submitting}
+      // Modal bọc: đang gửi thì khoá mask/ESC/X, huỷ form khi đóng để initialValues đúng.
+      submitting={submitting}
       onOk={() => form.submit()}
       onCancel={onCancel}
-      // Huỷ form mỗi lần đóng để initialValues luôn đúng với item đang sửa.
-      destroyOnHidden
     >
       <Form<${entity}Payload>
         form={form}
@@ -414,13 +413,15 @@ files.set(
   `src/features/${kebab}/pages/${kebab}-page.tsx`,
   `import { PlusOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
-import { App, Button, Card } from 'antd';
+import { Card } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { EmptyState } from '@/components/feedback/empty-state';
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
+import { Button } from '@/components/ui/button';
+import { useConfirm } from '@/components/ui/use-confirm';
 import { ${entity}FormModal } from '@/features/${kebab}/components/${entityCamel}-form-modal';
 import { ${pascal}Table } from '@/features/${kebab}/components/${kebab}-table';
 import {
@@ -438,7 +439,7 @@ type FormState = { open: boolean; item: ${entity} | null };
 
 export function ${pascal}Page() {
   const { t } = useTranslation();
-  const { modal } = App.useApp();
+  const confirm = useConfirm();
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
@@ -446,7 +447,9 @@ export function ${pascal}Page() {
   const updateSearch = (patch: Partial<${pascal}Search>) =>
     navigate({ search: (prev) => ({ ...prev, ...patch }) });
 
-  const query = use${pascal}(search);
+  const query = use${pascal}(search, {
+    onPageOverflow: (page) => void updateSearch({ page }),
+  });
   const create${entity} = useCreate${entity}();
   const update${entity} = useUpdate${entity}();
   const delete${entity} = useDelete${entity}();
@@ -463,20 +466,16 @@ export function ${pascal}Page() {
     void mutation.then(closeForm, () => undefined);
   };
 
-  const confirmDelete = (item: ${entity}) => {
-    modal.confirm({
+  const confirmDelete = (item: ${entity}) =>
+    confirm({
       title: t('${labels.deleteTitle}', { name: item.name }),
       content: t('Hành động này không thể hoàn tác.'),
       okText: t('Xoá'),
-      okButtonProps: { danger: true },
       cancelText: t('Huỷ'),
-      onOk: () =>
-        delete${entity}.mutateAsync(item.id).then(
-          () => undefined,
-          () => undefined,
-        ),
+      danger: true,
+      // Lỗi đã toast trong mutation; kết quả true/false không cần xử lý thêm.
+      onConfirm: () => delete${entity}.mutateAsync(item.id),
     });
-  };
 
   return (
     <>
@@ -491,17 +490,15 @@ export function ${pascal}Page() {
 
       <Card className="app-card">
         {query.isError ? (
-          <ErrorState error={query.error} onRetry={() => query.refetch()} />
+          <ErrorState error={query.error} onRetry={query.refetch} />
         ) : (
           <${pascal}Table
-            items={query.data?.items ?? []}
-            loading={query.isPending || query.isPlaceholderData}
-            pagination={{
-              page: search.page,
-              pageSize: search.pageSize,
-              total: query.data?.total ?? 0,
-            }}
-            onPageChange={(page, pageSize) => updateSearch({ page, pageSize })}
+            list={query}
+            page={search.page}
+            pageSize={search.pageSize}
+            onPageChange={(page, pageSize) =>
+              void updateSearch({ page, pageSize })
+            }
             emptyState={
               <EmptyState
                 title={t('${labels.empty}')}
@@ -514,7 +511,7 @@ export function ${pascal}Page() {
               />
             }
             onEdit={(item) => setForm({ open: true, item })}
-            onDelete={confirmDelete}
+            onDelete={(item) => void confirmDelete(item)}
           />
         )}
       </Card>

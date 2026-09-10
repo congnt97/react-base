@@ -1,7 +1,9 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from '@tanstack/react-router';
-import { Button, Form, Input } from 'antd';
+import { Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
+
+import { Button } from '@/components/ui/button';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
 import type { LoginRequest } from '@/features/auth/types';

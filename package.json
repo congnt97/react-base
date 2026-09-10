@@ -65,6 +65,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "4.6.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@tanstack/eslint-plugin-query": "^5.102.8",

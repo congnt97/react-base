@@ -1,7 +1,8 @@
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import { AppUpload } from '@/components/ui/app-upload';
+import { Modal } from '@/components/ui/modal';
+import { Upload } from '@/components/ui/upload';
 import {
   PROJECT_STATUSES,
   PROJECT_STATUS_LABELS,
@@ -43,11 +44,10 @@ export function ProjectFormModal({
       title={isEdit ? t('Sửa dự án') : t('Tạo dự án')}
       okText={isEdit ? t('Lưu') : t('Tạo dự án')}
       cancelText={t('Huỷ')}
-      confirmLoading={submitting}
+      // Modal bọc: đang gửi thì khoá mask/ESC/X, huỷ form khi đóng để initialValues đúng.
+      submitting={submitting}
       onOk={() => form.submit()}
       onCancel={onCancel}
-      // Huỷ form mỗi lần đóng để initialValues luôn đúng với project đang sửa.
-      destroyOnHidden
     >
       <Form<ProjectPayload>
         form={form}
@@ -86,11 +86,7 @@ export function ProjectFormModal({
         </Form.Item>
 
         <Form.Item label={t('Tài liệu đính kèm')} name="attachmentUrl">
-          <AppUpload
-            accept={ATTACHMENT_TYPES}
-            maxSizeMb={5}
-            upload={uploadFile}
-          />
+          <Upload accept={ATTACHMENT_TYPES} maxSizeMb={5} upload={uploadFile} />
         </Form.Item>
       </Form>
     </Modal>

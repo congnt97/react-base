@@ -4,10 +4,11 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Drawer, Grid, Layout, Menu } from 'antd';
+import { Grid, Layout, Menu } from 'antd';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Drawer } from '@/components/ui/drawer';
 import { usePermissions } from '@/features/auth/hooks/use-permissions';
 import type { Permission } from '@/features/auth/permissions';
 

@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  queryOptions,
-  useQuery,
-} from '@tanstack/react-query';
-
+import { useListQuery } from '@/core/hooks/use-list-query';
 import { projectsApi } from '@/features/projects/api';
 import type { ProjectListParams } from '@/features/projects/types';
 
@@ -15,15 +10,20 @@ export const projectKeys = {
   detail: (id: string) => [...projectKeys.all, 'detail', id] as const,
 };
 
-const projectsQueryOptions = (params: ProjectListParams) =>
-  queryOptions({
-    queryKey: projectKeys.list(params),
-    // `signal` huỷ request cũ khi user đổi trang/filter nhanh, tránh response lệch.
-    queryFn: ({ signal }) => projectsApi.list(params, { signal }),
-    // Giữ data trang cũ khi đổi trang/filter để bảng không nháy trắng.
-    placeholderData: keepPreviousData,
-  });
+type UseProjectsOptions = {
+  /** Xoá dòng cuối của trang cuối thì lùi về trang còn dữ liệu. */
+  onPageOverflow: (lastPage: number) => void;
+};
 
-export function useProjects(params: ProjectListParams) {
-  return useQuery(projectsQueryOptions(params));
+export function useProjects(
+  params: ProjectListParams,
+  { onPageOverflow }: UseProjectsOptions,
+) {
+  return useListQuery({
+    queryKey: projectKeys.list(params),
+    queryFn: ({ signal }) => projectsApi.list(params, { signal }),
+    page: params.page,
+    pageSize: params.pageSize,
+    onPageOverflow,
+  });
 }

@@ -1,10 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { getRouteApi } from '@tanstack/react-router';
-import { App, Button, Card } from 'antd';
+import { Card } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { ErrorState } from '@/components/feedback/error-state';
 import { PageHeader } from '@/components/layout/page-header';
+import { Button } from '@/components/ui/button';
+import { useConfirm } from '@/components/ui/use-confirm';
 import { Can } from '@/features/auth/components/can';
 import { usePermissions } from '@/features/auth/hooks/use-permissions';
 import { ProjectFormModal } from '@/features/projects/components/project-form-modal';
@@ -24,7 +26,7 @@ const route = getRouteApi('/_app/projects/');
 
 export function ProjectsPage() {
   const { t } = useTranslation();
-  const { modal } = App.useApp();
+  const confirm = useConfirm();
   const { can } = usePermissions();
   const search = route.useSearch();
   const navigate = route.useNavigate();
@@ -33,7 +35,9 @@ export function ProjectsPage() {
   const updateSearch = (patch: Partial<ProjectsSearch>) =>
     navigate({ search: (prev) => ({ ...prev, ...patch }) });
 
-  const projects = useProjects(search);
+  const projects = useProjects(search, {
+    onPageOverflow: (page) => void updateSearch({ page }),
+  });
   const form = useProjectForm();
   const updateStatus = useUpdateProjectStatus();
   const deleteProject = useDeleteProject();
@@ -43,20 +47,16 @@ export function ProjectsPage() {
   const canDelete = can('projects:delete');
   const hasFilter = Boolean(search.keyword ?? search.status);
 
-  const confirmDelete = (project: Project) => {
-    modal.confirm({
+  const confirmDelete = (project: Project) =>
+    confirm({
       title: t('Xoá dự án "{{name}}"?', { name: project.name }),
       content: t('Hành động này không thể hoàn tác.'),
       okText: t('Xoá'),
-      okButtonProps: { danger: true },
       cancelText: t('Huỷ'),
-      onOk: () =>
-        deleteProject.mutateAsync(project.id).then(
-          () => undefined,
-          () => undefined,
-        ),
+      danger: true,
+      // Lỗi đã toast trong mutation; kết quả true/false không cần xử lý thêm.
+      onConfirm: () => deleteProject.mutateAsync(project.id),
     });
-  };
 
   return (
     <>
@@ -83,25 +83,18 @@ export function ProjectsPage() {
           <ProjectsFilter
             keyword={search.keyword}
             status={search.status}
-            onChange={(filter) => updateSearch({ ...filter, page: 1 })}
+            onChange={(filter) => void updateSearch({ ...filter, page: 1 })}
           />
 
           {projects.isError ? (
-            <ErrorState
-              error={projects.error}
-              onRetry={() => projects.refetch()}
-            />
+            <ErrorState error={projects.error} onRetry={projects.refetch} />
           ) : (
             <ProjectsTable
-              projects={projects.data?.items ?? []}
-              loading={projects.isPending || projects.isPlaceholderData}
-              pagination={{
-                page: search.page,
-                pageSize: search.pageSize,
-                total: projects.data?.total ?? 0,
-              }}
+              list={projects}
+              page={search.page}
+              pageSize={search.pageSize}
               onPageChange={(page, pageSize) =>
-                updateSearch({ page, pageSize })
+                void updateSearch({ page, pageSize })
               }
               emptyState={
                 <ProjectsEmptyState
@@ -116,7 +109,9 @@ export function ProjectsPage() {
                       updateStatus.mutate({ id: project.id, status })
                   : undefined
               }
-              onDelete={canDelete ? confirmDelete : undefined}
+              onDelete={
+                canDelete ? (project) => void confirmDelete(project) : undefined
+              }
             />
           )}
         </div>
