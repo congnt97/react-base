@@ -15,3 +15,27 @@ export const fail = (statusCode: number, message: string) =>
     { success: false, statusCode, message },
     { status: statusCode },
   );
+
+/** Lỗi theo field (422): `lib/http.ts` đưa `errors` vào `ApiError.fieldErrors`. */
+export const failFields = (
+  statusCode: number,
+  message: string,
+  errors: Record<string, string>,
+) =>
+  HttpResponse.json(
+    { success: false, statusCode, message, errors },
+    { status: statusCode },
+  );
+
+/** Cắt trang theo `page`/`pageSize` trên URL, đúng envelope PaginatedResponse. */
+export const paginate = <T>(items: T[], url: URL) => {
+  const page = Number(url.searchParams.get('page') ?? 1);
+  const pageSize = Number(url.searchParams.get('pageSize') ?? 10);
+  const start = (page - 1) * pageSize;
+  return {
+    items: items.slice(start, start + pageSize),
+    total: items.length,
+    page,
+    pageSize,
+  };
+};

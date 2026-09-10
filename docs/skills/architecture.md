@@ -51,7 +51,7 @@ features/<x>/
   guards.ts         helper cho beforeLoad (chỉ auth có)
 ```
 
-Không phải feature nào cũng cần đủ file. Dashboard chỉ có `pages/`.
+Không phải feature nào cũng cần đủ file. Dashboard chỉ có `pages/`. Mẫu CRUD cơ bản: `features/projects`. Mẫu phức tạp hơn (chọn nhiều dòng + hành động hàng loạt, drawer form với select tìm server, bảng con phân trang trên URL, lỗi field từ backend): `features/members`.
 
 `scripts/check-structure.mjs` (trong `pnpm validate`) fail khi có folder lạ ở `src/`, file sai chỗ trong feature, hoặc folder con trong `lib/`. Cần loại file mới thì sửa script kèm docs này, không tạo tạm rồi để đó.
 
@@ -87,6 +87,7 @@ URL search params   = filter/pagination/sort của list page (share link, back/f
 ```
 
 - Không copy query data vào Zustand hay `useState` để render.
+- Đọc store qua selector `useXStore((state) => state.field)`; gọi `useXStore()` không đối số bị ESLint chặn.
 - Filter/pagination của list đi qua `validateSearch` + `navigate({ search })`, không `useState`. Mẫu: `features/projects/pages/projects-page.tsx`.
 - Zustand selector phải hẹp: `useAuthStore((s) => s.user)`.
 

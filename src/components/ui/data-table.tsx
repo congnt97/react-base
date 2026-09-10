@@ -40,6 +40,7 @@ export function DataTable<TRow extends object>({
     <ScrollHint>
       <Table<TRow>
         {...tableProps}
+        rootClassName="app-data-table"
         dataSource={list.items}
         loading={{ spinning: busy, delay: 200 }}
         locale={busy ? undefined : { emptyText: emptyState }}

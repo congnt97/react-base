@@ -129,3 +129,12 @@ select {
   background: #f1f5f9;
   color: #475569;
 }
+
+/*
+ * AntD 6 nhân đôi header (kể cả checkbox "chọn tất cả") vào hàng đo cột có
+ * aria-hidden, nên có phần tử focus được nằm trong vùng ẩn (axe: aria-hidden-focus).
+ * Ẩn hẳn nội dung hàng đo; hàng này chỉ để đo chiều rộng, không ai nhìn thấy.
+ */
+.app-data-table .ant-table-measure-row * {
+  visibility: hidden;
+}

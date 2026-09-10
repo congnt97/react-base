@@ -28,6 +28,17 @@ test.describe('Accessibility (axe, WCAG 2.1 AA)', () => {
     await expectNoA11yViolations(page);
   });
 
+  test('danh sách thành viên và drawer thêm', async ({ page }) => {
+    await login(page, 'admin');
+    await page.goto('/members');
+    await expect(page.getByText('37 thành viên')).toBeVisible();
+    await expectNoA11yViolations(page);
+
+    await page.getByRole('button', { name: 'Thêm thành viên' }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expectNoA11yViolations(page);
+  });
+
   test('chi tiết dự án', async ({ page }) => {
     await login(page, 'admin');
     await page.goto('/projects/p1');

@@ -2,6 +2,7 @@ import {
   DashboardOutlined,
   FolderOutlined,
   SettingOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Grid, Layout, Menu } from 'antd';
@@ -15,7 +16,7 @@ import type { Permission } from '@/features/auth/permissions';
 const { Sider } = Layout;
 
 type NavItem = {
-  key: '/' | '/projects' | '/settings';
+  key: '/' | '/projects' | '/members' | '/settings';
   label: string;
   icon: ReactNode;
   permission?: Permission;
@@ -28,6 +29,12 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Dự án',
     icon: <FolderOutlined />,
     permission: 'projects:read',
+  },
+  {
+    key: '/members',
+    label: 'Thành viên',
+    icon: <TeamOutlined />,
+    permission: 'members:read',
   },
   {
     key: '/settings',

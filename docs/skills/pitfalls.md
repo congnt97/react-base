@@ -4,11 +4,12 @@
 
 ## Máy đã ép
 
-- Feature import `Button, Modal, Table, Popconfirm, Upload, Drawer` thẳng từ `antd`: ESLint chặn (`WRAPPED_UI` trong `eslint.config.js`). Dùng `components/ui/<tên>`.
+- Feature import `Button, Modal, Table, Popconfirm, Upload, Drawer, Form` thẳng từ `antd`: ESLint chặn (`WRAPPED_UI` trong `eslint.config.js`). Dùng `components/ui/<tên>`.
 - Feature import `useQuery` thẳng: ESLint chặn. Dùng `core/hooks/use-list-query.ts` hoặc `use-detail-query.ts`.
 - `onClick={async …}` trên nút thường: ESLint `no-misused-promises` (attributes). Dùng `components/ui/button.tsx` hoặc `core/hooks/use-async-action.ts`.
 - `core/` và `lib/` import thư viện UI: ESLint chặn.
 - `eslint-disable` không ghi lý do, disable thừa, `@ts-ignore`: ESLint chặn.
+- Component khai báo trong component, `useXStore()` không selector, `VITE_*` có tên gợi secret: ESLint chặn.
 - Hành vi của từng adapter và hook core: test trong `src/core/**/*.test.*` và `src/components/ui/*.test.tsx`, chạy cùng `pnpm test`.
 - Đường dẫn nhắc trong file này phải tồn tại: `src/test/pitfalls.test.ts`.
 
@@ -43,10 +44,10 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 | 18  | Dependency thiếu hoặc disable lint để né   | `exhaustive-deps` error; disable phải có lý do                        | máy  |
 | 19  | `key` là index                             | `react/no-array-index-key`                                            | máy  |
 | 20  | Thiếu `key` trong map                      | `react/jsx-key`                                                       | máy  |
-| 21  | Component định nghĩa trong component       | Xem `docs/skills/hooks.md`                                            | docs |
+| 21  | Component định nghĩa trong component       | `react/no-unstable-nested-components`                                 | máy  |
 | 22  | Mutate state, mutate data từ cache         | `react-hooks/immutability`                                            | máy  |
 | 23  | Memo tay sai dependency                    | React Compiler rule                                                   | máy  |
-| 24  | Lấy cả store Zustand                       | Xem `docs/skills/architecture.md`                                     | docs |
+| 24  | Lấy cả store Zustand                       | ESLint chặn `useXStore()` không selector                              | máy  |
 | 25  | Input đổi từ uncontrolled sang controlled  | Xem `docs/skills/ui.md`                                               | docs |
 | 26  | Form giữ giá trị cũ khi mở lại modal       | `components/ui/modal.tsx` luôn `destroyOnHidden`                      | core |
 | 27  | Hook gọi trong điều kiện hoặc vòng lặp     | `rules-of-hooks`                                                      | máy  |
@@ -73,20 +74,20 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 
 ## 4. Auth và bảo mật
 
-| #   | Lỗi                                    | Base chặn bằng                                            | Chặn |
-| --- | -------------------------------------- | --------------------------------------------------------- | ---- |
-| 43  | Token mất khi reload                   | `features/auth/store.ts` persist                          | mẫu  |
-| 44  | Guard đọc context cũ nên bounce        | `features/auth/guards.ts` đọc `getState()`                | mẫu  |
-| 45  | Redirect loop login và app             | `e2e/auth.spec.ts`                                        | mẫu  |
-| 46  | Open redirect qua `redirectTo`         | `features/auth/search.ts` có test                         | máy  |
-| 47  | Ẩn nút tưởng là an toàn                | Backend phải check; xem `docs/skills/routing-auth.md`     | docs |
-| 48  | Phiên hết hạn đá về login im lặng      | `reason=expired` và giữ `redirectTo`                      | mẫu  |
-| 49  | Log token, password                    | Xem `docs/skills/security.md`                             | docs |
-| 50  | `dangerouslySetInnerHTML`, thiếu `rel` | ESLint                                                    | máy  |
-| 51  | Secret trong `VITE_*`                  | Xem `docs/skills/env.md`                                  | docs |
-| 52  | Upload không whitelist                 | `components/ui/upload.tsx` bắt buộc `accept`, `maxSizeMb` | core |
-| 53  | Thiếu CSP, nosniff                     | `docker/nginx` headers                                    | máy  |
-| 54  | Package độc hại vừa publish            | `pnpm-workspace.yaml` chặn 24h                            | máy  |
+| #   | Lỗi                                    | Base chặn bằng                                            | Chặn    |
+| --- | -------------------------------------- | --------------------------------------------------------- | ------- |
+| 43  | Token mất khi reload                   | `features/auth/store.ts` persist                          | mẫu     |
+| 44  | Guard đọc context cũ nên bounce        | `features/auth/guards.ts` đọc `getState()`                | mẫu     |
+| 45  | Redirect loop login và app             | `e2e/auth.spec.ts`                                        | mẫu     |
+| 46  | Open redirect qua `redirectTo`         | `features/auth/search.ts` có test                         | máy     |
+| 47  | Ẩn nút tưởng là an toàn                | Backend phải check; xem `docs/skills/routing-auth.md`     | docs    |
+| 48  | Phiên hết hạn đá về login im lặng      | `reason=expired` và giữ `redirectTo`                      | mẫu     |
+| 49  | Log token, password                    | Xem `docs/skills/security.md`                             | docs    |
+| 50  | `dangerouslySetInnerHTML`, thiếu `rel` | ESLint                                                    | máy     |
+| 51  | Secret trong `VITE_*`                  | ESLint chặn tên `VITE_*SECRET                             | PRIVATE | PASSWORD | TOKEN` | máy |
+| 52  | Upload không whitelist                 | `components/ui/upload.tsx` bắt buộc `accept`, `maxSizeMb` | core    |
+| 53  | Thiếu CSP, nosniff                     | `docker/nginx` headers                                    | máy     |
+| 54  | Package độc hại vừa publish            | `pnpm-workspace.yaml` chặn 24h                            | máy     |
 
 ## 5. UI/UX
 
@@ -131,6 +132,19 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 | 81  | Đổi tên field không đồng bộ mock và backend     | Type dùng chung cho `api.ts` và handler; contract backend là việc của PR                                               | docs |
 | 82  | Chỉ đúng trong mock                             | E2E chạy dev server thật; xem `docs/skills/testing.md`                                                                 | mẫu  |
 | 83  | Sửa ngoài phạm vi                               | `AGENTS.md` "Không làm"                                                                                                | docs |
+
+## 8. Form và select (thêm sau khi thử base với feature `members`)
+
+| #   | Lỗi                                                     | Base chặn bằng                                                                                  | Chặn |
+| --- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---- |
+| 84  | Submit form hai lần khi Enter và bấm nút cùng lúc       | `components/ui/form.tsx`: `onSubmit` trả Promise thì bỏ qua submit trùng                        | máy  |
+| 85  | Sửa field khi đang gửi, dữ liệu gửi đi khác trên màn    | `Form` bọc `disabled` mọi field tới khi xong                                                    | core |
+| 86  | Lỗi field từ backend (422) chỉ hiện toast chung         | `ApiError.fieldErrors` từ `body.errors`; `Form` bọc gắn vào đúng field                          | core |
+| 87  | Select tìm server gọi API mỗi ký tự, option cũ đè mới   | `core/hooks/use-async-options.ts` debounce, huỷ request cũ, bỏ response cũ; `search-select.tsx` | core |
+| 88  | Select khi sửa hiện id thay vì tên                      | `SearchSelect` nhận `selectedOption` để có label trước khi tìm                                  | core |
+| 89  | Đổi trang/filter mà vẫn giữ dòng đã chọn ngoài màn hình | Mẫu `features/members/hooks/use-members-selection.ts`: `updateSearch` gọi `clear()`             | mẫu  |
+| 90  | Hành động hàng loạt lặp N request                       | API `patchMany` một request nhiều id; mẫu `features/members/api.ts`                             | mẫu  |
+| 91  | Bảng con trên trang chi tiết giữ trang trong state      | Route `$id` có `validateSearch` riêng; mẫu `src/routes/_app/members/$id.tsx`                    | mẫu  |
 
 ## Khi gặp lỗi mới
 

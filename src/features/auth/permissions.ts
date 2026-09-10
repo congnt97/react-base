@@ -6,6 +6,10 @@ const PERMISSIONS = [
   'projects:create',
   'projects:update',
   'projects:delete',
+  'members:read',
+  'members:create',
+  'members:update',
+  'members:delete',
   'settings:manage',
 ] as const;
 
@@ -14,7 +18,12 @@ export type Permission = (typeof PERMISSIONS)[number];
 // Frontend chỉ dùng để ẩn/hiện UI và guard route; backend vẫn phải enforce.
 const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
   [Role.ADMIN]: PERMISSIONS,
-  [Role.USER]: ['projects:read', 'projects:create', 'projects:update'],
+  [Role.USER]: [
+    'projects:read',
+    'projects:create',
+    'projects:update',
+    'members:read',
+  ],
 };
 
 export const can = (

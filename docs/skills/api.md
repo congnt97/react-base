@@ -76,6 +76,7 @@ const projectsQueryOptions = (params: ProjectListParams) =>
 ```
 
 - Query key phải chứa mọi param mà `queryFn` dùng. Object trong key là bình thường, TanStack hash ổn định không phụ thuộc thứ tự field.
+- Method API: `list/detail/create/update/patch/remove`. Hành động hàng loạt là `<verb>Many` với một request nhiều id (`patchMany`), list con theo id cha là `list<Con>` (`listSessions`). Mẫu: `features/members/api.ts`.
 - Feature không gọi `useQuery` thẳng (ESLint chặn). List dùng `useListQuery`, detail dùng `useDetailQuery` từ `core/hooks/`: `isLoading` đúng nghĩa (query tắt không kẹt loading), `signal` sẵn, giữ data cũ khi đổi trang, tự báo `onPageOverflow` khi xoá dòng cuối của trang cuối. Mẫu: `features/projects/hooks/use-projects.ts`, `use-project.ts`.
 - `enabled: Boolean(id)` khi param bắt buộc có thể `undefined`. `queryOptions` tách riêng khi route loader cần prefetch (`projectDetailQueryOptions`).
 - Mutation: toast + `invalidateQueries({ queryKey: projectKeys.all })`. Chỉ auth/logout mới `queryClient.clear()`.

@@ -6,7 +6,7 @@
 
 1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả. Riêng `docs/skills/craft.md` (logic đúng, code sạch, tối ưu, cú pháp) áp dụng cho mọi task viết code; `docs/skills/pitfalls.md` cho mọi task có async, list, form, modal, xoá.
 2. Tìm cái có sẵn trước khi tạo mới: `rg` trong `src/components`, `src/features`, `src/lib`.
-3. Feature CRUD mới: `pnpm gen <tên>` rồi sửa, không viết tay từ đầu. Mẫu để đối chiếu: `src/features/projects`.
+3. Feature CRUD mới: `pnpm gen <tên>` rồi sửa, không viết tay từ đầu. Mẫu để đối chiếu: `src/features/projects` (CRUD cơ bản), `src/features/members` (chọn nhiều, hàng loạt, drawer form, bảng con).
 4. Sửa xong chạy `pnpm validate && pnpm test`. Đổi UI thì chạy thêm `pnpm test:e2e` (hoặc file spec liên quan) và xem thật trên browser.
 5. Khi kết thúc, báo: đã làm gì, lệnh nào đã chạy và kết quả, còn gì chưa làm và vì sao.
 
@@ -30,7 +30,7 @@ Sửa một bug thật thì để lại guard chặn nó (test hành vi, rule li
 - Không tạo folder ngoài `app/ components/ core/ features/ lib/ locales/ mocks/ routes/ styles/ test/`.
 - Không import feature từ feature khác (trừ `features/auth`). Code chung đưa xuống `components/` hoặc `lib/`.
 - Không gọi `axios`/`http` trong component hay page. Đi qua `features/<x>/api.ts` rồi `useListQuery`/`useDetailQuery`/`useMutation`; không `useQuery` thẳng trong feature.
-- Không import `Button, Modal, Table, Popconfirm, Upload, Drawer` thẳng từ thư viện UI trong feature; dùng bản bọc `components/ui/<tên>`. Hành động async từ nút đi qua `Button` bọc hoặc `useAsyncAction`.
+- Không import `Button, Modal, Table, Popconfirm, Upload, Drawer, Form` thẳng từ thư viện UI trong feature; dùng bản bọc `components/ui/<tên>`. Hành động async từ nút đi qua `Button` bọc hoặc `useAsyncAction`; select có dữ liệu từ API dùng `SearchSelect`.
 - Không `useMemo`/`useCallback` tay (React Compiler lo), không `useEffect` để tính derived state hay sync data từ Query.
 - Không hardcode text hiển thị; mọi chuỗi qua `t()` với key là câu tiếng Việt có dấu.
 - Không `!important`, không hex màu trong component; token ở `src/app/tokens.ts`.

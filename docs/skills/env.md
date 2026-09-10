@@ -4,7 +4,7 @@
 
 ## Máy đã ép
 
-`lib/env.ts` validate bằng zod, thiếu là throw lúc khởi động. `src/vite-env.d.ts` khai kiểu nên `import.meta.env.X` không phải `any`.
+`lib/env.ts` validate bằng zod, thiếu là throw lúc khởi động. `src/vite-env.d.ts` khai kiểu nên `import.meta.env.X` không phải `any`. Tên `VITE_*` chứa `SECRET|PRIVATE|PASSWORD|TOKEN` bị ESLint chặn.
 
 ## Rule
 

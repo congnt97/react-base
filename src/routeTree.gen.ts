@@ -15,6 +15,8 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AppMembersIndexRouteImport } from './routes/_app/members/index'
+import { Route as AppMembersIdRouteImport } from './routes/_app/members/$id'
 import { Route as AppProjectsIndexRouteImport } from './routes/_app/projects/index'
 import { Route as AppProjectsIdRouteImport } from './routes/_app/projects/$id'
 
@@ -47,6 +49,16 @@ const AuthRegisterRoute = AuthRegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppMembersIndexRoute = AppMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppMembersIdRoute = AppMembersIdRouteImport.update({
+  id: '/members/$id',
+  path: '/members/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -64,7 +76,9 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/members/$id': typeof AppMembersIdRoute
   '/projects/$id': typeof AppProjectsIdRoute
+  '/members/': typeof AppMembersIndexRoute
   '/projects/': typeof AppProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -73,7 +87,9 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
+  '/members/$id': typeof AppMembersIdRoute
   '/projects/$id': typeof AppProjectsIdRoute
+  '/members': typeof AppMembersIndexRoute
   '/projects': typeof AppProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -84,7 +100,9 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/members/$id': typeof AppMembersIdRoute
   '/_app/projects/$id': typeof AppProjectsIdRoute
+  '/_app/members/': typeof AppMembersIndexRoute
   '/_app/projects/': typeof AppProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -95,7 +113,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/auth/login'
     | '/auth/register'
+    | '/members/$id'
     | '/projects/$id'
+    | '/members/'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,7 +124,9 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/'
+    | '/members/$id'
     | '/projects/$id'
+    | '/members'
     | '/projects'
   id:
     | '__root__'
@@ -114,7 +136,9 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/_app/'
+    | '/_app/members/$id'
     | '/_app/projects/$id'
+    | '/_app/members/'
     | '/_app/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -167,6 +191,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/members/': {
+      id: '/_app/members/'
+      path: '/members'
+      fullPath: '/members/'
+      preLoaderRoute: typeof AppMembersIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/members/$id': {
+      id: '/_app/members/$id'
+      path: '/members/$id'
+      fullPath: '/members/$id'
+      preLoaderRoute: typeof AppMembersIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/projects/': {
       id: '/_app/projects/'
       path: '/projects'
@@ -187,14 +225,18 @@ declare module '@tanstack/react-router' {
 interface AppRouteRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppMembersIdRoute: typeof AppMembersIdRoute
   AppProjectsIdRoute: typeof AppProjectsIdRoute
+  AppMembersIndexRoute: typeof AppMembersIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppMembersIdRoute: AppMembersIdRoute,
   AppProjectsIdRoute: AppProjectsIdRoute,
+  AppMembersIndexRoute: AppMembersIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
 }
 

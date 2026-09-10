@@ -97,6 +97,6 @@ features/<feature>/
 File kebab-case, component PascalCase, hook useX, hằng UPPER_SNAKE.
 Boolean is/has/can/should. Handler handleX, prop onX.
 Type không prefix I/T; hậu tố Payload/ListParams/Search/Props/Api.
-API chỉ list/detail/create/update/patch/remove.
+API: list/detail/create/update/patch/remove; hàng loạt <verb>Many; list con list<Con>.
 Không default export, không viết tắt tuỳ tiện.
 ```

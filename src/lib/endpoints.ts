@@ -16,4 +16,12 @@ export const Endpoints = {
     LIST: '/projects',
     DETAIL: '/projects/:id',
   },
+  Members: {
+    LIST: '/members',
+    DETAIL: '/members/:id',
+    /** Hành động hàng loạt: PATCH một lần cho nhiều id. */
+    STATUS: '/members/status',
+    /** List con theo id cha. */
+    SESSIONS: '/members/:id/sessions',
+  },
 } as const;
