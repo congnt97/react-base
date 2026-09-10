@@ -16,9 +16,12 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   // Dev server bật MSW nên E2E không cần backend thật.
   webServer: {
-    command: 'yarn dev',
+    command: 'pnpm dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
+    // Lần đầu sau khi đổi lockfile Vite re-optimize dependency, có thể quá 60s.
+    timeout: 120_000,
+    // Hiện stderr của dev server để khi không lên được thì biết vì sao.
+    stderr: 'pipe',
   },
 });

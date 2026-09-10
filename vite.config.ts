@@ -32,7 +32,7 @@ export default defineConfig({
     // React bị bỏ qua (không memo), eslint-plugin-react-hooks báo chỗ đó.
     react({ compiler: true }),
     tailwindcss(),
-    // `yarn build:analyze` -> dist/stats.html để soi chunk nào phình.
+    // `pnpm build:analyze` -> dist/stats.html để soi chunk nào phình.
     process.env.ANALYZE
       ? visualizer({ filename: 'dist/stats.html', gzipSize: true })
       : undefined,
