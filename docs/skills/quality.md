@@ -7,7 +7,7 @@
 - Không `console.log`, không throw string, không promise bỏ lửng, không empty catch: ESLint.
 - Code chết (file/export/dependency không dùng): knip trong `validate`.
 - Bundle vượt ngân sách: `pnpm size` trong CI. Ngân sách ở `scripts/check-bundle-size.mjs`.
-- Coverage `lib/**`, `search/guards/permissions` dưới ngưỡng: `pnpm test:coverage` trong CI.
+- Coverage `lib/**`, `core/**`, `search/guards/permissions` dưới ngưỡng: `pnpm test:coverage` trong CI.
 - Memo tay sai dependency, setState trong effect, mutate trong render: `react-hooks/*`.
 
 ## Fallback

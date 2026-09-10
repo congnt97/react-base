@@ -17,7 +17,7 @@ Trước khi viết, liệt kê các trạng thái đầu vào và xử lý đ�
 
 - Rỗng, `0`, `''`, `false`, `null`, `undefined`: phân biệt "chưa có" và "có nhưng bằng không".
 - Loading, lỗi, rỗng, có data: mỗi màn hình đủ 4 nhánh.
-- Đồng thời: request cũ về sau request mới (truyền `signal`), bấm hai lần (bind `loading`), nhiều 401 cùng lúc (đã gom refresh).
+- Đồng thời: request cũ về sau request mới, bấm hai lần, nhiều 401 cùng lúc. Core và adapter đã lo; danh sách đầy đủ ở `docs/skills/pitfalls.md`.
 - Biên: trang cuối, trang vượt tổng, ký tự có dấu trong URL và header, timezone khi format ngày.
 - Bất biến: không mutate object từ Query cache hay props; tạo bản mới.
 - Đọc code có sẵn trước khi gọi: kiểm type thật, không đoán tên field hay tên hàm.

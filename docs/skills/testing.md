@@ -4,7 +4,8 @@
 
 ## Máy đã ép
 
-- Coverage `lib/**`, `components/hooks/**`, `features/*/search|guards|permissions` dưới ngưỡng: CI đỏ.
+- Coverage `lib/**`, `core/**`, `features/*/search|guards|permissions` dưới ngưỡng: CI đỏ.
+- Test hành vi cho hook core và adapter UI (`core/**/*.test.*`, `components/ui/*.test.tsx`) chạy cùng `pnpm test`; đây là guard chính cho `docs/skills/pitfalls.md`, không dựa vào E2E.
 - Vitest chỉ chạy `src/**/*.test.{ts,tsx}`; `e2e/*.spec.ts` là Playwright.
 - Hai test đối chiếu (endpoint↔MSW, `t()`↔`en.json`) chạy cùng `pnpm test`.
 

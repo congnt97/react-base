@@ -26,7 +26,7 @@ Frontend chỉ là guardrail. Backend phải enforce auth, permission, validate 
 ## Nội dung từ ngoài
 
 - Text từ user, API, file upload là untrusted. React escape sẵn; chỉ nguy hiểm khi tự render HTML hoặc chèn vào URL, style, iframe.
-- Upload dùng `components/ui/app-upload.tsx` với `accept` (MIME whitelist) và `maxSizeMb`. Không preview file HTML/SVG không kiểm soát.
+- Upload dùng `components/ui/upload.tsx` với `accept` (MIME whitelist) và `maxSizeMb`. Không preview file HTML/SVG không kiểm soát.
 - URL từ API phải validate trước khi mở hoặc nhúng. Mẫu chặn open redirect: `features/auth/search.ts`.
 
 ## Env và dependency

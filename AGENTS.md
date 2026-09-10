@@ -4,7 +4,7 @@
 
 ## Cách làm một task
 
-1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả. Riêng `docs/skills/craft.md` (logic đúng, code sạch, tối ưu, cú pháp) áp dụng cho mọi task viết code.
+1. Đọc `SKILLS.md`, chọn đúng file rule phụ theo bảng router. Không đọc tất cả. Riêng `docs/skills/craft.md` (logic đúng, code sạch, tối ưu, cú pháp) áp dụng cho mọi task viết code; `docs/skills/pitfalls.md` cho mọi task có async, list, form, modal, xoá.
 2. Tìm cái có sẵn trước khi tạo mới: `rg` trong `src/components`, `src/features`, `src/lib`.
 3. Feature CRUD mới: `pnpm gen <tên>` rồi sửa, không viết tay từ đầu. Mẫu để đối chiếu: `src/features/projects`.
 4. Sửa xong chạy `pnpm validate && pnpm test`. Đổi UI thì chạy thêm `pnpm test:e2e` (hoặc file spec liên quan) và xem thật trên browser.
@@ -20,14 +20,17 @@
 
 ## Khi guard báo lỗi
 
-Guard (ESLint, test đối chiếu, check cấu trúc, knip, coverage, bundle size) tồn tại để bắt đúng loại lỗi hay gặp. Gặp lỗi thì sửa nguyên nhân. Không `eslint-disable`, không `@ts-ignore`, không hạ ngưỡng, không thêm exclude, trừ khi có lý do ghi rõ trong PR.
+Guard (ESLint, test đối chiếu, test hành vi core/adapter, check cấu trúc, knip, coverage, bundle size) tồn tại để bắt đúng loại lỗi hay gặp. Gặp lỗi thì sửa nguyên nhân. Không `eslint-disable`, không `@ts-ignore`, không hạ ngưỡng, không thêm exclude, trừ khi có lý do ghi rõ trong PR. Sửa file guard (`eslint.config.js`, `vitest.config.ts`, `tsconfig.json`, `scripts/`, `.github/`) thì PR phải gắn label `guards`; CI đỏ nếu thiếu.
+
+Sửa một bug thật thì để lại guard chặn nó (test hành vi, rule lint, test đối chiếu) và một dòng trong `docs/skills/pitfalls.md`.
 
 ## Không làm
 
 - Không thêm thư viện UI, state, router, toast, form, CSS mới khi chưa được yêu cầu rõ.
-- Không tạo folder ngoài `app/ components/ features/ lib/ locales/ mocks/ routes/ styles/ test/`.
+- Không tạo folder ngoài `app/ components/ core/ features/ lib/ locales/ mocks/ routes/ styles/ test/`.
 - Không import feature từ feature khác (trừ `features/auth`). Code chung đưa xuống `components/` hoặc `lib/`.
-- Không gọi `axios`/`http` trong component hay page. Đi qua `features/<x>/api.ts` và hook TanStack Query.
+- Không gọi `axios`/`http` trong component hay page. Đi qua `features/<x>/api.ts` rồi `useListQuery`/`useDetailQuery`/`useMutation`; không `useQuery` thẳng trong feature.
+- Không import `Button, Modal, Table, Popconfirm, Upload, Drawer` thẳng từ thư viện UI trong feature; dùng bản bọc `components/ui/<tên>`. Hành động async từ nút đi qua `Button` bọc hoặc `useAsyncAction`.
 - Không `useMemo`/`useCallback` tay (React Compiler lo), không `useEffect` để tính derived state hay sync data từ Query.
 - Không hardcode text hiển thị; mọi chuỗi qua `t()` với key là câu tiếng Việt có dấu.
 - Không `!important`, không hex màu trong component; token ở `src/app/tokens.ts`.

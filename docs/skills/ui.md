@@ -8,6 +8,8 @@
 - Thiếu `key`, `alt`, label, role sai, click không có keyboard: ESLint `react/*`, `jsx-a11y/*`.
 - Màu lệch giữa `tokens.ts` và `styles.css`: `src/app/tokens.test.ts`.
 - Tương phản màu, a11y WCAG 2.1 AA trên mọi trang chính, cả ở 375px: `e2e/a11y.spec.ts`, `e2e/mobile.spec.ts`.
+- Feature import `Button, Modal, Table, Popconfirm, Upload, Drawer` thẳng từ `antd`: ESLint chặn, dùng bản bọc trong `components/ui/`. Các component AntD khác import thẳng.
+- `onClick={async …}` trên nút thường: ESLint chặn. Dùng `components/ui/button.tsx`.
 
 ## Token và style
 
@@ -19,15 +21,22 @@
 
 Có sẵn, reuse trước khi tạo mới:
 
-| Cần                       | Dùng                                                      |
-| ------------------------- | --------------------------------------------------------- |
-| Tiêu đề trang, breadcrumb | `components/layout/page-header.tsx`                       |
-| Ô tìm kiếm                | `components/ui/search-input.tsx`, có debounce, `onSearch` |
-| Upload một file           | `components/ui/app-upload.tsx`, whitelist MIME + size     |
-| Bảng cuộn ngang           | bọc `components/ui/scroll-hint.tsx`                       |
-| Rỗng                      | `components/feedback/empty-state.tsx`, có nút hành động   |
-| Loading, lỗi, 404, 403    | `components/feedback/*`                                   |
-| Ngày, số, tiền, file size | `lib/format.ts`, không `dayjs().format` trong component   |
+| Cần                          | Dùng                                                                                |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| Nút có hành động async       | `components/ui/button.tsx`: `onClick` trả Promise thì tự loading, chặn click spam   |
+| Modal form                   | `components/ui/modal.tsx`: `submitting` khoá mask/ESC/X, luôn `destroyOnHidden`     |
+| Xác nhận xoá, hành động nguy | `components/ui/use-confirm.ts` (hộp thoại) hoặc `components/ui/popconfirm.tsx`      |
+| Bảng list                    | `components/ui/data-table.tsx` nhận `list` từ `useListQuery`, `emptyState` bắt buộc |
+| Drawer                       | `components/ui/drawer.tsx`: `submitting` khoá đóng                                  |
+| Upload một file              | `components/ui/upload.tsx`, whitelist MIME + size                                   |
+| Loading/lỗi/rỗng cho query   | `components/feedback/query-boundary.tsx`, 4 nhánh bắt buộc                          |
+| Tiêu đề trang, breadcrumb    | `components/layout/page-header.tsx`                                                 |
+| Ô tìm kiếm                   | `components/ui/search-input.tsx`, có debounce, `onSearch`                           |
+| Rỗng                         | `components/feedback/empty-state.tsx`, có nút hành động                             |
+| Loading, lỗi, 404, 403       | `components/feedback/*`                                                             |
+| Ngày, số, tiền, file size    | `lib/format.ts`, không `dayjs().format` trong component                             |
+
+Adapter trong `components/ui/` là chỗ duy nhất biết thư viện UI cho các hành vi dễ sai. Hành vi (khoá click, khoá modal, loading trễ, trang tràn) nằm ở `src/core/`, không phụ thuộc AntD; đổi thư viện UI thì viết adapter mới và chạy lại test `components/ui/*.test.tsx`. Danh sách lỗi và thứ chặn: `docs/skills/pitfalls.md`.
 
 Tạo component chung mới chỉ khi: dùng từ 2 nơi, hoặc có behavior/a11y chung cần nhất quán. Chỉ bọc AntD mà không thêm gì thì không tạo. Component đặc thù một feature đặt trong `features/<x>/components`.
 
@@ -41,14 +50,14 @@ Tạo component chung mới chỉ khi: dùng từ 2 nơi, hoặc có behavior/a1
 ## Form
 
 - Validate bằng `rules` của `Form.Item`, không tự quản state lỗi. Mẫu: `features/projects/components/project-form-modal.tsx`.
-- Nút submit bind `loading={mutation.isPending}`.
-- Modal form dùng `destroyOnHidden` để `initialValues` đúng mỗi lần mở.
+- Nút submit trong `<Form>` bind `loading={mutation.isPending}`; nút gọi hành động async trực tiếp thì để `Button` bọc tự lo.
+- Modal form truyền `submitting={mutation.isPending}` cho `Modal` bọc; không tự xử lý `maskClosable`/`destroyOnHidden`.
 - `Form.useWatch('field', form)` đúng field cần, không watch cả form.
 - Lỗi backend trả về vẫn phải hiện lại, không giả định validate FE là đủ.
 
 ## Trạng thái hiển thị
 
-Mỗi màn hình có data phải xử lý đủ: loading (`Skeleton` hoặc `loading` của Table), lỗi (`ErrorState` có retry), rỗng (`EmptyState`, phân biệt rỗng do filter và rỗng thật). Hành động phá huỷ (xoá, logout) phải confirm có nút Huỷ.
+Mỗi màn hình có data phải xử lý đủ 4 nhánh: loading, lỗi (`ErrorState` có retry), rỗng (`EmptyState`, phân biệt rỗng do filter và rỗng thật), có data. `QueryBoundary` và `DataTable` bắt buộc ở type nên không quên được. Hành động phá huỷ (xoá, logout) đi qua `useConfirm` với `danger: true`.
 
 ## Mobile
 

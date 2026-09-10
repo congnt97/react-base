@@ -4,13 +4,14 @@ Rule chung và cách làm task nằm ở `AGENTS.md`. File này chỉ để ch�
 
 ## Stack cố định
 
-React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind (layout/spacing), TanStack Router, TanStack Query, Zustand, Axios qua `lib/http.ts`, MSW, Vitest + Testing Library, Playwright, pnpm.
+React 19 + React Compiler, TypeScript, Vite, Ant Design (qua adapter `components/ui/` cho phần hành vi), Tailwind (layout/spacing), TanStack Router, TanStack Query (qua `core/hooks/`), Zustand, Axios qua `lib/http.ts`, MSW, Vitest + Testing Library, Playwright, pnpm.
 
 ## Đọc gì khi task chạm tới
 
 | Task chạm tới                                                          | Đọc                           |
 | ---------------------------------------------------------------------- | ----------------------------- |
 | Mọi task viết/sửa code: logic đúng, code sạch, tối ưu, cú pháp         | `docs/skills/craft.md`        |
+| Async, click, loading, list/phân trang, modal, xoá, upload, đổi UI lib | `docs/skills/pitfalls.md`     |
 | Folder, feature mới, state, store                                      | `docs/skills/architecture.md` |
 | Đặt tên file, biến, type, hook, API, query key, event, branch, commit  | `docs/skills/naming.md`       |
 | API, endpoint, query/mutation, cache, response/error, pagination, mock | `docs/skills/api.md`          |

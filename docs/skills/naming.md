@@ -47,7 +47,7 @@ features/<feature>/
 ```
 
 - Feature folder số nhiều nếu là danh sách entity (`projects`), số ít nếu là khái niệm (`auth`, `dashboard`, `settings`).
-- Component dùng chung trong `components/<group>/`: wrapper AntD có prefix `App` (`AppUpload`), còn lại tên thường (`PageHeader`, `SearchInput`, `ErrorState`, `PageLoading`).
+- Component dùng chung trong `components/<group>/`: adapter bọc thư viện UI giữ đúng tên gốc (`Button`, `Modal`, `Upload` trong `components/ui/`), còn lại tên thường (`PageHeader`, `SearchInput`, `ErrorState`, `DataTable`).
 - Test colocate cùng tên: `url.ts` -> `url.test.ts`. E2E: `e2e/<area>.spec.ts`.
 - Route theo convention TanStack: tên file = URL (`_app/projects.tsx` -> `/projects`), `_app` là pathless layout, `$id` là param, `__root` là root.
 

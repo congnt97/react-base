@@ -22,6 +22,7 @@ DOM API (focus, measure), subscription (WebSocket, event listener), timer, thư 
 
 ## Custom hook
 
-- Đặt ở `features/<x>/hooks/` (biết feature) hoặc `components/hooks/` (dùng chung, không biết feature). Không đặt trong `lib` vì `lib` không import React.
+- Đặt ở `features/<x>/hooks/` (biết feature) hoặc `core/hooks/` (hành vi dùng chung, biết React, không biết feature và không biết thư viện UI). Không đặt trong `lib` vì `lib` không import React.
+- Hành động async từ user (bấm nút, xác nhận) bọc bằng `useAsyncAction` để có `pending` và chặn gọi trùng.
 - Tên nói đúng việc nó làm, không side-effect ẩn.
 - Trả về đúng thứ nơi gọi cần, không trả nguyên object nội bộ.

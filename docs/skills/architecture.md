@@ -14,7 +14,8 @@
 ```text
 src/
   app/          bootstrap + layout app (router, providers, theme, AppShell, Header, Sidebar)
-  components/   UI dùng chung, không biết feature
+  components/   UI dùng chung, không biết feature; components/ui/ là adapter của thư viện UI
+  core/         hành vi headless dùng chung (hook, contract), biết React, không biết UI lib
   features/     mỗi feature một folder, tự chứa mọi thứ của nó
   lib/          tầng thấp nhất: http, env, error, response, storage, url, endpoints, query-client
   mocks/        MSW handlers + data (chỉ dev)
@@ -25,12 +26,13 @@ src/
 Chiều phụ thuộc (ESLint enforce):
 
 ```text
-routes -> features -> components -> lib
-app    -> features, components, lib
+routes -> features -> components -> core -> lib
+app    -> features, components, core, lib
 ```
 
-- `lib` không import React, AntD, hay bất kỳ tầng trên nào. Hook React dùng chung đặt ở `components/hooks/` (được dùng React, không biết feature).
-- `components` không import `features`/`app`. Component có logic feature thì đặt trong `features/<x>/components`.
+- `lib` không import React, thư viện UI, hay bất kỳ tầng trên nào.
+- `core` chỉ import `lib`. Không import thư viện UI (ESLint chặn): đổi AntD sang thư viện khác không đụng `core`.
+- `components` không import `features`/`app`. Component có logic feature thì đặt trong `features/<x>/components`. Adapter cho component có hành vi dễ sai (`Button, Modal, Table, Popconfirm, Upload, Drawer`) nằm ở `components/ui/`, feature bắt buộc dùng qua đó.
 - `axios` chỉ xuất hiện trong `lib/http.ts`.
 - Feature không import feature khác trừ `features/auth` (store/guards/types là app-level). Nếu hai feature cần chung code, đưa xuống `components` hoặc `lib`. ESLint sinh rule này tự động cho từng folder trong `src/features`.
 - Tên file/folder kebab-case do `eslint-plugin-check-file` kiểm tra (trừ `routes/` theo convention TanStack).

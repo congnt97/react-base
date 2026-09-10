@@ -76,23 +76,20 @@ const projectsQueryOptions = (params: ProjectListParams) =>
 ```
 
 - Query key phải chứa mọi param mà `queryFn` dùng. Object trong key là bình thường, TanStack hash ổn định không phụ thuộc thứ tự field.
-- `enabled: Boolean(id)` khi param bắt buộc có thể `undefined`. Mẫu detail: `use-project.ts` với `projectDetailQueryOptions(id)` dùng chung cho route loader.
-- List dùng `placeholderData: keepPreviousData` để bảng không nháy khi đổi trang.
+- Feature không gọi `useQuery` thẳng (ESLint chặn). List dùng `useListQuery`, detail dùng `useDetailQuery` từ `core/hooks/`: `isLoading` đúng nghĩa (query tắt không kẹt loading), `signal` sẵn, giữ data cũ khi đổi trang, tự báo `onPageOverflow` khi xoá dòng cuối của trang cuối. Mẫu: `features/projects/hooks/use-projects.ts`, `use-project.ts`.
+- `enabled: Boolean(id)` khi param bắt buộc có thể `undefined`. `queryOptions` tách riêng khi route loader cần prefetch (`projectDetailQueryOptions`).
 - Mutation: toast + `invalidateQueries({ queryKey: projectKeys.all })`. Chỉ auth/logout mới `queryClient.clear()`.
 - Không fetch bằng `useEffect` + `useState`.
 
 ## Xử Lý 3 Trạng Thái
 
 ```tsx
-if (query.isError)
-  return <ErrorState error={query.error} onRetry={query.refetch} />;
-<Table
-  loading={query.isPending || query.isPlaceholderData}
-  dataSource={query.data?.items ?? []}
-/>;
+const list = useProjects(search, { onPageOverflow: (page) => void updateSearch({ page }) });
+if (list.isError) return <ErrorState error={list.error} onRetry={list.refetch} />;
+<DataTable list={list} page={search.page} pageSize={search.pageSize} emptyState={…} … />;
 ```
 
-Không chỉ `data && ...` rồi im lặng khi lỗi.
+Không chỉ `data && ...` rồi im lặng khi lỗi. Không đọc `isPending` của query để hiện loading; dùng `isLoading` mà core đã tính.
 
 ## Error
 
@@ -114,7 +111,7 @@ type PaginatedResponse<T> = {
 };
 ```
 
-Page truyền `total/page/pageSize` thẳng vào `Table.pagination`, không tự giữ state phân trang song song. `page/pageSize/filter` nằm trên URL (xem `routing-auth.md`).
+Page truyền `list` từ `useListQuery` và `page/pageSize` từ URL vào `DataTable`, không tự giữ state phân trang song song. `page/pageSize/filter` nằm trên URL (xem `routing-auth.md`).
 
 ## Optimistic Update
 
@@ -132,7 +129,7 @@ Bảng có phân trang số trang vẫn dùng `PaginatedResponse<T>`; không tr�
 
 ## Upload
 
-Dùng `components/ui/app-upload.tsx` với `accept` (MIME whitelist) và `maxSizeMb`; giá trị là URL string nên đặt thẳng trong `Form.Item`. Hàm upload dùng chung ở `lib/upload.ts`. Client validate chỉ để UX, backend phải validate lại.
+Dùng `components/ui/upload.tsx` với `accept` (MIME whitelist) và `maxSizeMb`; giá trị là URL string nên đặt thẳng trong `Form.Item`. Hàm upload dùng chung ở `lib/upload.ts`. Client validate chỉ để UX, backend phải validate lại.
 
 ## Mock (MSW)
 
