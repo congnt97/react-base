@@ -2,7 +2,7 @@
 
 Base frontend cho CMS/admin: React 19 + React Compiler, TypeScript, Vite, Ant Design, Tailwind, TanStack Router/Query, Zustand, MSW, pnpm.
 
-Rule cho người và AI: [AGENTS.md](./AGENTS.md) (cách làm task, định nghĩa xong) và [SKILLS.md](./SKILLS.md) (chọn rule phụ).
+Rule cho người và AI: [AGENTS.md](./AGENTS.md) (cách làm task, định nghĩa xong) và [SKILLS.md](./SKILLS.md) (chọn rule phụ). Giải thích dài có ví dụ: [docs/handbook.md](./docs/handbook.md). Vì sao base chọn như vậy: [docs/decisions.md](./docs/decisions.md).
 
 ## 30 phút đầu cho người mới
 
