@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import js from '@eslint/js';
@@ -10,6 +10,12 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
+
+// eslint-plugin-react cần biết bản React. 'detect' gọi API đã bỏ ở ESLint 10 nên đọc
+// thẳng từ package đang cài, để nâng React không phải nhớ sửa chỗ này.
+const REACT_VERSION = JSON.parse(
+  readFileSync('node_modules/react/package.json', 'utf8'),
+).version;
 
 // Feature được phép import từ mọi nơi (store/guards/types là app-level).
 const SHARED_FEATURES = ['auth'];
@@ -109,8 +115,7 @@ export default tseslint.config(
     // Lỗi JSX cơ bản TypeScript không bắt được.
     files: ['src/**/*.tsx'],
     plugins: { react },
-    // Ghi cứng thay vì 'detect': detect gọi API đã bỏ ở ESLint 10 và làm vỡ rule.
-    settings: { react: { version: '19.2' } },
+    settings: { react: { version: REACT_VERSION } },
     rules: {
       'react/jsx-key': ['error', { checkFragmentShorthand: true }],
       // Component khai báo trong component: remount mỗi render, mất state và focus.
