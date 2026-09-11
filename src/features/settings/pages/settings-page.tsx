@@ -1,4 +1,4 @@
-import { Card, Descriptions } from 'antd';
+import { Card, Descriptions, Space, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { PageHeader } from '@/components/layout/page-header';
@@ -32,9 +32,18 @@ export function SettingsPage() {
               children: user?.name ?? t('Chưa cập nhật'),
             },
             {
-              key: 'role',
-              label: t('Vai trò'),
-              children: user?.role ?? t('Chưa xác định'),
+              // Quyền đã chuẩn hoá ở biên API; hiện ra để kiểm backend trả đúng chưa.
+              key: 'permissions',
+              label: t('Quyền'),
+              children: user?.permissions.length ? (
+                <Space size={[0, 4]} wrap>
+                  {user.permissions.map((permission) => (
+                    <Tag key={permission}>{permission}</Tag>
+                  ))}
+                </Space>
+              ) : (
+                t('Không có quyền nào')
+              ),
             },
           ]}
         />

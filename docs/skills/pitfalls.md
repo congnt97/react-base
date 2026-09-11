@@ -135,17 +135,19 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 
 ## 8. Form và select (thêm sau khi thử base với feature `members`)
 
-| #   | Lỗi                                                        | Base chặn bằng                                                                                                  | Chặn |
-| --- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---- |
-| 84  | Submit form hai lần khi Enter và bấm nút cùng lúc          | `components/ui/form.tsx`: `onSubmit` trả Promise thì bỏ qua submit trùng                                        | máy  |
-| 85  | Sửa field khi đang gửi, dữ liệu gửi đi khác trên màn       | `Form` bọc `disabled` mọi field tới khi xong                                                                    | core |
-| 86  | Lỗi field từ backend (422) chỉ hiện toast chung            | `ApiError.fieldErrors` từ `body.errors`; `Form` bọc gắn vào đúng field                                          | core |
-| 87  | Select tìm server gọi API mỗi ký tự, option cũ đè mới      | `core/hooks/use-async-options.ts` debounce, huỷ request cũ, bỏ response cũ; `search-select.tsx`                 | core |
-| 88  | Select khi sửa hiện id thay vì tên                         | `SearchSelect` nhận `selectedOption` để có label trước khi tìm                                                  | core |
-| 89  | Đổi trang/filter mà vẫn giữ dòng đã chọn ngoài màn hình    | Mẫu `features/members/hooks/use-members-selection.ts`: `updateSearch` gọi `clear()`                             | mẫu  |
-| 90  | Hành động hàng loạt lặp N request                          | API `patchMany` một request nhiều id; mẫu `features/members/api.ts`                                             | mẫu  |
-| 91  | Bảng con trên trang chi tiết giữ trang trong state         | Route `$id` có `validateSearch` riêng; mẫu `src/routes/_app/members/$id.tsx`                                    | mẫu  |
-| 92  | Route import page thẳng làm chunk đầu lớn theo số màn hình | `autoCodeSplitting` trong `vite.config.ts`; `scripts/check-bundle-size.mjs` fail nếu route không có chunk riêng | máy  |
+| #   | Lỗi                                                                      | Base chặn bằng                                                                                                        | Chặn |
+| --- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- | ---- |
+| 84  | Submit form hai lần khi Enter và bấm nút cùng lúc                        | `components/ui/form.tsx`: `onSubmit` trả Promise thì bỏ qua submit trùng                                              | máy  |
+| 85  | Sửa field khi đang gửi, dữ liệu gửi đi khác trên màn                     | `Form` bọc `disabled` mọi field tới khi xong                                                                          | core |
+| 86  | Lỗi field từ backend (422) chỉ hiện toast chung                          | `ApiError.fieldErrors` từ `body.errors`; `Form` bọc gắn vào đúng field                                                | core |
+| 87  | Select tìm server gọi API mỗi ký tự, option cũ đè mới                    | `core/hooks/use-async-options.ts` debounce, huỷ request cũ, bỏ response cũ; `search-select.tsx`                       | core |
+| 88  | Select khi sửa hiện id thay vì tên                                       | `SearchSelect` nhận `selectedOption` để có label trước khi tìm                                                        | core |
+| 89  | Đổi trang/filter mà vẫn giữ dòng đã chọn ngoài màn hình                  | Mẫu `features/members/hooks/use-members-selection.ts`: `updateSearch` gọi `clear()`                                   | mẫu  |
+| 90  | Hành động hàng loạt lặp N request                                        | API `patchMany` một request nhiều id; mẫu `features/members/api.ts`                                                   | mẫu  |
+| 91  | Bảng con trên trang chi tiết giữ trang trong state                       | Route `$id` có `validateSearch` riêng; mẫu `src/routes/_app/members/$id.tsx`                                          | mẫu  |
+| 92  | Route import page thẳng làm chunk đầu lớn theo số màn hình               | `autoCodeSplitting` trong `vite.config.ts`; `scripts/check-bundle-size.mjs` fail nếu route không có chunk riêng       | máy  |
+| 93  | Quyết định quyền bằng `user.role` rải rác, đổi backend phải sửa khắp nơi | `AuthUser` không có `role` nên TypeScript báo lỗi; quyền chuẩn hoá ở `features/auth/api.ts` bằng `resolvePermissions` | máy  |
+| 94  | Backend đổi tên permission, nút lặng lẽ biến mất                         | `resolvePermissions` bỏ chuỗi lạ và báo monitoring một lần                                                            | core |
 
 ## Khi gặp lỗi mới
 

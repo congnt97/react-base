@@ -204,7 +204,7 @@ Viết `t('Câu tiếng Việt có dấu')` rồi thêm cặp key/value vào `sr
 
 ### Thêm permission
 
-Thêm chuỗi `<resource>:<action>` vào `PERMISSIONS`, gán cho role trong `ROLE_PERMISSIONS`, cập nhật `permissions.test.ts`. Dùng ở ba nơi: `requirePermission` trong route, `<Can>` quanh nút, `usePermissions().can()` khi cần biến boolean.
+Thêm chuỗi `<resource>:<action>` vào `PERMISSIONS`, gán cho role trong `ROLE_PERMISSIONS` (dùng khi backend chỉ trả role, và cho mock), cập nhật `permissions.test.ts`. Dùng ở ba nơi: `requirePermission` trong route, `<Can>` quanh nút, `usePermissions().can()` khi cần biến boolean. Tên phải khớp đúng chuỗi backend trả; lệch tên thì quyền bị bỏ và monitoring nhận một báo cáo.
 
 ### Thêm màu hoặc token
 
@@ -233,7 +233,7 @@ Sửa xong phải để lại hai thứ: một guard (test hành vi, rule lint, 
 | `src/test/pitfalls.test.ts`     | test                          | đường dẫn trong tài liệu không còn tồn tại                                                                                                                                                                                                                                       |
 | test hành vi `core/`, `ui/`     | test                          | adapter hoặc hook core mất hành vi đã cam kết                                                                                                                                                                                                                                    |
 | coverage                        | test:coverage, CI             | `lib/`, `core/`, `search/guards/permissions` dưới ngưỡng 95/90/95/95                                                                                                                                                                                                             |
-| `scripts/check-bundle-size.mjs` | size, CI                      | mỗi route một chunk; framework 180 KB, entry 40 KB, chunk lẻ 250 KB, CSS 30 KB, tổng JS 750 KB (gzip)                                                                                                                                                                            |
+| `scripts/check-bundle-size.mjs` | size, CI                      | mỗi route một chunk; framework 180 KB, tải ban đầu (entry và mọi chunk nó kéo theo) 300 KB, chunk lẻ 250 KB, CSS 30 KB, tổng JS 750 KB (gzip)                                                                                                                                    |
 | CI label `guards`               | CI                            | PR sửa `eslint.config.js`, `vitest.config.ts`, `vite.config.ts`, `tsconfig.json`, `scripts/`, `.github/` mà không gắn label                                                                                                                                                      |
 | pnpm `minimumReleaseAge`        | install                       | package vừa publish dưới 24 giờ                                                                                                                                                                                                                                                  |
 | Hook sau khi AI sửa file        | Claude Code, Cursor           | lint + format ngay file vừa sửa, trả lỗi về cho AI                                                                                                                                                                                                                               |
@@ -246,6 +246,9 @@ Nguyên tắc khi guard đỏ: sửa nguyên nhân. Không `eslint-disable`, kh�
 - **Guard route** trong `beforeLoad` đọc `useAuthStore.getState()` để thấy giá trị mới nhất, không phụ thuộc React render. Chưa đăng nhập thì redirect về `/auth/login?redirectTo=...`; `redirectTo` chỉ nhận đường dẫn nội bộ (chặn open redirect, có test).
 - **Phiên hết hạn**: refresh thất bại thì xoá token, về login với `reason=expired` và giữ `redirectTo`.
 - **Permission** dạng `<resource>:<action>`. Frontend chỉ ẩn/hiện và chặn route; backend vẫn phải kiểm tra.
+- **Backend chưa chốt, nên biên API nhận cả hai kiểu.** `features/auth/api.ts` đổi user từ backend (`AuthUserDto`) thành `AuthUser` của app: có `permissions` thì dùng nguyên danh sách đó (mảng rỗng là không có quyền); chỉ có `role` thì tra `ROLE_PERMISSIONS`; không có gì hoặc role lạ thì không có quyền nào. Chuỗi lạ bị bỏ và báo monitoring một lần. Logic nằm ở `resolvePermissions` trong `features/auth/permissions.ts`, có test cho từng nhánh.
+- **`AuthUser` không có `role`.** Viết `user.role === 'admin'` trong feature là lỗi TypeScript. Mọi quyết định quyền đi qua `can()`, nên khi biết backend thật chỉ phải sửa biên API. Cần hiển thị vai trò thì thêm field nhãn ở biên API, không đưa `role` vào lại.
+- Mock hiện trả hai kiểu có chủ đích: `admin@example.com` trả `permissions`, `user@example.com` chỉ trả `role`, để cả hai nhánh chạy thật trong dev và E2E. Biết backend thật thì sửa mock về đúng một kiểu và xoá nhánh không dùng trong `resolvePermissions`.
 - **Route** theo convention TanStack: `_app` là layout cần đăng nhập, `$id` là param, `index.tsx` là trang list. Route chỉ khai báo; logic ở page. Loader dùng `ensureQueryData` với cùng `queryOptions` của hook để không nháy loading; API trả 404 thì `throw notFound()`.
 - **Search param** của trang list và cả bảng con trên trang chi tiết đều qua `validateSearch`. Route có search bắt buộc thì khai input là `Partial` kèm `SearchSchemaInput` để `<Link>` không phải truyền đủ.
 

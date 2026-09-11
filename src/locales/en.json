@@ -99,7 +99,6 @@
   "Vai trò": "Role",
   "Chưa có email": "No email",
   "Chưa cập nhật": "Not set",
-  "Chưa xác định": "Unknown",
   "Gõ để tìm": "Type to search",
   "Không có kết quả": "No results",
   "Sửa thành viên": "Edit member",
@@ -138,5 +137,7 @@
   "Đã vô hiệu hoá": "Deactivated",
   "Đã thêm thành viên": "Member added",
   "Đã cập nhật thành viên": "Member updated",
-  "Đã xoá thành viên": "Member deleted"
+  "Đã xoá thành viên": "Member deleted",
+  "Quyền": "Permissions",
+  "Không có quyền nào": "No permissions"
 }

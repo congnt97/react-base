@@ -53,7 +53,7 @@ export const projectsApi: ProjectsApi = {
 - Method đọc (`list`, `detail`) nhận `options?: { signal }` và truyền vào `http`; hook viết `queryFn: ({ signal }) => api.list(params, { signal })` để TanStack huỷ request cũ khi đổi trang/filter.
 - `lib/http.ts` gắn `X-Request-Id` mỗi request; `ApiError.requestId` đi theo lỗi lên monitoring để tra log backend.
 - Endpoint từ `lib/endpoints.ts`, không hardcode URL.
-- Không toast, không transform UI trong `api.ts`.
+- Không toast, không transform UI trong `api.ts`. Chuẩn hoá DTO của backend thành type của app thì làm ở đây (mẫu: `toAuthUser` trong `features/auth/api.ts`), để phần còn lại của app không biết backend trả hình dạng gì.
 
 ## Hooks
 

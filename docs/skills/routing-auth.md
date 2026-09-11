@@ -7,6 +7,7 @@
 - `throw redirect()`/`throw notFound()` được ESLint cho phép riêng; throw thứ khác không phải Error là lỗi.
 - Luồng refresh token (401 → refresh một lần → retry, thất bại → clear + báo hết phiên): `lib/http.test.ts`.
 - Permission và `requirePermission`: `permissions.test.ts`, `guards.test.ts`; E2E kiểm user thường không thấy nút xoá và bị 403.
+- `AuthUser` không có `role`: đọc `user.role` trong feature là lỗi TypeScript. Quyết định quyền chỉ qua `can()`.
 - Chưa ép được: route có query param mà quên `validateSearch`. Tự kiểm khi thêm route list.
 
 ## Auth Flow
@@ -22,7 +23,15 @@ Guard đọc `useAuthStore.getState()` chứ không đọc router context. `befo
 
 ## Permission
 
-Một cơ chế duy nhất: permission theo hành động `<resource>:<action>` trong `features/auth/permissions.ts`, map từ role qua `ROLE_PERMISSIONS`. Không check `user.role === 'admin'` rải rác.
+Một cơ chế duy nhất: permission theo hành động `<resource>:<action>` trong `features/auth/permissions.ts`, quyết định qua `can()`.
+
+Quyền đến từ đâu: backend chưa chốt, nên `features/auth/api.ts` chuẩn hoá user ở biên API bằng `resolvePermissions`:
+
+1. Backend trả `permissions` thì dùng nguyên danh sách đó, kể cả mảng rỗng. Chuỗi frontend không biết bị bỏ và báo monitoring một lần.
+2. Backend chỉ trả `role` thì tra `ROLE_PERMISSIONS`.
+3. Không có gì, hoặc role lạ, thì không có quyền nào.
+
+Bên trong app `AuthUser` chỉ có `permissions`, không có `role`. Biết backend thật thì chỉ sửa biên API và mock, không sửa feature.
 
 | Nơi dùng              | Cách dùng                                                                                                |
 | --------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -31,9 +40,9 @@ Một cơ chế duy nhất: permission theo hành động `<resource>:<action>` 
 | Logic trong component | `const { can } = usePermissions(); can('projects:delete')`                                               |
 | Ngoài React           | `can(user, 'projects:read')`                                                                             |
 
-Thêm permission mới: thêm vào `PERMISSIONS`, cấp cho role trong `ROLE_PERMISSIONS`, viết test trong `permissions.test.ts`. Frontend guard chỉ là UX, backend phải enforce.
+Thêm permission mới: thêm vào `PERMISSIONS` với đúng tên backend trả, cấp cho role trong `ROLE_PERMISSIONS`, viết test trong `permissions.test.ts`. Frontend guard chỉ là UX, backend phải enforce.
 
-Mock có hai tài khoản để thấy khác biệt: `admin@example.com` (tất cả) và `user@example.com` (không xoá dự án, không vào Cài đặt), mật khẩu `123456`.
+Mock có hai tài khoản để thấy khác biệt: `admin@example.com` (tất cả, backend trả `permissions`) và `user@example.com` (không xoá dự án, không vào Cài đặt, backend chỉ trả `role`), mật khẩu `123456`.
 
 ## Route Rules
 

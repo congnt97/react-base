@@ -1,11 +1,16 @@
 import { delay, http } from 'msw';
 
-import { Role, type AuthUser, type LoginRequest } from '@/features/auth/types';
+import { ROLE_PERMISSIONS } from '@/features/auth/permissions';
+import {
+  Role,
+  type AuthUserDto,
+  type LoginRequest,
+} from '@/features/auth/types';
 import { Endpoints } from '@/lib/endpoints';
 import { apiUrl, fail, ok } from '@/mocks/utils';
 
 type MockAccount = {
-  user: AuthUser;
+  user: AuthUserDto;
   password: string;
   accessToken: string;
   refreshToken: string;
@@ -13,6 +18,11 @@ type MockAccount = {
 
 // Hai tài khoản để thấy khác biệt permission: admin có tất cả, user không xoá
 // dự án và không vào Cài đặt.
+//
+// Backend chưa chốt nên hai tài khoản trả hai kiểu, để cả hai nhánh của
+// resolvePermissions chạy thật trong dev và E2E: admin trả `permissions` (backend
+// quyết định quyền), user chỉ trả `role` (frontend tra ROLE_PERMISSIONS). Khi biết
+// backend thật, sửa cả hai về đúng một kiểu.
 const mockAccounts: MockAccount[] = [
   {
     user: {
@@ -20,6 +30,7 @@ const mockAccounts: MockAccount[] = [
       email: 'admin@example.com',
       name: 'Admin',
       role: Role.ADMIN,
+      permissions: [...ROLE_PERMISSIONS[Role.ADMIN]],
       isEmailVerified: true,
     },
     password: '123456',

@@ -2,13 +2,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { ForbiddenError, requirePermission } from '@/features/auth/guards';
 import { useAuthStore } from '@/features/auth/store';
-import { Role, type AuthUser } from '@/features/auth/types';
+import type { AuthUser } from '@/features/auth/types';
 
 const admin: AuthUser = {
   id: '1',
   email: 'admin@example.com',
-  role: Role.ADMIN,
   isEmailVerified: true,
+  permissions: ['projects:read', 'settings:manage'],
 };
 
 describe('requirePermission', () => {
@@ -27,7 +27,9 @@ describe('requirePermission', () => {
       ForbiddenError,
     );
 
-    useAuthStore.getState().setAuthenticated({ ...admin, role: Role.USER });
+    useAuthStore
+      .getState()
+      .setAuthenticated({ ...admin, permissions: ['projects:read'] });
     expect(() => requirePermission('settings:manage')).toThrowError(
       ForbiddenError,
     );

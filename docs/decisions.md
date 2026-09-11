@@ -114,7 +114,7 @@ Mỗi mục: quyết định, bối cảnh, lựa chọn đã cân nhắc, hệ 
 
 ## 15. Ngân sách bundle là con số cứng
 
-**Quyết định**: `scripts/check-bundle-size.mjs` fail CI khi framework chunk quá 180 KB, entry quá 40 KB, chunk lẻ quá 250 KB, CSS quá 30 KB, tổng JS quá 750 KB (gzip).
+**Quyết định**: `scripts/check-bundle-size.mjs` fail CI khi framework chunk quá 180 KB, tải ban đầu (entry và mọi chunk nó import tĩnh) quá 300 KB, chunk lẻ quá 250 KB, CSS quá 30 KB, tổng JS quá 750 KB (gzip).
 
 **Bối cảnh**: gộp cả Ant Design vào một chunk từng tạo chunk 1.1 MB; không có con số thì không ai nhận ra.
 
@@ -126,7 +126,17 @@ Mỗi mục: quyết định, bối cảnh, lựa chọn đã cân nhắc, hệ 
 
 **Bối cảnh**: 100 màn hình mà route import page thẳng thì chunk đầu lớn theo số feature. Tách tay bằng `.lazy.tsx` phụ thuộc vào người nhớ; tách tự động thì `pnpm gen` và mọi route sau đều được hưởng.
 
-**Hệ quả**: `vite.config.ts` là file guard (label `guards`). Ngân sách entry hạ xuống 40 KB để page hay file dịch lọt vào chunk đầu là đỏ.
+**Hệ quả**: `vite.config.ts` là file guard (label `guards`). Ngân sách đo tải ban đầu (entry cộng mọi chunk nó import tĩnh, đọc từ manifest), không đo riêng `index-*.js`: bản đầu đo riêng entry và đã bị qua mặt khi rolldown dời code sang một chunk chung vẫn tải ngay, entry tụt từ 26.7 xuống 9.1 KB trong khi tổng tải không đổi.
+
+## 17. Quyền chuẩn hoá ở biên API, bên trong app không có `role`
+
+**Quyết định**: `features/auth/api.ts` đổi `AuthUserDto` của backend thành `AuthUser` của app. `AuthUser` có `permissions`, không có `role`. `resolvePermissions` nhận cả hai kiểu backend: có `permissions` thì dùng nguyên, chỉ có `role` thì tra `ROLE_PERMISSIONS`, còn lại từ chối.
+
+**Bối cảnh**: backend chưa biết. Nếu chọn trước một kiểu và feature đọc `user.role`, đến khi backend về theo kiểu kia thì phải sửa khắp nơi.
+
+**Cân nhắc**: rule ESLint chặn so sánh `.role` (khó phân biệt role của người đăng nhập với field `role` của entity khác như `Member`, dễ báo nhầm); rule ESLint có type info tự viết (chính xác nhưng thêm code phải bảo trì); bỏ `role` khỏi type của app để TypeScript chặn (chọn, không cần thêm công cụ).
+
+**Hệ quả**: đọc `user.role` trong feature là lỗi TypeScript. Mảng `permissions` rỗng là không có quyền, không rơi về bảng role. Chuỗi lạ từ backend bị bỏ và báo monitoring một lần mỗi phiên, để lệch tên hiện ra thay vì lặng lẽ ẩn nút. Mock trả hai kiểu có chủ đích; biết backend thật thì sửa mock về một kiểu và xoá nhánh thừa.
 
 ## Chưa quyết định
 

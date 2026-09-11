@@ -37,7 +37,10 @@ console.log(`ok   routes     ${routeFiles.length} route, mỗi route một chunk
 
 const BUDGETS_KB = {
   framework: 180, // react, tanstack, zustand, axios, i18next, zod, dayjs
-  entry: 40, // index-*.js: bootstrap + layout, không chứa page hay bản dịch
+  // Entry cộng mọi chunk nó import tĩnh: đúng lượng JS người dùng tải trước khi thấy
+  // màn hình đầu. Không đo riêng index-*.js vì rolldown có thể dời code sang chunk
+  // chung mà vẫn tải ngay, làm con số entry nhỏ đi giả.
+  initial: 300,
   anyChunk: 250, // chunk lẻ lớn nhất (antd theo route)
   css: 30,
   totalJs: 750,
@@ -51,6 +54,30 @@ const files = readdirSync(DIST).filter(
 );
 const sizes = files.map((file) => ({ file, kb: gzipKb(file) }));
 const js = sizes.filter(({ file }) => file.endsWith('.js'));
+
+// Đi theo `imports` (tĩnh) trong manifest từ index.html; `dynamicImports` là
+// route và bản dịch tải sau nên không tính.
+const initialLoad = () => {
+  const seen = new Set();
+  const visit = (key) => {
+    for (const next of manifest[key]?.imports ?? []) {
+      if (!seen.has(next)) {
+        seen.add(next);
+        visit(next);
+      }
+    }
+  };
+  visit('index.html');
+  const chunks = ['index.html', ...seen].map((key) => manifest[key].file);
+  return {
+    file: `${chunks.length} chunk`,
+    kb: chunks.reduce(
+      (sum, file) =>
+        sum + gzipKb(path.relative(DIST, path.resolve('dist', file))),
+      0,
+    ),
+  };
+};
 
 const maxBy = (items, predicate) =>
   items
@@ -66,11 +93,7 @@ const checks = [
     ...maxBy(js, (f) => f.startsWith('framework-')),
     budget: BUDGETS_KB.framework,
   },
-  {
-    name: 'entry',
-    ...maxBy(js, (f) => f.startsWith('index-')),
-    budget: BUDGETS_KB.entry,
-  },
+  { name: 'initial', ...initialLoad(), budget: BUDGETS_KB.initial },
   { name: 'anyChunk', ...maxBy(js, () => true), budget: BUDGETS_KB.anyChunk },
   {
     name: 'css',
