@@ -14,7 +14,7 @@
 
 ## Token và style
 
-- Màu, radius, kích thước layout: `src/app/design-tokens.json` là nguồn duy nhất. `theme.ts` map sang AntD, `scripts/generate-token-css.mjs` sinh `styles/tokens.generated.css` cho Tailwind. Sửa bằng Design Lab (`design-lab.html` khi chạy dev) hoặc sửa JSON rồi `pnpm tokens:css`.
+- Màu, radius, kích thước layout: `src/app/design-tokens.json` là nguồn duy nhất. `theme.ts` map sang AntD, `scripts/generate-token-css.mjs` sinh `styles/tokens.generated.css` cho Tailwind. Sửa JSON rồi chạy `pnpm tokens:css`; `pnpm dev` tự sinh lại.
 - Chỉnh AntD qua `theme.ts` (`token`, `components.<Tên>`), không override CSS, không `!important`. Ngoại lệ duy nhất đã ghi trong code: `text-white!` cho brand trên nền tối vì `.ant-app a` tô màu link.
 - Tailwind cho layout và spacing. Không hex trong component; dùng `var(--text-muted)` hoặc token.
 

@@ -148,15 +148,17 @@ Mỗi mục: quyết định, bối cảnh, lựa chọn đã cân nhắc, hệ 
 
 **Hệ quả**: gán hoặc truyền chuỗi trần vào chỗ nhận enum là lỗi TypeScript, so sánh là lỗi ESLint `no-unsafe-enum-comparison`. Đổi lại enum sinh code runtime, tuy rất nhỏ. Không bật `erasableSyntaxOnly` trong tsconfig. zod 4 nhận enum trực tiếp qua `z.enum(ProjectStatus)`. Lấy danh sách giá trị bằng `Object.values`, còn chỗ cần tuple không rỗng thì liệt kê tường minh.
 
-## 19. Design token nằm trong JSON, sửa được từ Design Lab
+## 19. Design token nằm trong một file JSON
 
-**Quyết định**: token nằm ở `src/app/design-tokens.json`. `app/tokens.ts` đọc ra, `app/theme.ts` map sang AntD qua `buildAntdTheme(tokens)`, `scripts/generate-token-css.mjs` sinh `styles/tokens.generated.css` cho Tailwind và CSS thường. Design Lab ở `design-lab.html` cùng plugin Vite chỉ chạy ở dev cho phép chỉnh và ghi lại vào JSON.
+**Quyết định**: token nằm ở `src/app/design-tokens.json`. `app/tokens.ts` đọc ra, `app/theme.ts` map sang AntD, `scripts/generate-token-css.mjs` sinh `styles/tokens.generated.css` cho Tailwind và CSS thường. `pnpm dev` sinh lại trước khi chạy.
 
-**Bối cảnh**: trước đây token nằm trong `tokens.ts` và bị chép tay lần hai vào `:root` của `styles.css`, giữ khớp bằng test. Muốn sửa token từ giao diện thì máy phải ghi được file, mà ghi vào file TypeScript thì phải sửa cú pháp, dễ hỏng.
+**Bối cảnh**: trước đây token nằm trong `tokens.ts` và bị chép tay lần hai vào `:root` của `styles.css`, giữ khớp bằng test. Sửa một màu phải sửa hai nơi.
 
-**Cân nhắc**: dùng Storybook cộng addon (thêm một bộ công cụ nữa, vẫn không ghi ngược vào source); chỉnh token rồi copy tay (không ai làm); JSON cộng trang dev riêng cộng middleware (chọn).
+**Cân nhắc**: giữ hai nơi và dựa vào test (vẫn phải sửa hai chỗ); để token trong TypeScript rồi sinh CSS từ đó (script phải chạy được TypeScript); JSON cộng script sinh CSS (chọn, script đọc JSON trực tiếp).
 
-**Hệ quả**: `styles.css` không còn khối `:root` chép tay. File CSS sinh ra được commit, `tokens.test.ts` fail nếu quên chạy `pnpm tokens:css`. Design Lab không vào bản build vì Vite chỉ build `index.html`, và ESLint chặn `src/` import từ `tools/`. Middleware chỉ nhận đúng hình dạng JSON hiện có nên trình duyệt không ghi được khoá lạ. Đổi thư viện UI thì viết lại `buildAntdTheme` và phần gallery, còn file token giữ nguyên.
+**Hệ quả**: `styles.css` không còn khối `:root` chép tay. File CSS sinh ra vẫn commit để bản build không phụ thuộc bước sinh; `tokens.test.ts` chạy lại script và fail nếu file đang commit bị lệch. Một trang dev để chỉnh token bằng chuột đã làm thử rồi bỏ, vì nhóm toàn dev và không ai cần.
+
+## Chưa quyết định
 
 - Form nhiều bước (wizard): chưa có lỗi thật để chốt hành vi, nên chưa có adapter. Khi cần, làm cùng lúc adapter, test và dòng pitfalls.
 - Realtime (WebSocket, SSE): chưa có nhu cầu trong base; khi có, đặt subscription ở `core/` với cleanup và reconnect có test.

@@ -3,8 +3,6 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
-
-import { designLab } from './tools/vite-plugin-design-lab.mjs';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -36,8 +34,6 @@ export default defineConfig({
     // React bị bỏ qua (không memo), eslint-plugin-react-hooks báo chỗ đó.
     react({ compiler: true }),
     tailwindcss(),
-    // Dev-only: API đọc/ghi design token cho design-lab.html.
-    designLab(),
     // `pnpm build:analyze` -> dist/stats.html để soi chunk nào phình.
     process.env.ANALYZE
       ? visualizer({ filename: 'dist/stats.html', gzipSize: true })

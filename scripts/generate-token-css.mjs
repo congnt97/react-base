@@ -1,5 +1,5 @@
 // Sinh src/styles/tokens.generated.css từ src/app/design-tokens.json.
-// Chạy tay: pnpm tokens:css. Tự chạy: khi bật dev server và khi Design Lab lưu token.
+// Chạy tay: pnpm tokens:css. Tự chạy khi `pnpm dev`.
 // `--stdout` in ra thay vì ghi file, để tokens.test.ts đối chiếu file có bị lệch không.
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -17,7 +17,7 @@ export const tokenCss = (tokens) => {
   );
 
   return `/* File sinh tự động từ src/app/design-tokens.json. Không sửa tay:
-   sửa token trong JSON hoặc trong Design Lab, rồi chạy \`pnpm tokens:css\`. */
+   sửa token trong JSON rồi chạy \`pnpm tokens:css\`. */
 :root {
 ${lines.join('\n')}
 }

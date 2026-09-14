@@ -1,5 +1,5 @@
 /* File sinh tự động từ src/app/design-tokens.json. Không sửa tay:
-   sửa token trong JSON hoặc trong Design Lab, rồi chạy `pnpm tokens:css`. */
+   sửa token trong JSON rồi chạy `pnpm tokens:css`. */
 :root {
   --app-bg: #f8fafc;
   --content-bg: #ffffff;

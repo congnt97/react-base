@@ -3,8 +3,8 @@ import type { ThemeConfig } from 'antd';
 import { designTokens, type DesignTokens } from '@/app/tokens';
 
 // Token nằm ở app/design-tokens.json (nguồn duy nhất); file này chỉ map sang tên
-// của AntD. Nhận tokens làm tham số để Design Lab dựng theme từ bản đang sửa.
-export const buildAntdTheme = (tokens: DesignTokens): ThemeConfig => {
+// của AntD.
+const buildAntdTheme = (tokens: DesignTokens): ThemeConfig => {
   const { colors, layout, typography, components } = tokens;
 
   return {

@@ -209,10 +209,7 @@ Thêm member vào enum `Permission`, gán cho role trong `ROLE_PERMISSIONS` (dù
 
 ### Thêm màu hoặc token
 
-Hai cách, cùng một nguồn là `src/app/design-tokens.json`:
-
-- Trên giao diện: chạy `pnpm dev`, mở `http://localhost:3001/design-lab.html`, chỉnh rồi bấm "Lưu vào source". Trang này cũng là chỗ xem mọi component dùng chung với đủ biến thể.
-- Sửa tay: đổi giá trị trong `design-tokens.json` rồi chạy `pnpm tokens:css`.
+Sửa `src/app/design-tokens.json` rồi chạy `pnpm tokens:css`. `pnpm dev` cũng tự sinh lại.
 
 `src/styles/tokens.generated.css` là file sinh tự động, không sửa tay. `tokens.test.ts` fail nếu file đó lệch với JSON. Không hex trong component, không `!important`.
 
