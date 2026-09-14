@@ -1,12 +1,12 @@
 import { delay, http } from 'msw';
 
 import {
-  PROJECT_STATUSES,
+  ProjectStatus,
   type Project,
   type ProjectPayload,
 } from '@/features/projects/types';
 import { Endpoints } from '@/lib/endpoints';
-import { apiUrl, cycle, fail, ok } from '@/mocks/utils';
+import { apiUrl, cycle, fail, matchesFilter, ok } from '@/mocks/utils';
 
 const OWNERS = ['Lan', 'Minh', 'Hà', 'Tuấn', 'Ngọc'] as const;
 
@@ -16,7 +16,10 @@ const seedProjects = (count: number): Project[] =>
     return {
       id: `p${index + 1}`,
       name: `Dự án ${index + 1}`,
-      status: cycle(PROJECT_STATUSES, index),
+      status: cycle(
+        [ProjectStatus.ACTIVE, ProjectStatus.PAUSED, ProjectStatus.ARCHIVED],
+        index,
+      ),
       owner: cycle(OWNERS, index),
       description: index % 3 === 0 ? 'Mô tả ngắn cho dự án mẫu.' : undefined,
       createdAt: date,
@@ -40,7 +43,7 @@ export const projectsHandlers = [
       .filter(
         (project) => !keyword || project.name.toLowerCase().includes(keyword),
       )
-      .filter((project) => !status || project.status === status)
+      .filter((project) => matchesFilter(project.status, status))
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 
     const start = (page - 1) * pageSize;

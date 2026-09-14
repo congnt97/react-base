@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Drawer } from '@/components/ui/drawer';
 import { usePermissions } from '@/features/auth/hooks/use-permissions';
-import type { Permission } from '@/features/auth/permissions';
+import { Permission } from '@/features/auth/permissions';
 
 const { Sider } = Layout;
 
@@ -28,19 +28,19 @@ const NAV_ITEMS: NavItem[] = [
     key: '/projects',
     label: 'Dự án',
     icon: <FolderOutlined />,
-    permission: 'projects:read',
+    permission: Permission.PROJECTS_READ,
   },
   {
     key: '/members',
     label: 'Thành viên',
     icon: <TeamOutlined />,
-    permission: 'members:read',
+    permission: Permission.MEMBERS_READ,
   },
   {
     key: '/settings',
     label: 'Cài đặt',
     icon: <SettingOutlined />,
-    permission: 'settings:manage',
+    permission: Permission.SETTINGS_MANAGE,
   },
 ];
 

@@ -3,6 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MemberFormDrawer } from '@/features/members/components/member-form-drawer';
+import { MemberRole } from '@/features/members/types';
 import { ApiError } from '@/lib/api-error';
 
 const renderDrawer = (onSubmit = vi.fn(() => Promise.resolve())) => {
@@ -54,7 +55,7 @@ describe('MemberFormDrawer', () => {
         expect.objectContaining({
           name: 'Lan',
           email: 'lan@example.com',
-          role: 'viewer',
+          role: MemberRole.VIEWER,
         }),
       ),
     );

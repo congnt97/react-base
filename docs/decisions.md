@@ -138,6 +138,16 @@ Mỗi mục: quyết định, bối cảnh, lựa chọn đã cân nhắc, hệ 
 
 **Hệ quả**: đọc `user.role` trong feature là lỗi TypeScript. Mảng `permissions` rỗng là không có quyền, không rơi về bảng role. Chuỗi lạ từ backend bị bỏ và báo monitoring một lần mỗi phiên, để lệch tên hiện ra thay vì lặng lẽ ẩn nút. Mock trả hai kiểu có chủ đích; biết backend thật thì sửa mock về một kiểu và xoá nhánh thừa.
 
+## 18. Tập giá trị đóng dùng `enum`, không dùng union chuỗi
+
+**Quyết định**: trạng thái, vai trò, quyền, ngôn ngữ khai bằng `enum` của TypeScript và luôn gọi qua tên, ví dụ `ProjectStatus.ACTIVE`. Bỏ mẫu `as const` array cộng union cho các tập này. `as const` chỉ còn dùng cho dữ liệu mẫu trong mock và cấu hình.
+
+**Bối cảnh**: base trước đây trộn hai kiểu. `Role` là enum, còn trạng thái dự án và thành viên là union, nên chuỗi trần như `status: 'active'` nằm rải rác. Đổi tên một giá trị phải tự đi tìm, không có gì báo sót.
+
+**Cân nhắc**: giữ union cộng `as const` vì erasable syntax và hợp với zod (nhưng gán chuỗi trần vẫn hợp lệ nên máy không ép được); dùng object hằng cộng union (gọi qua tên nhưng vẫn không cấm được chuỗi trần); dùng `enum` (chọn, vì máy ép được).
+
+**Hệ quả**: gán hoặc truyền chuỗi trần vào chỗ nhận enum là lỗi TypeScript, so sánh là lỗi ESLint `no-unsafe-enum-comparison`. Đổi lại enum sinh code runtime, tuy rất nhỏ. Không bật `erasableSyntaxOnly` trong tsconfig. zod 4 nhận enum trực tiếp qua `z.enum(ProjectStatus)`. Lấy danh sách giá trị bằng `Object.values`, còn chỗ cần tuple không rỗng thì liệt kê tường minh.
+
 ## Chưa quyết định
 
 - Form nhiều bước (wizard): chưa có lỗi thật để chốt hành vi, nên chưa có adapter. Khi cần, làm cùng lúc adapter, test và dòng pitfalls.

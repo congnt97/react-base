@@ -1,13 +1,17 @@
 import type { PaginationParams } from '@/lib/api-response';
 
-export const PROJECT_STATUSES = ['active', 'paused', 'archived'] as const;
-
-export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
+// Tập giá trị đóng đi qua enum, không rải chuỗi trần trong code: gán sai là lỗi
+// biên dịch, đổi tên chỉ sửa một chỗ, và IDE gợi ý đủ giá trị hợp lệ.
+export enum ProjectStatus {
+  ACTIVE = 'active',
+  PAUSED = 'paused',
+  ARCHIVED = 'archived',
+}
 
 export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
-  active: 'Đang chạy',
-  paused: 'Tạm dừng',
-  archived: 'Lưu trữ',
+  [ProjectStatus.ACTIVE]: 'Đang chạy',
+  [ProjectStatus.PAUSED]: 'Tạm dừng',
+  [ProjectStatus.ARCHIVED]: 'Lưu trữ',
 };
 
 export type Project = {

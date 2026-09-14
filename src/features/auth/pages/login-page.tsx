@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AuthLayout } from '@/features/auth/components/auth-layout';
 import { LoginForm } from '@/features/auth/components/login-form';
+import { LoginReason } from '@/features/auth/search';
 
 const route = getRouteApi('/auth/login');
 
@@ -13,7 +14,7 @@ export function LoginPage() {
 
   return (
     <AuthLayout>
-      {reason === 'expired' ? (
+      {reason === LoginReason.EXPIRED ? (
         <Alert
           type="warning"
           showIcon

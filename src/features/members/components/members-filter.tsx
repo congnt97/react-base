@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { SearchInput } from '@/components/ui/search-input';
 import type { MembersSearch } from '@/features/members/search';
 import {
-  MEMBER_ROLES,
+  MemberStatus,
+  MemberRole,
   MEMBER_ROLE_LABELS,
-  MEMBER_STATUSES,
   MEMBER_STATUS_LABELS,
 } from '@/features/members/types';
 
@@ -41,7 +41,7 @@ export function MembersFilter({
         placeholder={t('Vai trò')}
         aria-label={t('Vai trò')}
         value={role}
-        options={MEMBER_ROLES.map((value) => ({
+        options={Object.values(MemberRole).map((value) => ({
           value,
           label: t(MEMBER_ROLE_LABELS[value]),
         }))}
@@ -53,7 +53,7 @@ export function MembersFilter({
         placeholder={t('Trạng thái')}
         aria-label={t('Trạng thái')}
         value={status}
-        options={MEMBER_STATUSES.map((value) => ({
+        options={Object.values(MemberStatus).map((value) => ({
           value,
           label: t(MEMBER_STATUS_LABELS[value]),
         }))}

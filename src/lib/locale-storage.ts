@@ -1,12 +1,16 @@
-export const LOCALES = ['vi', 'en'] as const;
-export type Locale = (typeof LOCALES)[number];
-// Kiểu literal để chỗ khác loại trừ được ngôn ngữ mặc định (Exclude<Locale, 'vi'>).
-export const DEFAULT_LOCALE = 'vi' satisfies Locale;
+export enum Locale {
+  VI = 'vi',
+  EN = 'en',
+}
+
+const LOCALE_VALUES: readonly string[] = Object.values(Locale);
+
+export const DEFAULT_LOCALE = Locale.VI;
 
 const LOCALE_KEY = 'react_base_locale';
 
 const isLocale = (value: unknown): value is Locale =>
-  typeof value === 'string' && (LOCALES as readonly string[]).includes(value);
+  typeof value === 'string' && LOCALE_VALUES.includes(value);
 
 export const getStoredLocale = (): Locale => {
   const value = localStorage.getItem(LOCALE_KEY);

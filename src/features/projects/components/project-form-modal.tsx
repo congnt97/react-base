@@ -5,7 +5,7 @@ import { Form } from '@/components/ui/form';
 import { Modal } from '@/components/ui/modal';
 import { Upload } from '@/components/ui/upload';
 import {
-  PROJECT_STATUSES,
+  ProjectStatus,
   PROJECT_STATUS_LABELS,
   type Project,
   type ProjectPayload,
@@ -24,7 +24,7 @@ type ProjectFormModalProps = {
 const DEFAULT_VALUES: ProjectPayload = {
   name: '',
   owner: '',
-  status: 'active',
+  status: ProjectStatus.ACTIVE,
 };
 
 const ATTACHMENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg'];
@@ -76,7 +76,7 @@ export function ProjectFormModal({
 
         <Form.Item label={t('Trạng thái')} name="status">
           <Select
-            options={PROJECT_STATUSES.map((value) => ({
+            options={Object.values(ProjectStatus).map((value) => ({
               value,
               label: t(PROJECT_STATUS_LABELS[value]),
             }))}

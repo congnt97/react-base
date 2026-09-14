@@ -13,4 +13,4 @@
 - Type là tập con của model thì derive: `Pick<Project, 'id' | 'name'>`, không copy field.
 - `?.` và `??` cho optional hợp lệ, không để né kiểm tra required. Xem `quality.md` mục Fallback.
 - Hậu tố type theo `naming.md`: `Payload`, `ListParams`, `Search`, `Props`, `Api`, `State`.
-- `as const` array + union là mặc định cho tập giá trị cố định; `enum` chỉ khi cần giá trị runtime ở nhiều tầng.
+- Tập giá trị đóng dùng `enum` và gọi qua tên, không rải chuỗi trần. `as const` chỉ dành cho dữ liệu mẫu hoặc cấu hình không phải mô hình nghiệp vụ. zod nhận enum trực tiếp: `z.enum(ProjectStatus)`.

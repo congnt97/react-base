@@ -40,7 +40,7 @@ Trước khi viết, liệt kê các trạng thái đầu vào và xử lý đ�
 
 ## Cú pháp và chuẩn
 
-- TypeScript hiện đại: `satisfies`, `as const`, union thay enum khi có thể, `readonly` cho tham số không sửa.
+- TypeScript hiện đại: `satisfies`, `as const` cho dữ liệu, `enum` cho tập giá trị đóng, `readonly` cho tham số không sửa.
 - `async/await` thay `.then` lồng; `Promise.all` cho việc độc lập.
 - Destructuring có chừng mực: không destructure quá 5 field, không destructure sâu làm mất ngữ cảnh.
 - Import theo thứ tự: package ngoài, rồi `@/` nội bộ, cách nhau một dòng trắng (prettier không sắp import; giữ tay).

@@ -3,36 +3,36 @@ import { monitoring } from '@/lib/monitoring';
 
 // Permission theo hành động trên resource: `<resource>:<action>`. Đây là danh sách
 // quyền frontend biết và có UI tương ứng; backend có thể có nhiều hơn.
-const PERMISSIONS = [
-  'projects:read',
-  'projects:create',
-  'projects:update',
-  'projects:delete',
-  'members:read',
-  'members:create',
-  'members:update',
-  'members:delete',
-  'settings:manage',
-] as const;
+export enum Permission {
+  PROJECTS_READ = 'projects:read',
+  PROJECTS_CREATE = 'projects:create',
+  PROJECTS_UPDATE = 'projects:update',
+  PROJECTS_DELETE = 'projects:delete',
+  MEMBERS_READ = 'members:read',
+  MEMBERS_CREATE = 'members:create',
+  MEMBERS_UPDATE = 'members:update',
+  MEMBERS_DELETE = 'members:delete',
+  SETTINGS_MANAGE = 'settings:manage',
+}
 
-export type Permission = (typeof PERMISSIONS)[number];
+const PERMISSION_VALUES: readonly string[] = Object.values(Permission);
 
 /**
  * Quyền theo role. Chỉ được đọc khi backend trả `role` mà không trả `permissions`,
  * và để mock mô phỏng backend. Backend trả `permissions` thì bảng này bị bỏ qua.
  */
 export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
-  [Role.ADMIN]: PERMISSIONS,
+  [Role.ADMIN]: Object.values(Permission),
   [Role.USER]: [
-    'projects:read',
-    'projects:create',
-    'projects:update',
-    'members:read',
+    Permission.PROJECTS_READ,
+    Permission.PROJECTS_CREATE,
+    Permission.PROJECTS_UPDATE,
+    Permission.MEMBERS_READ,
   ],
 };
 
 const isPermission = (value: string): value is Permission =>
-  (PERMISSIONS as readonly string[]).includes(value);
+  PERMISSION_VALUES.includes(value);
 
 const isRole = (value: string): value is Role =>
   (Object.values(Role) as string[]).includes(value);

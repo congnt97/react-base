@@ -1,14 +1,23 @@
 import { delay, http } from 'msw';
 
 import {
-  MEMBER_ROLES,
+  MemberRole,
+  MemberStatus,
   type Member,
   type MemberPayload,
   type MemberSession,
   type MemberStatusPayload,
 } from '@/features/members/types';
 import { Endpoints } from '@/lib/endpoints';
-import { apiUrl, cycle, fail, failFields, ok, paginate } from '@/mocks/utils';
+import {
+  apiUrl,
+  cycle,
+  fail,
+  failFields,
+  matchesFilter,
+  ok,
+  paginate,
+} from '@/mocks/utils';
 
 const NAMES = [
   'Lan Phạm',
@@ -34,8 +43,11 @@ const seedMembers = (count: number): Member[] =>
       id: `m${index + 1}`,
       name: `${cycle(NAMES, index)} ${index + 1}`,
       email: `member${index + 1}@example.com`,
-      role: cycle(MEMBER_ROLES, index),
-      status: index % 5 === 4 ? 'inactive' : 'active',
+      role: cycle(
+        [MemberRole.ADMIN, MemberRole.EDITOR, MemberRole.VIEWER],
+        index,
+      ),
+      status: index % 5 === 4 ? MemberStatus.INACTIVE : MemberStatus.ACTIVE,
       managerId: manager === undefined ? undefined : `m${manager + 1}`,
       managerName:
         manager === undefined
@@ -86,8 +98,8 @@ export const membersHandlers = [
           member.name.toLowerCase().includes(keyword) ||
           member.email.toLowerCase().includes(keyword),
       )
-      .filter((member) => !role || member.role === role)
-      .filter((member) => !status || member.status === status)
+      .filter((member) => matchesFilter(member.role, role))
+      .filter((member) => matchesFilter(member.status, status))
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
       .map(withManagerName);
 
@@ -123,7 +135,7 @@ export const membersHandlers = [
     const member: Member = {
       id: `m${Date.now()}`,
       ...body,
-      status: 'active',
+      status: MemberStatus.ACTIVE,
       createdAt: now,
       updatedAt: now,
     };

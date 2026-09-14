@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SearchInput } from '@/components/ui/search-input';
 import type { ProjectsSearch } from '@/features/projects/search';
 import {
-  PROJECT_STATUSES,
+  ProjectStatus,
   PROJECT_STATUS_LABELS,
 } from '@/features/projects/types';
 
@@ -38,7 +38,7 @@ export function ProjectsFilter({
         placeholder={t('Trạng thái')}
         aria-label={t('Trạng thái')}
         value={status}
-        options={PROJECT_STATUSES.map((value) => ({
+        options={Object.values(ProjectStatus).map((value) => ({
           value,
           label: t(PROJECT_STATUS_LABELS[value]),
         }))}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { loginSearchSchema } from '@/features/auth/search';
+import { LoginReason, loginSearchSchema } from '@/features/auth/search';
 
 describe('loginSearchSchema', () => {
   it('giữ lại đường dẫn nội bộ hợp lệ', () => {
@@ -34,7 +34,9 @@ describe('loginSearchSchema', () => {
   });
 
   it('chỉ nhận reason trong danh sách cho phép', () => {
-    expect(loginSearchSchema({ reason: 'expired' }).reason).toBe('expired');
+    expect(loginSearchSchema({ reason: 'expired' }).reason).toBe(
+      LoginReason.EXPIRED,
+    );
     expect(loginSearchSchema({ reason: 'hacked' }).reason).toBeUndefined();
   });
 });

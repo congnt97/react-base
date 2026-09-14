@@ -20,6 +20,7 @@ import { useMembers } from '@/features/members/hooks/use-members';
 import { useMembersSelection } from '@/features/members/hooks/use-members-selection';
 import type { MembersSearch } from '@/features/members/search';
 import type { Member } from '@/features/members/types';
+import { Permission } from '@/features/auth/permissions';
 
 const route = getRouteApi('/_app/members/');
 
@@ -43,8 +44,8 @@ export function MembersPage() {
   const form = useMemberForm();
   const deleteMember = useDeleteMember();
 
-  const canUpdate = can('members:update');
-  const canDelete = can('members:delete');
+  const canUpdate = can(Permission.MEMBERS_UPDATE);
+  const canDelete = can(Permission.MEMBERS_DELETE);
   const hasFilter = Boolean(search.keyword ?? search.role ?? search.status);
 
   const confirmDelete = (member: Member) =>
@@ -65,7 +66,7 @@ export function MembersPage() {
           'Ví dụ chọn nhiều dòng và hành động hàng loạt, drawer form với select tìm từ server, bảng con phân trang trên trang chi tiết.',
         )}
         actions={
-          <Can permission="members:create">
+          <Can permission={Permission.MEMBERS_CREATE}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -116,7 +117,7 @@ export function MembersPage() {
                     title={t('Chưa có thành viên')}
                     description={t('Thêm người đầu tiên vào nhóm.')}
                     action={
-                      can('members:create')
+                      can(Permission.MEMBERS_CREATE)
                         ? {
                             label: t('Thêm thành viên'),
                             icon: <PlusOutlined />,

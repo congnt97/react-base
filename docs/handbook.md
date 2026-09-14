@@ -204,7 +204,7 @@ Viết `t('Câu tiếng Việt có dấu')` rồi thêm cặp key/value vào `sr
 
 ### Thêm permission
 
-Thêm chuỗi `<resource>:<action>` vào `PERMISSIONS`, gán cho role trong `ROLE_PERMISSIONS` (dùng khi backend chỉ trả role, và cho mock), cập nhật `permissions.test.ts`. Dùng ở ba nơi: `requirePermission` trong route, `<Can>` quanh nút, `usePermissions().can()` khi cần biến boolean. Tên phải khớp đúng chuỗi backend trả; lệch tên thì quyền bị bỏ và monitoring nhận một báo cáo.
+Thêm member vào enum `Permission`, gán cho role trong `ROLE_PERMISSIONS` (dùng khi backend chỉ trả role, và cho mock), cập nhật `permissions.test.ts`. Dùng ở ba nơi: `requirePermission` trong route, `<Can>` quanh nút, `usePermissions().can()` khi cần biến boolean. Tên phải khớp đúng chuỗi backend trả; lệch tên thì quyền bị bỏ và monitoring nhận một báo cáo.
 
 ### Thêm màu hoặc token
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { projectsSearchSchema } from '@/features/projects/search';
+import { ProjectStatus } from '@/features/projects/types';
 
 describe('projectsSearchSchema', () => {
   it('trả mặc định khi không có query param', () => {
@@ -20,7 +21,12 @@ describe('projectsSearchSchema', () => {
         keyword: 'cms',
         status: 'paused',
       }),
-    ).toEqual({ page: 3, pageSize: 20, keyword: 'cms', status: 'paused' });
+    ).toEqual({
+      page: 3,
+      pageSize: 20,
+      keyword: 'cms',
+      status: ProjectStatus.PAUSED,
+    });
   });
 
   it('đưa param sai về mặc định thay vì throw', () => {

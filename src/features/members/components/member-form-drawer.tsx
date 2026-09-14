@@ -7,7 +7,8 @@ import { Form } from '@/components/ui/form';
 import { SearchSelect } from '@/components/ui/search-select';
 import { membersApi } from '@/features/members/api';
 import {
-  MEMBER_ROLES,
+  MemberRole,
+  MemberStatus,
   MEMBER_ROLE_LABELS,
   type Member,
   type MemberPayload,
@@ -22,13 +23,17 @@ type MemberFormDrawerProps = {
   onSubmit: (values: MemberPayload) => Promise<unknown>;
 };
 
-const DEFAULT_VALUES: MemberPayload = { name: '', email: '', role: 'viewer' };
+const DEFAULT_VALUES: MemberPayload = {
+  name: '',
+  email: '',
+  role: MemberRole.VIEWER,
+};
 
 /** Tìm người quản lý trong chính danh sách thành viên, bỏ người đang sửa. */
 const searchManagers =
   (excludeId?: string) => async (keyword: string, signal: AbortSignal) => {
     const page = await membersApi.list(
-      { keyword, page: 1, pageSize: 10, status: 'active' },
+      { keyword, page: 1, pageSize: 10, status: MemberStatus.ACTIVE },
       { signal },
     );
     return page.items
@@ -98,7 +103,7 @@ export function MemberFormDrawer({
 
         <Form.Item label={t('Vai trò')} name="role">
           <Select
-            options={MEMBER_ROLES.map((value) => ({
+            options={Object.values(MemberRole).map((value) => ({
               value,
               label: t(MEMBER_ROLE_LABELS[value]),
             }))}

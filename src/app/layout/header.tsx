@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { changeLocale } from '@/app/i18n';
 import { useLogout } from '@/features/auth/hooks/use-logout';
 import { useAuthStore } from '@/features/auth/store';
-import { LOCALES, type Locale } from '@/lib/locale-storage';
+import { Locale } from '@/lib/locale-storage';
 
 const LOCALE_LABELS: Record<Locale, string> = {
-  vi: 'Tiếng Việt',
-  en: 'Tiếng Anh',
+  [Locale.VI]: 'Tiếng Việt',
+  [Locale.EN]: 'Tiếng Anh',
 };
 
 export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
@@ -53,7 +53,7 @@ export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
         variant="borderless"
         aria-label={t('Ngôn ngữ')}
         value={i18n.language as Locale}
-        options={LOCALES.map((value) => ({
+        options={Object.values(Locale).map((value) => ({
           value,
           label: t(LOCALE_LABELS[value]),
         }))}

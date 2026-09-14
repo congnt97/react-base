@@ -15,6 +15,7 @@ import { useProject } from '@/features/projects/hooks/use-project';
 import { useUpdateProject } from '@/features/projects/hooks/use-project-mutations';
 import type { ProjectPayload } from '@/features/projects/types';
 import { formatDateTime } from '@/lib/format';
+import { Permission } from '@/features/auth/permissions';
 
 const route = getRouteApi('/_app/projects/$id');
 
@@ -55,7 +56,7 @@ export function ProjectDetailPage() {
           { label: data.name },
         ]}
         actions={
-          <Can permission="projects:update">
+          <Can permission={Permission.PROJECTS_UPDATE}>
             <Button icon={<EditOutlined />} onClick={() => setEditing(true)}>
               {t('Sửa dự án')}
             </Button>

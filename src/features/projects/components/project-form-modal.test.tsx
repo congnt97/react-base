@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProjectFormModal } from '@/features/projects/components/project-form-modal';
-import type { Project } from '@/features/projects/types';
+import { ProjectStatus, type Project } from '@/features/projects/types';
 
 const project: Project = {
   id: 'p1',
   name: 'CMS nội bộ',
   owner: 'Lan',
-  status: 'paused',
+  status: ProjectStatus.PAUSED,
   description: 'Mô tả',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-02T00:00:00.000Z',
@@ -58,7 +58,7 @@ describe('ProjectFormModal', () => {
         expect.objectContaining({
           name: 'Dự án A',
           owner: 'Minh',
-          status: 'active',
+          status: ProjectStatus.ACTIVE,
         }),
       ),
     );

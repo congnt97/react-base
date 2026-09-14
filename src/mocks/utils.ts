@@ -27,6 +27,10 @@ export const failFields = (
     { status: statusCode },
   );
 
+/** So khớp filter dạng chuỗi trên URL với giá trị enum, không so enum với chuỗi lạ. */
+export const matchesFilter = (value: string, filter: string | null) =>
+  !filter || value === filter;
+
 /** Cắt trang theo `page`/`pageSize` trên URL, đúng envelope PaginatedResponse. */
 export const paginate = <T>(items: T[], url: URL) => {
   const page = Number(url.searchParams.get('page') ?? 1);

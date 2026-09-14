@@ -1,18 +1,26 @@
 import type { PaginationParams } from '@/lib/api-response';
 
-export const MEMBER_ROLES = ['admin', 'editor', 'viewer'] as const;
-export type MemberRole = (typeof MEMBER_ROLES)[number];
+// Tập giá trị đóng đi qua enum; xem docs/skills/naming.md.
+export enum MemberRole {
+  ADMIN = 'admin',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
+}
+
 export const MEMBER_ROLE_LABELS: Record<MemberRole, string> = {
-  admin: 'Quản trị',
-  editor: 'Biên tập',
-  viewer: 'Chỉ xem',
+  [MemberRole.ADMIN]: 'Quản trị',
+  [MemberRole.EDITOR]: 'Biên tập',
+  [MemberRole.VIEWER]: 'Chỉ xem',
 };
 
-export const MEMBER_STATUSES = ['active', 'inactive'] as const;
-export type MemberStatus = (typeof MEMBER_STATUSES)[number];
+export enum MemberStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
 export const MEMBER_STATUS_LABELS: Record<MemberStatus, string> = {
-  active: 'Đang hoạt động',
-  inactive: 'Đã vô hiệu hoá',
+  [MemberStatus.ACTIVE]: 'Đang hoạt động',
+  [MemberStatus.INACTIVE]: 'Đã vô hiệu hoá',
 };
 
 export type Member = {

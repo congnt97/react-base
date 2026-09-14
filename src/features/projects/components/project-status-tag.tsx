@@ -3,9 +3,8 @@ import { Dropdown, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import {
-  PROJECT_STATUSES,
   PROJECT_STATUS_LABELS,
-  type ProjectStatus,
+  ProjectStatus,
 } from '@/features/projects/types';
 
 const STATUS_COLORS: Record<ProjectStatus, string> = {
@@ -41,7 +40,7 @@ export function ProjectStatusTag({ status, onChange }: ProjectStatusTagProps) {
       trigger={['click']}
       menu={{
         selectedKeys: [status],
-        items: PROJECT_STATUSES.map((value) => ({
+        items: Object.values(ProjectStatus).map((value) => ({
           key: value,
           label: t(PROJECT_STATUS_LABELS[value]),
           disabled: value === status,

@@ -21,6 +21,7 @@ import {
 import { useProjects } from '@/features/projects/hooks/use-projects';
 import type { ProjectsSearch } from '@/features/projects/search';
 import type { Project } from '@/features/projects/types';
+import { Permission } from '@/features/auth/permissions';
 
 const route = getRouteApi('/_app/projects/');
 
@@ -42,9 +43,9 @@ export function ProjectsPage() {
   const updateStatus = useUpdateProjectStatus();
   const deleteProject = useDeleteProject();
 
-  const canCreate = can('projects:create');
-  const canUpdate = can('projects:update');
-  const canDelete = can('projects:delete');
+  const canCreate = can(Permission.PROJECTS_CREATE);
+  const canUpdate = can(Permission.PROJECTS_UPDATE);
+  const canDelete = can(Permission.PROJECTS_DELETE);
   const hasFilter = Boolean(search.keyword ?? search.status);
 
   const confirmDelete = (project: Project) =>
@@ -66,7 +67,7 @@ export function ProjectsPage() {
           'Ví dụ CRUD đầy đủ: filter qua URL, phân trang server, form modal, xác nhận xoá, permission theo hành động.',
         )}
         actions={
-          <Can permission="projects:create">
+          <Can permission={Permission.PROJECTS_CREATE}>
             <Button
               type="primary"
               icon={<PlusOutlined />}

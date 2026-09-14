@@ -7,7 +7,7 @@ import {
   DEFAULT_LOCALE,
   getStoredLocale,
   setStoredLocale,
-  type Locale,
+  Locale,
 } from '@/lib/locale-storage';
 
 /**
@@ -22,7 +22,7 @@ const BUNDLES: Record<
   Exclude<Locale, typeof DEFAULT_LOCALE>,
   () => Promise<{ default: Record<string, string> }>
 > = {
-  en: () => import('@/locales/en.json'),
+  [Locale.EN]: () => import('@/locales/en.json'),
 };
 
 const loadBundle = async (locale: Locale) => {

@@ -7,6 +7,7 @@ import { analytics } from '@/lib/analytics';
 import { subscribeSessionExpired } from '@/lib/auth-storage';
 import { queryClient } from '@/lib/query-client';
 import { routeTree } from '@/routeTree.gen';
+import { LoginReason } from '@/features/auth/search';
 
 export const router = createRouter({
   routeTree,
@@ -37,7 +38,7 @@ subscribeSessionExpired(() => {
     to: '/auth/login',
     search: {
       redirectTo: href.startsWith('/auth') ? undefined : href,
-      reason: 'expired',
+      reason: LoginReason.EXPIRED,
     },
     replace: true,
   });

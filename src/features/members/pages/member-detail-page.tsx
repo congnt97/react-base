@@ -20,6 +20,7 @@ import { useUpdateMember } from '@/features/members/hooks/use-member-mutations';
 import { useMemberSessions } from '@/features/members/hooks/use-members';
 import type { Member, MemberPayload } from '@/features/members/types';
 import { formatDateTime } from '@/lib/format';
+import { Permission } from '@/features/auth/permissions';
 
 const route = getRouteApi('/_app/members/$id');
 
@@ -131,7 +132,7 @@ export function MemberDetailPage() {
           { label: data.name },
         ]}
         actions={
-          <Can permission="members:update">
+          <Can permission={Permission.MEMBERS_UPDATE}>
             <Button icon={<EditOutlined />} onClick={() => setEditing(true)}>
               {t('Sửa thành viên')}
             </Button>

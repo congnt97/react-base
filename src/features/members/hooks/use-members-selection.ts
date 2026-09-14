@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useConfirm } from '@/components/ui/use-confirm';
 import { useUpdateMembersStatus } from '@/features/members/hooks/use-member-mutations';
-import type { MemberStatus } from '@/features/members/types';
+import { MemberStatus } from '@/features/members/types';
 
 /**
  * Chọn nhiều dòng và hành động hàng loạt. Đổi trang/filter thì bỏ chọn, vì id đã
@@ -20,15 +20,16 @@ export function useMembersSelection() {
   const setStatus = async (status: MemberStatus) => {
     const confirmed = await confirm({
       title:
-        status === 'active'
+        status === MemberStatus.ACTIVE
           ? t('Kích hoạt {{count}} thành viên?', { count: selectedIds.length })
           : t('Vô hiệu hoá {{count}} thành viên?', {
               count: selectedIds.length,
             }),
       content: t('Áp dụng cho tất cả thành viên đang chọn.'),
-      okText: status === 'active' ? t('Kích hoạt') : t('Vô hiệu hoá'),
+      okText:
+        status === MemberStatus.ACTIVE ? t('Kích hoạt') : t('Vô hiệu hoá'),
       cancelText: t('Huỷ'),
-      danger: status === 'inactive',
+      danger: status === MemberStatus.INACTIVE,
       onConfirm: () => updateStatus.mutateAsync({ ids: selectedIds, status }),
     });
     if (confirmed) {
@@ -40,7 +41,7 @@ export function useMembersSelection() {
     selectedIds,
     setSelectedIds,
     clear,
-    activate: () => setStatus('active'),
-    deactivate: () => setStatus('inactive'),
+    activate: () => setStatus(MemberStatus.ACTIVE),
+    deactivate: () => setStatus(MemberStatus.INACTIVE),
   };
 }

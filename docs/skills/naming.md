@@ -64,8 +64,9 @@ features/<feature>/
 | `Api`        | Interface contract của `api.ts`                   | `ProjectsApi`         |
 | `State`      | State của store                                   | `AuthState`           |
 
-- Union string + `as const` array là mặc định: `PROJECT_STATUSES` -> `ProjectStatus`. `enum` chỉ khi cần giá trị runtime dùng ở nhiều tầng (`Role`).
-- Map nhãn/màu từ union: `<X>_LABELS`, `<X>_COLORS`.
+- Tập giá trị đóng dùng `enum`, không dùng union chuỗi: `ProjectStatus`, `MemberRole`, `Permission`, `Locale`. Gọi qua `ProjectStatus.ACTIVE`, không viết `'active'`. Lý do: gán chuỗi trần vào kiểu enum là lỗi biên dịch, còn union thì không, nên máy ép được.
+- Enum PascalCase số ít, member UPPER_SNAKE, giá trị là chuỗi backend dùng. Lấy danh sách bằng `Object.values(X)`.
+- Map nhãn/màu theo enum: `<X>_LABELS`, `<X>_COLORS`, key là `[Enum.MEMBER]`.
 - Derive từ model thay vì copy: `Pick<Project, 'name' | 'status'>`.
 
 ## API, Query, Mutation

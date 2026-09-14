@@ -39,6 +39,7 @@ Sửa một bug thật thì để lại guard chặn nó (test hành vi, rule li
 ## Quy ước nhanh
 
 - File kebab-case; component PascalCase; hook `useX`; hằng UPPER_SNAKE; type không prefix `I`.
+- Tập giá trị đóng (trạng thái, vai trò, quyền, ngôn ngữ) khai bằng `enum` và gọi qua tên: `ProjectStatus.ACTIVE`, không viết `'active'`.
 - API method chỉ `list/detail/create/update/patch/remove`; `interface <X>Api` khai báo trước implementation.
 - Quyền chỉ qua `can()`, `<Can>`, `requirePermission`. `AuthUser` không có `role`; không thêm lại.
 - Filter và pagination của list nằm trên URL qua `validateSearch` (zod `.catch`).

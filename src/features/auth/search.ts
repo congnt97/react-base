@@ -1,6 +1,8 @@
-const LOGIN_REASONS = ['expired'] as const;
+export enum LoginReason {
+  EXPIRED = 'expired',
+}
 
-export type LoginReason = (typeof LOGIN_REASONS)[number];
+const LOGIN_REASON_VALUES: readonly string[] = Object.values(LoginReason);
 
 export type LoginSearch = {
   redirectTo?: string;
@@ -12,8 +14,7 @@ const isInternalPath = (value: unknown): value is string =>
   typeof value === 'string' && value.startsWith('/') && !value.startsWith('//');
 
 const isLoginReason = (value: unknown): value is LoginReason =>
-  typeof value === 'string' &&
-  (LOGIN_REASONS as readonly string[]).includes(value);
+  typeof value === 'string' && LOGIN_REASON_VALUES.includes(value);
 
 // Chỉ nhận đường dẫn nội bộ để chặn open redirect.
 export const loginSearchSchema = (

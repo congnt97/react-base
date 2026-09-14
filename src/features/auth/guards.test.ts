@@ -3,12 +3,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ForbiddenError, requirePermission } from '@/features/auth/guards';
 import { useAuthStore } from '@/features/auth/store';
 import type { AuthUser } from '@/features/auth/types';
+import { Permission } from '@/features/auth/permissions';
 
 const admin: AuthUser = {
   id: '1',
   email: 'admin@example.com',
   isEmailVerified: true,
-  permissions: ['projects:read', 'settings:manage'],
+  permissions: [Permission.PROJECTS_READ, Permission.SETTINGS_MANAGE],
 };
 
 describe('requirePermission', () => {
@@ -19,18 +20,18 @@ describe('requirePermission', () => {
   it('không throw khi user trong store có permission', () => {
     useAuthStore.getState().setAuthenticated(admin);
 
-    expect(() => requirePermission('settings:manage')).not.toThrow();
+    expect(() => requirePermission(Permission.SETTINGS_MANAGE)).not.toThrow();
   });
 
   it('throw ForbiddenError khi thiếu permission hoặc chưa đăng nhập', () => {
-    expect(() => requirePermission('settings:manage')).toThrowError(
+    expect(() => requirePermission(Permission.SETTINGS_MANAGE)).toThrowError(
       ForbiddenError,
     );
 
     useAuthStore
       .getState()
-      .setAuthenticated({ ...admin, permissions: ['projects:read'] });
-    expect(() => requirePermission('settings:manage')).toThrowError(
+      .setAuthenticated({ ...admin, permissions: [Permission.PROJECTS_READ] });
+    expect(() => requirePermission(Permission.SETTINGS_MANAGE)).toThrowError(
       ForbiddenError,
     );
   });

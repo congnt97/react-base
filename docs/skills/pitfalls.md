@@ -10,6 +10,7 @@
 - `core/` và `lib/` import thư viện UI: ESLint chặn.
 - `eslint-disable` không ghi lý do, disable thừa, `@ts-ignore`: ESLint chặn.
 - Component khai báo trong component, `useXStore()` không selector, `VITE_*` có tên gợi secret: ESLint chặn.
+- Chuỗi trần thay cho member của `enum` (`ProjectStatus`, `MemberRole`, `Permission`, `Locale`): TypeScript và ESLint chặn.
 - Hành vi của từng adapter và hook core: test trong `src/core/**/*.test.*` và `src/components/ui/*.test.tsx`, chạy cùng `pnpm test`.
 - Đường dẫn nhắc trong file này phải tồn tại: `src/test/pitfalls.test.ts`.
 
@@ -148,6 +149,7 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 | 92  | Route import page thẳng làm chunk đầu lớn theo số màn hình               | `autoCodeSplitting` trong `vite.config.ts`; `scripts/check-bundle-size.mjs` fail nếu route không có chunk riêng       | máy  |
 | 93  | Quyết định quyền bằng `user.role` rải rác, đổi backend phải sửa khắp nơi | `AuthUser` không có `role` nên TypeScript báo lỗi; quyền chuẩn hoá ở `features/auth/api.ts` bằng `resolvePermissions` | máy  |
 | 94  | Backend đổi tên permission, nút lặng lẽ biến mất                         | `resolvePermissions` bỏ chuỗi lạ và báo monitoring một lần                                                            | core |
+| 95  | Chuỗi ma thuật cho tập giá trị đóng, đổi tên một giá trị là sót chỗ      | Khai bằng `enum`: gán hoặc truyền chuỗi trần là lỗi TypeScript, so sánh là lỗi `no-unsafe-enum-comparison`            | máy  |
 
 ## Khi gặp lỗi mới
 

@@ -700,6 +700,6 @@ Việc cần làm tiếp:
   3. Đổi nhãn tạm ("${labels.title}", "${labels.create}"...) sang tiếng Việt thật,
      cập nhật src/locales/en.json.
   4. Thêm menu vào src/app/layout/sidebar.tsx; nếu cần phân quyền thì thêm
-     '${kebab}:read|create|update|delete' vào features/auth/permissions.ts và bọc
+     ${pascal.toUpperCase()}_READ|CREATE|UPDATE|DELETE vào enum Permission và bọc
      nút bằng <Can>.
   5. pnpm validate && pnpm test`);

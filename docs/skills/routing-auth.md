@@ -33,14 +33,14 @@ Quyền đến từ đâu: backend chưa chốt, nên `features/auth/api.ts` chu
 
 Bên trong app `AuthUser` chỉ có `permissions`, không có `role`. Biết backend thật thì chỉ sửa biên API và mock, không sửa feature.
 
-| Nơi dùng              | Cách dùng                                                                                                |
-| --------------------- | -------------------------------------------------------------------------------------------------------- |
-| Route                 | `beforeLoad: () => requirePermission('settings:manage')` throw `ForbiddenError`, `RouteError` render 403 |
-| JSX                   | `<Can permission="projects:create">...</Can>`                                                            |
-| Logic trong component | `const { can } = usePermissions(); can('projects:delete')`                                               |
-| Ngoài React           | `can(user, 'projects:read')`                                                                             |
+| Nơi dùng              | Cách dùng                                                                                            |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| Route                 | `beforeLoad: () => requirePermission(Permission.SETTINGS_MANAGE)` throw `ForbiddenError`, render 403 |
+| JSX                   | `<Can permission={Permission.PROJECTS_CREATE}>...</Can>`                                             |
+| Logic trong component | `const { can } = usePermissions(); can(Permission.PROJECTS_DELETE)`                                  |
+| Ngoài React           | `can(user, Permission.PROJECTS_READ)`                                                                |
 
-Thêm permission mới: thêm vào `PERMISSIONS` với đúng tên backend trả, cấp cho role trong `ROLE_PERMISSIONS`, viết test trong `permissions.test.ts`. Frontend guard chỉ là UX, backend phải enforce.
+Thêm permission mới: thêm member vào enum `Permission` với đúng chuỗi backend trả, cấp cho role trong `ROLE_PERMISSIONS`, viết test trong `permissions.test.ts`. Frontend guard chỉ là UX, backend phải enforce.
 
 Mock có hai tài khoản để thấy khác biệt: `admin@example.com` (tất cả, backend trả `permissions`) và `user@example.com` (không xoá dự án, không vào Cài đặt, backend chỉ trả `role`), mật khẩu `123456`.
 
@@ -62,7 +62,7 @@ export const projectsSearchSchema = z.object({
   page: z.number().int().min(1).catch(1),
   pageSize: z.number().int().min(1).max(100).catch(10),
   keyword: z.string().trim().min(1).optional().catch(undefined),
-  status: z.enum(PROJECT_STATUSES).optional().catch(undefined),
+  status: z.enum(ProjectStatus).optional().catch(undefined),
 });
 
 export const Route = createFileRoute('/_app/projects')({

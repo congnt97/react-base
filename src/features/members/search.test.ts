@@ -4,6 +4,7 @@ import {
   memberSessionsSearchSchema,
   membersSearchSchema,
 } from '@/features/members/search';
+import { MemberRole } from '@/features/members/types';
 
 describe('membersSearchSchema', () => {
   it('trả mặc định khi không có query param', () => {
@@ -37,7 +38,7 @@ describe('membersSearchSchema', () => {
   it('giữ param hợp lệ', () => {
     expect(
       membersSearchSchema.parse({ page: 2, keyword: ' lan ', role: 'editor' }),
-    ).toMatchObject({ page: 2, keyword: 'lan', role: 'editor' });
+    ).toMatchObject({ page: 2, keyword: 'lan', role: MemberRole.EDITOR });
   });
 });
 

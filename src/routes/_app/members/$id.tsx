@@ -12,10 +12,11 @@ import {
   type MemberSessionsSearchInput,
 } from '@/features/members/search';
 import { ApiError } from '@/lib/api-error';
+import { Permission } from '@/features/auth/permissions';
 
 export const Route = createFileRoute('/_app/members/$id')({
   component: MemberDetailPage,
-  beforeLoad: () => requirePermission('members:read'),
+  beforeLoad: () => requirePermission(Permission.MEMBERS_READ),
   // Bảng con phân trang trên URL: ?page=2 mở lại đúng trang.
   // SearchSchemaInput: Link tới trang này không bắt buộc truyền page/pageSize.
   validateSearch: (search: MemberSessionsSearchInput & SearchSchemaInput) =>
