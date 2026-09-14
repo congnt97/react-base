@@ -1,0 +1,19 @@
+/* File sinh tự động từ src/app/design-tokens.json. Không sửa tay:
+   sửa token trong JSON hoặc trong Design Lab, rồi chạy `pnpm tokens:css`. */
+:root {
+  --app-bg: #f8fafc;
+  --content-bg: #ffffff;
+  --sidebar-bg: #0f172a;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --link: #1d4ed8;
+  --success: #166534;
+  --success-bg: #dcfce7;
+  --warning: #92400e;
+  --warning-bg: #fef3c7;
+  --danger: #dc2626;
+  --danger-bg: #fee2e2;
+}

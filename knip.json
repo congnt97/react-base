@@ -1,6 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
-  "entry": ["src/routes/**/*.tsx", "e2e/**/*.ts", "scripts/*.mjs"],
-  "project": ["src/**/*.{ts,tsx}", "e2e/**/*.ts", "scripts/**/*.mjs"],
+  "entry": [
+    "src/routes/**/*.tsx",
+    "e2e/**/*.ts",
+    "scripts/*.mjs",
+    "tools/design-lab/main.tsx",
+    "tools/vite-plugin-design-lab.mjs"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "e2e/**/*.ts",
+    "scripts/**/*.mjs",
+    "tools/**/*.{ts,tsx,mjs}"
+  ],
   "ignoreDependencies": ["tailwindcss", "@fontsource/inter"]
 }

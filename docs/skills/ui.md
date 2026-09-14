@@ -6,7 +6,7 @@
 
 - Text trần trong JSX và `placeholder/title/aria-label/alt`: ESLint `i18next/no-literal-string`.
 - Thiếu `key`, `alt`, label, role sai, click không có keyboard: ESLint `react/*`, `jsx-a11y/*`.
-- Màu lệch giữa `tokens.ts` và `styles.css`: `src/app/tokens.test.ts`.
+- CSS biến lệch với `design-tokens.json`: `src/app/tokens.test.ts`.
 - Tương phản màu, a11y WCAG 2.1 AA trên mọi trang chính, cả ở 375px: `e2e/a11y.spec.ts`, `e2e/mobile.spec.ts`.
 - Feature import `Button, Modal, Table, Popconfirm, Upload, Drawer, Form` thẳng từ `antd`: ESLint chặn, dùng bản bọc trong `components/ui/`. Các component AntD khác import thẳng.
 - Component khai báo bên trong component: ESLint `react/no-unstable-nested-components`.
@@ -14,7 +14,7 @@
 
 ## Token và style
 
-- Màu, radius, kích thước layout: `src/app/tokens.ts` là nguồn duy nhất. `theme.ts` map sang AntD, `styles.css` khai lại ở `:root` cho Tailwind. Đổi thì sửa `tokens.ts` rồi theo thông báo test.
+- Màu, radius, kích thước layout: `src/app/design-tokens.json` là nguồn duy nhất. `theme.ts` map sang AntD, `scripts/generate-token-css.mjs` sinh `styles/tokens.generated.css` cho Tailwind. Sửa bằng Design Lab (`design-lab.html` khi chạy dev) hoặc sửa JSON rồi `pnpm tokens:css`.
 - Chỉnh AntD qua `theme.ts` (`token`, `components.<Tên>`), không override CSS, không `!important`. Ngoại lệ duy nhất đã ghi trong code: `text-white!` cho brand trên nền tối vì `.ant-app a` tô màu link.
 - Tailwind cho layout và spacing. Không hex trong component; dùng `var(--text-muted)` hoặc token.
 

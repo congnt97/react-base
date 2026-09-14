@@ -355,6 +355,23 @@ export default tseslint.config(
     },
   },
   {
+    // tools/ chỉ là công cụ cho dev (Design Lab), không bao giờ vào bản build app.
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/tools/*', '**/tools/**'],
+              message: 'src không import từ tools/ (chỉ là công cụ dev).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // core là hành vi headless (hook, contract): biết React và lib, không biết
     // thư viện UI hay feature. Đổi từ antd sang lib khác không phải sửa core.
     files: ['src/core/**/*.{ts,tsx}'],

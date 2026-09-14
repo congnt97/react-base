@@ -3,26 +3,7 @@
 @import '@fontsource/inter/600.css';
 @import '@fontsource/inter/700.css';
 @import 'tailwindcss';
-
-/* Giá trị phải khớp src/app/tokens.ts (nguồn duy nhất); tokens.test.ts kiểm tra.
-   Khai báo ở đây vì AntD scope biến của nó vào class hash, Tailwind không dùng được. */
-:root {
-  --app-bg: #f8fafc;
-  --content-bg: #ffffff;
-  --sidebar-bg: #0f172a;
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --primary: #2563eb;
-  --link: #1d4ed8;
-  --success: #166534;
-  --success-bg: #dcfce7;
-  --warning: #92400e;
-  --warning-bg: #fef3c7;
-  --danger: #dc2626;
-  --danger-bg: #fee2e2;
-}
+@import './tokens.generated.css';
 
 html,
 body,

@@ -1,0 +1,53 @@
+{
+  "colors": {
+    "appBg": "#f8fafc",
+    "contentBg": "#ffffff",
+    "sidebarBg": "#0f172a",
+    "borderSubtle": "#e2e8f0",
+    "borderStrong": "#cbd5e1",
+    "textMain": "#0f172a",
+    "textMuted": "#64748b",
+    "primary": "#2563eb",
+    "link": "#1d4ed8",
+    "success": "#166534",
+    "successBg": "#dcfce7",
+    "warning": "#92400e",
+    "warningBg": "#fef3c7",
+    "danger": "#dc2626",
+    "dangerBg": "#fee2e2"
+  },
+  "layout": {
+    "borderRadius": 8,
+    "headerHeight": 64,
+    "sidebarWidth": 260,
+    "contentMaxWidth": 1440
+  },
+  "typography": {
+    "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+    "fontSize": 14
+  },
+  "components": {
+    "button": {
+      "borderRadius": 8,
+      "controlHeight": 32,
+      "paddingInline": 16,
+      "fontWeight": 500
+    },
+    "input": {
+      "borderRadius": 8,
+      "controlHeight": 32,
+      "paddingInline": 12
+    },
+    "card": {
+      "borderRadius": 8
+    },
+    "modal": {
+      "borderRadius": 8
+    },
+    "table": {
+      "headerBg": "#f8fafc",
+      "rowHoverBg": "#f1f5f9",
+      "cellPaddingBlock": 12
+    }
+  }
+}

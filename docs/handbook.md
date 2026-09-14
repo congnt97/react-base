@@ -58,6 +58,7 @@ Lệnh hay dùng:
 | `pnpm build`         | `tsc --noEmit` rồi Vite build                                                   |
 | `pnpm size`          | so bundle với ngân sách trong `scripts/check-bundle-size.mjs`                   |
 | `pnpm gen <tên>`     | sinh feature CRUD mới, xanh ngay                                                |
+| `pnpm tokens:css`    | sinh lại `styles/tokens.generated.css` từ `app/design-tokens.json`              |
 | `pnpm fix`           | eslint --fix và prettier --write                                                |
 
 Trước khi push: `pnpm validate && pnpm test`. Pre-commit (husky + lint-staged) đã lint và format file staged, nhưng không thay được hai lệnh trên.
@@ -208,7 +209,12 @@ Thêm member vào enum `Permission`, gán cho role trong `ROLE_PERMISSIONS` (dù
 
 ### Thêm màu hoặc token
 
-Sửa `src/app/tokens.ts`, rồi theo thông báo của `src/app/tokens.test.ts` để cập nhật `:root` trong `src/styles/styles.css`. Không hex trong component, không `!important`.
+Hai cách, cùng một nguồn là `src/app/design-tokens.json`:
+
+- Trên giao diện: chạy `pnpm dev`, mở `http://localhost:3001/design-lab.html`, chỉnh rồi bấm "Lưu vào source". Trang này cũng là chỗ xem mọi component dùng chung với đủ biến thể.
+- Sửa tay: đổi giá trị trong `design-tokens.json` rồi chạy `pnpm tokens:css`.
+
+`src/styles/tokens.generated.css` là file sinh tự động, không sửa tay. `tokens.test.ts` fail nếu file đó lệch với JSON. Không hex trong component, không `!important`.
 
 ### Thêm một hook hành vi dùng chung
 

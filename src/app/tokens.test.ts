@@ -1,46 +1,47 @@
+import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
-import { CSS_VARIABLE_BY_TOKEN, colors } from '@/app/tokens';
+import { cssVariableName, designTokens } from '@/app/tokens';
 
-const css = readFileSync(
-  path.resolve(__dirname, '../styles/styles.css'),
-  'utf8',
-);
+const ROOT = path.resolve(import.meta.dirname, '../..');
+const generatedPath = path.join(ROOT, 'src/styles/tokens.generated.css');
 
-const rootBlock = /:root\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
-
-const declaredVariables = new Map(
-  [...rootBlock.matchAll(/(--[a-z-]+)\s*:\s*([^;]+);/g)].map((match) => [
-    match[1] ?? '',
-    (match[2] ?? '').trim(),
-  ]),
-);
-
-// styles.css phải khớp app/tokens.ts: sửa token một chỗ rồi quên chỗ kia là lỗi
-// im lặng (UI lệch màu giữa component AntD và class Tailwind).
+// Sửa design-tokens.json mà quên sinh lại CSS là lỗi im lặng: component AntD đổi
+// màu còn class Tailwind thì không. Test chạy lại script và so với file đang commit.
 describe('design tokens', () => {
-  it('mọi màu trong tokens.ts đều có biến CSS cùng giá trị', () => {
-    const mismatched = Object.entries(colors)
-      .map(([token, value]) => {
-        const variable = CSS_VARIABLE_BY_TOKEN[token as keyof typeof colors];
-        const declared = declaredVariables.get(variable);
-        return declared === value
-          ? null
-          : `${variable}: styles.css có "${declared ?? 'thiếu'}", tokens.ts có "${value}"`;
-      })
-      .filter((message) => message !== null);
-
-    expect(mismatched, mismatched.join('\n')).toEqual([]);
-  });
-
-  it('styles.css không khai báo màu ngoài danh sách token', () => {
-    const known = new Set(Object.values(CSS_VARIABLE_BY_TOKEN));
-    const extra = [...declaredVariables.keys()].filter(
-      (variable) => !known.has(variable),
+  it('tokens.generated.css khớp design-tokens.json', () => {
+    const expected = execFileSync(
+      'node',
+      ['scripts/generate-token-css.mjs', '--stdout'],
+      { cwd: ROOT, encoding: 'utf8' },
     );
 
-    expect(extra, `Thêm vào tokens.ts: ${extra.join(', ')}`).toEqual([]);
+    expect(
+      readFileSync(generatedPath, 'utf8'),
+      'Chạy `pnpm tokens:css` rồi commit lại src/styles/tokens.generated.css',
+    ).toBe(expected);
+  });
+
+  it('mọi màu trong token đều thành một biến CSS', () => {
+    const css = readFileSync(generatedPath, 'utf8');
+    const missing = Object.keys(designTokens.colors).filter(
+      (token) => !css.includes(`${cssVariableName(token)}:`),
+    );
+
+    expect(missing).toEqual([]);
+  });
+
+  it('kích thước và bo góc là số dương', () => {
+    const numbers = [
+      ...Object.values(designTokens.layout),
+      ...Object.values(designTokens.components).flatMap((group) =>
+        Object.values(group).filter((value) => typeof value === 'number'),
+      ),
+    ];
+
+    expect(numbers.every((value) => value > 0)).toBe(true);
   });
 });

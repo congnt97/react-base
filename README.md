@@ -25,11 +25,20 @@ pnpm test                     # unit + component (test:coverage để xem ngư�
 pnpm test:e2e                 # Playwright; lần đầu: pnpm exec playwright install chromium
 pnpm build && pnpm size       # build + bundle budget
 pnpm gen <tên>                # sinh feature CRUD mới
+pnpm tokens:css               # sinh lại biến CSS từ design-tokens.json
 ```
 
 Tài khoản mock (mật khẩu `123456`): `admin@example.com` có mọi quyền, `user@example.com` không xoá dự án và không vào Cài đặt.
 
 CI: mỗi PR chạy validate, test có coverage, build, size. E2E chỉ khi merge `main`, PR gắn label `e2e`, hoặc chạy tay.
+
+## Design Lab
+
+Mở `http://localhost:3001/design-lab.html` khi đang chạy `pnpm dev`. Trang này liệt kê mọi component dùng chung của dự án và cho chỉnh design token ngay trên giao diện: màu, bo góc, chiều cao, khoảng đệm, cỡ chữ, cả token riêng của Button, Input, Card, Modal, bảng.
+
+Bấm "Lưu vào source" là ghi thẳng vào `src/app/design-tokens.json` rồi sinh lại `src/styles/tokens.generated.css`. Mọi component trong app ăn theo ngay, không phải sửa từng chỗ.
+
+Trang chỉ có ở dev: bản build production chỉ gồm `index.html`, và ESLint chặn `src/` import từ `tools/`.
 
 ## Cấu trúc
 
@@ -49,7 +58,8 @@ src/
   mocks/          MSW handlers, chỉ load ở dev khi VITE_ENABLE_MOCK_API=true
   routes/         TanStack file routes, chỉ khai báo route
 e2e/              Playwright: auth, CRUD, thành viên, permission, i18n, mobile, a11y
-scripts/          gen feature, check cấu trúc, bundle size
+scripts/          gen feature, check cấu trúc, bundle size, sinh CSS token
+tools/            công cụ cho dev, không vào bản build: Design Lab, plugin Vite ghi token
 deploy/           nginx template + security headers
 ```
 
