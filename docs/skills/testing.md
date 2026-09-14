@@ -29,6 +29,29 @@ Không bắt buộc test: page chỉ compose, wrapper mỏng quanh AntD, route f
 - Mock ở boundary ngoài cùng. Cần mock API trong test thì dùng MSW với `setupServer(...handlers)` từ `mocks/handlers`, không mock module nội bộ.
 - Test edge case: rỗng, `0`/`''`/`false`, lỗi, data hỏng.
 
+## Test có debounce/timer
+
+Không dùng `delay` ngắn (vd 50ms) với timer thật: tốc độ gõ của `userEvent` đua với
+đồng hồ thật, và dưới tải (CI, chạy cùng `--coverage`) việc gõ có thể chậm hơn
+khoảng debounce, khiến test đỏ ngẫu nhiên dù component đúng. Dùng timer giả với
+`shouldAdvanceTime: true` (tránh treo do React scheduler không tick), rồi
+`advanceTimersByTimeAsync` để bắn debounce một cách xác định:
+
+```ts
+beforeEach(() => vi.useFakeTimers({ shouldAdvanceTime: true }));
+afterEach(() => vi.useRealTimers());
+
+const user = userEvent.setup({
+  advanceTimers: vi.advanceTimersByTime.bind(vi),
+});
+await user.type(input, 'từ khoá');
+expect(onSearch).not.toHaveBeenCalled();
+await vi.advanceTimersByTimeAsync(400); // >= delay thật của component
+expect(onSearch).toHaveBeenCalledWith('từ khoá');
+```
+
+Mẫu: `components/ui/search-input.test.tsx`, `search-select.test.tsx`.
+
 ## E2E (Playwright)
 
 - Test ở `e2e/*.spec.ts`, chạy `pnpm test:e2e` (`test:e2e:ui` để debug). Config `playwright.config.ts` tự bật `pnpm dev` với MSW nên không cần backend.

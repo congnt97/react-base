@@ -1,11 +1,25 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchSelect } from '@/components/ui/search-select';
 
+// Timer thật đua với tốc độ gõ của userEvent: dưới tải, debounce (300ms mặc định
+// của useAsyncOptions) có thể bắn giữa chừng với từ khoá dở dang, khiến
+// `search` bị gọi với "la" thay vì "lan" và test đỏ ngẫu nhiên. Timer giả loại
+// bỏ hẳn cuộc đua đó, xem thêm search-input.test.tsx.
+beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+});
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 describe('SearchSelect', () => {
   it('gõ liên tục chỉ gọi search một lần, chọn thì trả value', async () => {
+    const user = userEvent.setup({
+      advanceTimers: vi.advanceTimersByTime.bind(vi),
+    });
     const search = vi.fn((keyword: string) =>
       Promise.resolve([{ value: 'u1', label: `Người ${keyword}` }]),
     );
@@ -14,14 +28,12 @@ describe('SearchSelect', () => {
       <SearchSelect aria-label="Quản lý" search={search} onChange={onChange} />,
     );
 
-    await userEvent.type(
-      screen.getByRole('combobox', { name: 'Quản lý' }),
-      'lan',
-    );
+    await user.type(screen.getByRole('combobox', { name: 'Quản lý' }), 'lan');
+    await vi.advanceTimersByTimeAsync(300);
 
-    await waitFor(() => expect(search).toHaveBeenCalledTimes(1));
+    expect(search).toHaveBeenCalledTimes(1);
     expect(search.mock.calls[0]?.[0]).toBe('lan');
-    await userEvent.click(await screen.findByText('Người lan'));
+    await user.click(await screen.findByText('Người lan'));
     expect(onChange).toHaveBeenCalledWith('u1', {
       value: 'u1',
       label: 'Người lan',

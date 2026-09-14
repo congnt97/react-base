@@ -150,6 +150,7 @@ Ký hiệu cột "Chặn": **máy** = lint/test đỏ; **core** = hook/adapter l
 | 93  | Quyết định quyền bằng `user.role` rải rác, đổi backend phải sửa khắp nơi | `AuthUser` không có `role` nên TypeScript báo lỗi; quyền chuẩn hoá ở `features/auth/api.ts` bằng `resolvePermissions` | máy  |
 | 94  | Backend đổi tên permission, nút lặng lẽ biến mất                         | `resolvePermissions` bỏ chuỗi lạ và báo monitoring một lần                                                            | core |
 | 95  | Chuỗi ma thuật cho tập giá trị đóng, đổi tên một giá trị là sót chỗ      | Khai bằng `enum`: gán hoặc truyền chuỗi trần là lỗi TypeScript, so sánh là lỗi `no-unsafe-enum-comparison`            | máy  |
+| 96  | Test debounce dùng timer thật với `delay` ngắn, đỏ ngẫu nhiên dưới tải   | Xem `docs/skills/testing.md` mục "Test có debounce/timer": timer giả + `advanceTimersByTimeAsync`                     | docs |
 
 ## Khi gặp lỗi mới
 
