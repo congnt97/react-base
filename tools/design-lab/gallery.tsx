@@ -1,9 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Card, Descriptions, Divider, Space, Tag, Typography } from 'antd';
+import {
+  Card,
+  Descriptions,
+  Divider,
+  Segmented,
+  Space,
+  Tag,
+  Typography,
+} from 'antd';
 import { useState, type ReactNode } from 'react';
 
 import { EmptyState } from '@/components/feedback/empty-state';
-import { ErrorState } from '@/components/feedback/error-state';
 import { PageLoading } from '@/components/feedback/page-loading';
 import { QueryBoundary } from '@/components/feedback/query-boundary';
 import { Button } from '@/components/ui/button';
@@ -41,6 +48,8 @@ function Section({
 
 type Row = { id: string; name: string; owner: string };
 
+type Branch = 'data' | 'loading' | 'error' | 'empty';
+
 const ROWS: Row[] = [
   { id: '1', name: 'CMS nội bộ', owner: 'Lan' },
   { id: '2', name: 'Cổng khách hàng', owner: 'Minh' },
@@ -51,6 +60,7 @@ export function Gallery() {
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [empty, setEmpty] = useState(false);
+  const [branch, setBranch] = useState<Branch>('data');
 
   return (
     <>
@@ -229,34 +239,62 @@ export function Gallery() {
 
       <Section
         title="Trạng thái"
-        note="Bốn nhánh bắt buộc của mọi màn có dữ liệu."
+        note="Bốn nhánh bắt buộc của mọi màn có dữ liệu. Chọn từng nhánh để xem."
       >
-        <QueryBoundary
-          isLoading={false}
-          isError={false}
-          error={null}
-          isEmpty={false}
-          onRetry={() => undefined}
-          emptyState={<EmptyState title="Rỗng" />}
-        >
-          <Descriptions
-            column={1}
-            items={[
-              { key: 'x', label: 'Nhánh có dữ liệu', children: 'Nội dung' },
-            ]}
-          />
-        </QueryBoundary>
-        <Divider />
-        <ErrorState
-          error={new ApiError('Mất kết nối máy chủ')}
-          onRetry={() => undefined}
+        <Segmented
+          className="mb-4"
+          value={branch}
+          onChange={setBranch}
+          options={[
+            { value: 'data', label: 'Có dữ liệu' },
+            { value: 'loading', label: 'Đang tải' },
+            { value: 'error', label: 'Lỗi' },
+            { value: 'empty', label: 'Rỗng' },
+          ]}
         />
+
+        <div className="flex min-h-[220px] items-center justify-center rounded-lg border border-[var(--border-subtle)] p-4">
+          <div className="w-full">
+            <QueryBoundary
+              isLoading={branch === 'loading'}
+              isError={branch === 'error'}
+              error={new ApiError('Mất kết nối máy chủ')}
+              isEmpty={branch === 'empty'}
+              onRetry={() => undefined}
+              emptyState={
+                <EmptyState
+                  title="Chưa có dữ liệu"
+                  description="Tạo mục đầu tiên để bắt đầu."
+                />
+              }
+            >
+              <Descriptions
+                column={1}
+                items={[
+                  { key: 'name', label: 'Tên dự án', children: 'CMS nội bộ' },
+                  { key: 'owner', label: 'Phụ trách', children: 'Lan' },
+                ]}
+              />
+            </QueryBoundary>
+          </div>
+        </div>
+
         <Divider />
-        <PageLoading />
+
+        <Typography.Paragraph type="secondary" className="mb-2! text-xs">
+          PageLoading dùng cho cả trang, trong app cao 60vh; ở đây thu lại cho
+          vừa khung.
+        </Typography.Paragraph>
+        <div className="rounded-lg border border-[var(--border-subtle)] [&>div]:min-h-[120px]!">
+          <PageLoading />
+        </div>
+
         <Divider />
+
         <Space wrap>
           <Tag color="success">Đang chạy</Tag>
           <Tag color="warning">Tạm dừng</Tag>
+          <Tag color="error">Lỗi</Tag>
           <Tag>Lưu trữ</Tag>
         </Space>
       </Section>
