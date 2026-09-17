@@ -2,9 +2,8 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import en from '@/locales/en.json';
-
 const SRC = path.resolve(__dirname, '..');
+const LOCALES_DIR = path.join(SRC, 'locales');
 
 const walk = (dir: string): string[] =>
   readdirSync(dir).flatMap((entry) => {
@@ -31,24 +30,44 @@ const collectKeys = () => {
   return [...keys];
 };
 
+const readLocale = (file: string) =>
+  JSON.parse(readFileSync(path.join(LOCALES_DIR, file), 'utf8')) as Record<
+    string,
+    string
+  >;
+
+// Every file here is checked automatically, so dropping in a new locale (e.g.
+// `ja.json`) gets the same missing-key and empty-value guard with no test to edit.
+const localeFiles = readdirSync(LOCALES_DIR).filter((file) =>
+  file.endsWith('.json'),
+);
+
 // A missing translation doesn't break the UI (i18next falls back to the Vietnamese
-// key) so no one notices until a user switches to English. This test catches it at code time.
+// key) so no one notices until a user switches language. This test catches it at code time.
 describe('i18n', () => {
-  it('mọi key t() tĩnh trong src đều có bản dịch tiếng Anh', () => {
-    const keys = collectKeys();
+  const keys = collectKeys();
+
+  it('quét được key t() tĩnh trong src', () => {
     // A broken regex leaves keys empty and the test passes falsely; guard against that.
     expect(keys.length).toBeGreaterThan(30);
-
-    const missing = keys.filter((key) => !(key in en));
-
-    expect(
-      missing,
-      `Thiếu trong locales/en.json:\n${missing.join('\n')}`,
-    ).toEqual([]);
   });
 
-  it('bản dịch không rỗng và không trùng nguyên văn key một cách vô ý', () => {
-    const empty = Object.entries(en)
+  it.each(localeFiles)(
+    'mọi key t() tĩnh trong src đều có bản dịch trong locales/%s',
+    (file) => {
+      const translations = readLocale(file);
+      const missing = keys.filter((key) => !(key in translations));
+
+      expect(
+        missing,
+        `Thiếu trong locales/${file}:\n${missing.join('\n')}`,
+      ).toEqual([]);
+    },
+  );
+
+  it.each(localeFiles)('bản dịch trong locales/%s không rỗng', (file) => {
+    const translations = readLocale(file);
+    const empty = Object.entries(translations)
       .filter(([, value]) => !value.trim())
       .map(([key]) => key);
 

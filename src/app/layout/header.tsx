@@ -5,12 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { changeLocale } from '@/app/i18n';
 import { useLogout } from '@/features/auth/hooks/use-logout';
 import { useAuthStore } from '@/features/auth/store';
-import { Locale } from '@/lib/locale-storage';
-
-const LOCALE_LABELS: Record<Locale, string> = {
-  [Locale.VI]: 'Tiếng Việt',
-  [Locale.EN]: 'Tiếng Anh',
-};
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/lib/locale-storage';
 
 export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
   const { t, i18n } = useTranslation();
@@ -48,16 +43,16 @@ export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
         />
       )}
 
-      <Select<Locale>
+      <Select
         size="small"
         variant="borderless"
         aria-label={t('Ngôn ngữ')}
-        value={i18n.language as Locale}
-        options={Object.values(Locale).map((value) => ({
+        value={i18n.language}
+        options={AVAILABLE_LOCALES.map((value) => ({
           value,
-          label: t(LOCALE_LABELS[value]),
+          label: t(LOCALE_LABELS[value] ?? value.toUpperCase()),
         }))}
-        onChange={(locale) => void changeLocale(locale)}
+        onChange={(locale: string) => void changeLocale(locale)}
       />
 
       <Dropdown

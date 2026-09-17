@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getStoredLocale, Locale, setStoredLocale } from '@/lib/locale-storage';
+import { getStoredLocale, setStoredLocale } from '@/lib/locale-storage';
 
 describe('locale-storage', () => {
   beforeEach(() => {
@@ -8,16 +8,16 @@ describe('locale-storage', () => {
   });
 
   it('mặc định vi khi chưa lưu', () => {
-    expect(getStoredLocale()).toBe(Locale.VI);
+    expect(getStoredLocale()).toBe('vi');
   });
 
   it('lưu và đọc lại locale hợp lệ', () => {
-    setStoredLocale(Locale.EN);
-    expect(getStoredLocale()).toBe(Locale.EN);
+    setStoredLocale('en');
+    expect(getStoredLocale()).toBe('en');
   });
 
-  it('về mặc định khi storage chứa giá trị lạ', () => {
-    localStorage.setItem('react_base_locale', 'fr');
-    expect(getStoredLocale()).toBe(Locale.VI);
+  it('về mặc định khi storage chứa giá trị không tồn tại file dịch', () => {
+    localStorage.setItem('react_base_locale', 'zz');
+    expect(getStoredLocale()).toBe('vi');
   });
 });
