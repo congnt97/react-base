@@ -17,8 +17,8 @@ import { Permission } from '@/features/auth/permissions';
 export const Route = createFileRoute('/_app/members/$id')({
   component: MemberDetailPage,
   beforeLoad: () => requirePermission(Permission.MEMBERS_READ),
-  // Bảng con phân trang trên URL: ?page=2 mở lại đúng trang.
-  // SearchSchemaInput: Link tới trang này không bắt buộc truyền page/pageSize.
+  // The sub-table paginates via the URL: ?page=2 reopens the right page.
+  // SearchSchemaInput: a Link to this page isn't required to pass page/pageSize.
   validateSearch: (search: MemberSessionsSearchInput & SearchSchemaInput) =>
     memberSessionsSearchSchema.parse(search),
   loader: async ({ context, params }) => {

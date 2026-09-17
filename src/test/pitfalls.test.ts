@@ -4,8 +4,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * Tài liệu chỉ đường tới file cụ thể. Đổi tên file mà không sửa doc thì người
- * và AI đọc doc sẽ đi tìm thứ không còn; test này làm doc đỏ ngay.
+ * Docs point to specific files. Renaming a file without updating the doc sends both
+ * people and AI looking for something that no longer exists; this test fails the doc immediately.
  */
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const DOCS = [
@@ -14,7 +14,7 @@ const DOCS = [
   'docs/decisions.md',
 ];
 
-// Đường dẫn trong backtick: bắt đầu bằng một folder đã biết, có phần mở rộng.
+// A path in backticks: starts with a known folder, has a file extension.
 const PATH_PATTERN =
   /`((?:src|docs|e2e|scripts|core|components|features|lib|app|\.claude)\/[\w./-]+\.[a-z]+)`/g;
 const REPO_ROOTS = ['src/', 'docs/', 'e2e/', 'scripts/', '.claude/'];

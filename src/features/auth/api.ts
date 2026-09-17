@@ -14,8 +14,8 @@ import { http } from '@/lib/http';
 type LoginResponseDto = Omit<LoginResponse, 'user'> & { user: AuthUserDto };
 type RegisterResponseDto = { user: AuthUserDto };
 
-// Biên API: DTO của backend đổi thành AuthUser của app tại đây và chỉ tại đây.
-// Object literal liệt kê từng field nên lỡ thêm `role` là TypeScript báo lỗi.
+// API boundary: the backend's DTO becomes the app's AuthUser here, and only here.
+// Listing each field as an object literal means adding a `role` by mistake is a TypeScript error.
 const toAuthUser = (dto: AuthUserDto): AuthUser => ({
   id: dto.id,
   email: dto.email,
@@ -26,7 +26,7 @@ const toAuthUser = (dto: AuthUserDto): AuthUser => ({
   permissions: resolvePermissions(dto),
 });
 
-// Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
+// Explicit contract: reading the interface tells you how the feature talks to the backend.
 export interface AuthApi {
   login: (body: LoginRequest) => Promise<LoginResponse>;
   logout: () => Promise<void>;

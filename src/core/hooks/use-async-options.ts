@@ -9,15 +9,16 @@ type AsyncOptionsState<TOption> = {
 };
 
 type UseAsyncOptionsConfig = {
-  /** Chờ ngừng gõ bao lâu mới gọi. */
+  /** How long to wait after typing stops before calling. */
   delay?: number;
-  /** Ngắn hơn thì không gọi, trả options rỗng. */
+  /** Shorter than this, don't call, return empty options. */
   minLength?: number;
 };
 
 /**
- * Tìm option từ server cho select: debounce, huỷ request cũ, bỏ response cũ về
- * sau response mới. Adapter chỉ cần nối `onSearch`, `options`, `loading`.
+ * Searches for options from the server for a select: debounces, cancels the previous
+ * request, and discards a stale response that arrives after a newer one. The adapter only
+ * needs to wire up `onSearch`, `options`, `loading`.
  */
 export function useAsyncOptions<TOption>(
   search: (keyword: string, signal: AbortSignal) => Promise<TOption[]>,
@@ -43,7 +44,7 @@ export function useAsyncOptions<TOption>(
     setState((previous) => ({ ...previous, loading: true }));
     try {
       const options = await search(keyword, controller.signal);
-      // Request đã bị thay bởi lần gõ sau: bỏ, không đè kết quả mới.
+      // The request has been superseded by a later keystroke: discard it, don't overwrite newer results.
       if (!controller.signal.aborted) {
         setState({ options, loading: false, error: null });
       }
@@ -58,7 +59,7 @@ export function useAsyncOptions<TOption>(
     void run(keyword);
   }, delay);
 
-  // Unmount thì huỷ request đang bay để không set state sau đó.
+  // On unmount, cancel any in-flight request so state isn't set afterward.
   useEffect(() => () => controllerRef.current?.abort(), []);
 
   return { ...state, onSearch: debouncedRun };

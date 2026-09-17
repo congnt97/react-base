@@ -7,11 +7,11 @@ import { getErrorMessage } from '@/lib/api-error';
 import type { UploadedFile } from '@/lib/upload';
 
 type UploadFieldProps = {
-  /** MIME whitelist, ví dụ ['application/pdf', 'image/png']. */
+  /** MIME whitelist, e.g. ['application/pdf', 'image/png']. */
   accept: string[];
   maxSizeMb: number;
   upload: (file: File) => Promise<UploadedFile>;
-  /** URL file đã upload; AntD Form inject value/onChange khi đặt trong Form.Item. */
+  /** URL of the uploaded file; AntD's Form injects value/onChange when placed in a Form.Item. */
   value?: string;
   onChange?: (url?: string) => void;
   disabled?: boolean;
@@ -20,9 +20,10 @@ type UploadFieldProps = {
 const fileNameFromUrl = (url: string) => url.split('/').pop() ?? url;
 
 /**
- * Bản bọc Upload: validate type/size ở client (UX), một file một lần, nút loading khi
- * đang tải. Backend vẫn phải validate lại. Giá trị là URL string để dùng thẳng trong
- * form payload. Feature phải dùng bản này thay vì antd Upload.
+ * Upload wrapper: validates type/size on the client (UX only), one file at a time, the
+ * button shows loading while uploading. The backend must still validate. The value is a
+ * URL string so it can go straight into the form payload. Features must use this instead
+ * of AntD's Upload.
  */
 export function Upload({
   accept,
@@ -66,7 +67,7 @@ export function Upload({
     }
   };
 
-  // AntD mong customRequest trả void; lỗi đã xử lý trong handleUpload.
+  // AntD expects customRequest to return void; the error is already handled in handleUpload.
   const customRequest: UploadProps['customRequest'] = (options) => {
     void handleUpload(options);
   };

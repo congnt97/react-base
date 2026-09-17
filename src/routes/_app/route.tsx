@@ -11,8 +11,8 @@ export const Route = createFileRoute('/_app')({
     </AppShell>
   ),
   beforeLoad: async ({ context, location }) => {
-    // Đọc store trực tiếp để guard thấy giá trị mới nhất ngay sau login/logout,
-    // không phụ thuộc React re-render.
+    // Reads the store directly so the guard sees the latest value right after login/logout,
+    // without depending on a React re-render.
     const auth = useAuthStore.getState();
     const redirectToLogin = () =>
       redirect({

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { MemberRole, MemberStatus } from '@/features/members/types';
 
-// `.catch` thay vì throw: query param sai/thiếu thì về mặc định, không văng lỗi route.
+// `.catch` instead of throw: a bad/missing query param falls back to the default instead of a route error.
 export const membersSearchSchema = z.object({
   page: z.number().int().min(1).catch(1),
   pageSize: z.number().int().min(1).max(100).catch(10),
@@ -13,13 +13,13 @@ export const membersSearchSchema = z.object({
 
 export type MembersSearch = z.infer<typeof membersSearchSchema>;
 
-/** Bảng con trên trang chi tiết cũng phân trang qua URL, để share link đúng trang. */
+/** The sub-table on the detail page also paginates via the URL, so a shared link opens the right page. */
 export const memberSessionsSearchSchema = z.object({
   page: z.number().int().min(1).catch(1),
   pageSize: z.number().int().min(1).max(50).catch(5),
 });
 
-/** Input khi điều hướng: mọi field tuỳ chọn, schema điền mặc định. */
+/** Input for navigation: every field optional, the schema fills in defaults. */
 export type MemberSessionsSearchInput = Partial<
   z.infer<typeof memberSessionsSearchSchema>
 >;

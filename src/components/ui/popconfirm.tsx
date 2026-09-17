@@ -10,18 +10,19 @@ type PopconfirmProps = Omit<
   AntPopconfirmProps,
   'onConfirm' | 'okText' | 'cancelText' | 'open' | 'onOpenChange'
 > & {
-  /** Bắt buộc có chữ rõ nghĩa; không dùng "OK/Cancel" mặc định. */
+  /** Must have clear wording; don't use the default "OK/Cancel". */
   okText: string;
   cancelText: string;
-  /** Hành động phá huỷ: nút OK đỏ. */
+  /** A destructive action: red OK button. */
   danger?: boolean;
-  /** Trả Promise thì nút OK loading, huỷ bị khoá, bấm lại bị bỏ qua tới khi xong. */
+  /** If it returns a Promise, the OK button shows loading, cancel is locked, and a repeat click is ignored until done. */
   onConfirm?: () => unknown;
 };
 
 /**
- * Bản bọc Popconfirm: chữ rõ nghĩa, chặn xác nhận trùng, chỉ đóng khi hành động xong
- * (lỗi thì giữ mở để thử lại; lỗi đã được toast ở mutation). Feature phải dùng bản này.
+ * Popconfirm wrapper: clear wording, blocks a duplicate confirm, only closes once the
+ * action finishes (stays open on error so the user can retry; the error has already been
+ * toasted in the mutation). Features must use this wrapper.
  */
 export function Popconfirm({
   onConfirm,
@@ -42,14 +43,14 @@ export function Popconfirm({
           setOpen(false);
         }
       },
-      // Lỗi đã được toast ở mutation; giữ popover mở để thử lại.
+      // The error has already been toasted in the mutation; keep the popover open to retry.
       () => undefined,
     );
 
   return (
     <AntPopconfirm
       open={open}
-      // antd gọi đóng ngay khi onConfirm không trả Promise; đang chạy thì bỏ qua.
+      // AntD closes it immediately when onConfirm doesn't return a Promise; ignore while running.
       onOpenChange={(next) => {
         if (!action.isRunning()) {
           setOpen(next);

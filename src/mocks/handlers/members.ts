@@ -67,7 +67,7 @@ const seedSessions = (memberId: string, count: number): MemberSession[] =>
     createdAt: new Date(Date.now() - index * 5 * 60 * 60_000).toISOString(),
   }));
 
-// In-memory, reset khi reload trang.
+// In-memory, resets on page reload.
 let members = seedMembers(37);
 const sessions = new Map(
   members.map((member, index) => [
@@ -125,7 +125,7 @@ export const membersHandlers = [
   http.post(apiUrl(Endpoints.Members.LIST), async ({ request }) => {
     await delay(300);
     const body = (await request.json()) as MemberPayload;
-    // Mẫu lỗi theo field từ backend (422): Form bọc gắn thẳng vào field email.
+    // Sample field-level error from the backend (422): the Form wrapper attaches it directly to the email field.
     if (members.some((member) => member.email === body.email)) {
       return failFields(422, 'Dữ liệu không hợp lệ', {
         email: 'Email đã tồn tại',

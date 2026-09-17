@@ -14,22 +14,23 @@ type ListQueryOptions<TItem> = {
     signal: AbortSignal;
   }) => Promise<PaginatedResponse<TItem>>;
   enabled?: boolean;
-  /** Trang và cỡ trang đang hiển thị, để phát hiện trang tràn. */
+  /** The page and page size currently shown, to detect page overflow. */
   page: number;
   pageSize: number;
   /**
-   * Gọi khi trang hiện tại trống nhưng vẫn còn dữ liệu (thường sau khi xoá dòng cuối
-   * của trang cuối). Nhận số trang hợp lệ gần nhất để điều hướng.
+   * Called when the current page is empty but data still exists (typically after deleting
+   * the last row of the last page). Receives the nearest valid page number to navigate to.
    */
   onPageOverflow?: (lastPage: number) => void;
 };
 
 /**
- * List query đã chuẩn hoá cho mọi thư viện bảng:
- * - `isLoading` chỉ true khi thật sự tải lần đầu; `enabled: false` không kẹt loading.
- * - Giữ data cũ khi đổi trang/filter (`keepPreviousData`) để bảng không nháy.
- * - Huỷ request cũ qua `signal`.
- * - Tự phát hiện trang tràn và báo về để lùi trang.
+ * List query normalized for any table library:
+ * - `isLoading` is true only while actually loading for the first time; `enabled: false`
+ *   doesn't get stuck in loading.
+ * - Keeps old data when the page/filter changes (`keepPreviousData`) so the table doesn't flicker.
+ * - Cancels the previous request via `signal`.
+ * - Detects page overflow itself and reports it back so the caller can go to an earlier page.
  */
 export function useListQuery<TItem>({
   queryKey,
@@ -56,13 +57,13 @@ export function useListQuery<TItem>({
     page > 1;
 
   const lastPage = Math.max(1, Math.ceil(total / pageSize));
-  // useEffectEvent: đọc callback mới nhất mà không đưa vào deps, nên chỉ báo một lần
-  // mỗi lần phát hiện tràn dù page truyền callback inline.
+  // useEffectEvent: reads the latest callback without putting it in deps, so it only
+  // notifies once per overflow detection even if the caller passes an inline callback.
   const notifyOverflow = useEffectEvent((page: number) =>
     onPageOverflow?.(page),
   );
 
-  // Đồng bộ với URL/state bên ngoài khi phát hiện trang tràn, nên là effect hợp lệ.
+  // Syncs with external URL/state when page overflow is detected, so this is a valid effect.
   useEffect(() => {
     if (isOverflow) {
       notifyOverflow(lastPage);
@@ -72,7 +73,7 @@ export function useListQuery<TItem>({
   return {
     items,
     total,
-    // TanStack v5: isPending true cả khi query tắt; isFetching mới là đang tải thật.
+    // TanStack v5: isPending is true even when the query is disabled; isFetching is the real loading signal.
     isLoading: query.isPending && query.isFetching,
     isRefreshing: query.isFetching && query.isPlaceholderData,
     isError: query.isError,

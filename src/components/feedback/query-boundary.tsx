@@ -10,13 +10,13 @@ type QueryBoundaryProps = {
   error: unknown;
   isEmpty: boolean;
   onRetry: () => void;
-  /** Bắt buộc: dữ liệu rỗng phải có nội dung nói người dùng nên làm gì. */
+  /** Required: an empty result must tell the user what to do. */
   emptyState: ReactNode;
   loadingState?: ReactNode;
   children: ReactNode;
 };
 
-/** AsyncBoundary với UI mặc định: skeleton, ErrorState có thử lại, empty state bắt buộc. */
+/** AsyncBoundary with default UI: skeleton, ErrorState with retry, empty state required. */
 export function QueryBoundary({
   isLoading,
   isError,

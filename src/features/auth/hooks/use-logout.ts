@@ -11,7 +11,7 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: authApi.logout,
-    // Dù server logout lỗi vẫn clear local và về login.
+    // Even if the server logout call fails, clear local state and go back to login.
     onSettled: () => {
       clearAuth();
       queryClient.clear();

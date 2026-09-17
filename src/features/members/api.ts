@@ -16,9 +16,9 @@ import { http, type HttpRequestOptions } from '@/lib/http';
 
 type ReadOptions = Pick<HttpRequestOptions, 'signal'>;
 
-// Contract tường minh. Ngoài list/detail/create/update/patch/remove còn:
-// - `patchMany`: hành động hàng loạt, một request cho nhiều id.
-// - `listSessions`: list con theo id cha.
+// Explicit contract. Besides list/detail/create/update/patch/remove there's also:
+// - `patchMany`: a bulk action, one request for many ids.
+// - `listSessions`: a sub-list keyed by the parent id.
 export interface MembersApi {
   list: (
     params: MemberListParams,

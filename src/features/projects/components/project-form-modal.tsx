@@ -17,7 +17,7 @@ type ProjectFormModalProps = {
   project: Project | null;
   submitting: boolean;
   onCancel: () => void;
-  /** Trả Promise: Form bọc khoá field, gắn lỗi field từ backend nếu có. */
+  /** Returns a Promise: the Form wrapper locks fields, attaches backend field errors if any. */
   onSubmit: (values: ProjectPayload) => Promise<unknown>;
 };
 
@@ -46,7 +46,7 @@ export function ProjectFormModal({
       title={isEdit ? t('Sửa dự án') : t('Tạo dự án')}
       okText={isEdit ? t('Lưu') : t('Tạo dự án')}
       cancelText={t('Huỷ')}
-      // Modal bọc: đang gửi thì khoá mask/ESC/X, huỷ form khi đóng để initialValues đúng.
+      // Modal wrapper: while submitting it locks mask/ESC/X, destroys the form on close so initialValues stay correct.
       submitting={submitting}
       onOk={() => form.submit()}
       onCancel={onCancel}

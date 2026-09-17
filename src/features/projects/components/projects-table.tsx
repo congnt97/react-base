@@ -20,9 +20,9 @@ type ProjectsTableProps = {
   page: number;
   pageSize: number;
   onPageChange: (page: number, pageSize: number) => void;
-  /** Hiện khi không có dòng nào và không loading. */
+  /** Shown when there are no rows and it's not loading. */
   emptyState: ReactNode;
-  // undefined = không có quyền, ẩn control tương ứng.
+  // undefined = no permission, hides the corresponding control.
   onEdit?: (project: Project) => void;
   onDelete?: (project: Project) => void;
   onStatusChange?: (project: Project, status: ProjectStatus) => void;

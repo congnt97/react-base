@@ -26,7 +26,7 @@ export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
       okText: t('Đăng xuất'),
       okButtonProps: { danger: true },
       cancelText: t('Huỷ'),
-      // Lỗi logout server đã được useLogout xử lý trong onSettled; modal chỉ cần đóng.
+      // Server logout errors are already handled by useLogout in onSettled; the modal just closes.
       onOk: () =>
         logout.mutateAsync().then(
           () => undefined,
@@ -37,7 +37,7 @@ export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
 
   return (
     <header className="app-header">
-      {/* Dưới lg, Sider thu về 0 nên đây là lối vào điều hướng duy nhất. */}
+      {/* Below lg, the Sider collapses to 0, so this is the only nav entry point. */}
       {isDesktop ? null : (
         <Button
           type="text"

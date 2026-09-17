@@ -1,7 +1,8 @@
 import type { PaginationParams } from '@/lib/api-response';
 
-// Tập giá trị đóng đi qua enum, không rải chuỗi trần trong code: gán sai là lỗi
-// biên dịch, đổi tên chỉ sửa một chỗ, và IDE gợi ý đủ giá trị hợp lệ.
+// A closed set of values goes through an enum instead of raw strings scattered in code: a
+// wrong assignment is a compile error, a rename touches one place, and the IDE suggests
+// every valid value.
 export enum ProjectStatus {
   ACTIVE = 'active',
   PAUSED = 'paused',

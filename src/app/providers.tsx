@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { antdTheme } from '@/app/theme';
 import { queryClient } from '@/lib/query-client';
 
-// Partial vì i18n.language là string bất kỳ; thiếu thì về vi.
+// Partial because i18n.language is an arbitrary string; falls back to vi when missing.
 const ANTD_LOCALES: Partial<Record<string, typeof viVN>> = {
   vi: viVN,
   en: enUS,

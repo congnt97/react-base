@@ -13,8 +13,8 @@ import { http, type HttpRequestOptions } from '@/lib/http';
 
 type ReadOptions = Pick<HttpRequestOptions, 'signal'>;
 
-// Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
-// Method đọc nhận `signal` để TanStack Query huỷ request cũ khi đổi trang/filter.
+// Explicit contract: reading the interface tells you how the feature talks to the backend.
+// Read methods take a `signal` so TanStack Query can cancel the stale request on page/filter change.
 export interface ProjectsApi {
   list: (
     params: ProjectListParams,

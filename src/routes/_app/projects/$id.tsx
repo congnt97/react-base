@@ -6,7 +6,7 @@ import { ApiError } from '@/lib/api-error';
 
 export const Route = createFileRoute('/_app/projects/$id')({
   component: ProjectDetailPage,
-  // Prefetch trước khi render để không nháy loading; 404 từ API thành trang Not Found.
+  // Prefetches before render to avoid a loading flash; a 404 from the API becomes the Not Found page.
   loader: async ({ context, params }) => {
     try {
       await context.queryClient.ensureQueryData(

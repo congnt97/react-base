@@ -5,7 +5,7 @@ import type {
   MemberSessionListParams,
 } from '@/features/members/types';
 
-// Key factory: invalidate `all` sau mutation là đủ cho list, detail và list con.
+// Key factory: invalidating `all` after a mutation is enough for the list, detail, and sub-lists.
 export const memberKeys = {
   all: ['members'] as const,
   list: (params: MemberListParams) =>
@@ -16,7 +16,7 @@ export const memberKeys = {
 };
 
 type ListOptions = {
-  /** Xoá dòng cuối của trang cuối thì lùi về trang còn dữ liệu. */
+  /** Deleting the last row of the last page steps back to a page that still has data. */
   onPageOverflow: (lastPage: number) => void;
 };
 
@@ -33,7 +33,7 @@ export function useMembers(
   });
 }
 
-/** List con theo id cha: cùng key gốc để invalidate một lần là đủ. */
+/** Sub-list keyed by the parent id: shares the root key, so a single invalidate is enough. */
 export function useMemberSessions(
   id: string,
   params: MemberSessionListParams,

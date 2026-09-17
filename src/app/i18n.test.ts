@@ -17,7 +17,7 @@ const walk = (dir: string): string[] =>
       : [];
   });
 
-// t('...') hoặc t("...") với khoảng trắng/xuống dòng tuỳ ý sau dấu (.
+// t('...') or t("...") with arbitrary whitespace/newlines after the ( character.
 const KEY_PATTERN = /\bt\(\s*(['"])((?:(?!\1)[^\\]|\\.)*)\1/g;
 
 const collectKeys = () => {
@@ -31,12 +31,12 @@ const collectKeys = () => {
   return [...keys];
 };
 
-// Quên thêm bản dịch không vỡ UI (i18next trả lại key tiếng Việt) nên không ai
-// nhận ra cho tới khi user đổi sang tiếng Anh. Test này bắt ngay lúc code.
+// A missing translation doesn't break the UI (i18next falls back to the Vietnamese
+// key) so no one notices until a user switches to English. This test catches it at code time.
 describe('i18n', () => {
   it('mọi key t() tĩnh trong src đều có bản dịch tiếng Anh', () => {
     const keys = collectKeys();
-    // Regex hỏng thì keys rỗng và test pass giả; chặn trường hợp đó.
+    // A broken regex leaves keys empty and the test passes falsely; guard against that.
     expect(keys.length).toBeGreaterThan(30);
 
     const missing = keys.filter((key) => !(key in en));

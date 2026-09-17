@@ -19,7 +19,7 @@ type MemberFormDrawerProps = {
   member: Member | null;
   submitting: boolean;
   onCancel: () => void;
-  /** Trả Promise: Form bọc khoá field, gắn lỗi field từ backend nếu có. */
+  /** Returns a Promise: the Form wrapper locks fields, attaches backend field errors if any. */
   onSubmit: (values: MemberPayload) => Promise<unknown>;
 };
 
@@ -29,7 +29,7 @@ const DEFAULT_VALUES: MemberPayload = {
   role: MemberRole.VIEWER,
 };
 
-/** Tìm người quản lý trong chính danh sách thành viên, bỏ người đang sửa. */
+/** Searches for a manager within the members list itself, excluding the one being edited. */
 const searchManagers =
   (excludeId?: string) => async (keyword: string, signal: AbortSignal) => {
     const page = await membersApi.list(

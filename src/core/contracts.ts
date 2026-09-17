@@ -1,41 +1,41 @@
 /**
- * Contract giữa core (headless) và components (adapter cho thư viện UI).
- * Adapter nào cũng phải thoả các type này; test contract trong components/ kiểm tra hành vi.
- * Không import thư viện UI ở đây.
+ * Contract between core (headless) and components (the adapter for the UI library).
+ * Every adapter must satisfy these types; contract tests in components/ check the behavior.
+ * Do not import any UI library here.
  */
 import type { ReactNode } from 'react';
 
-/** Hành động async: gọi khi đang chạy thì bị bỏ qua (chặn click spam). */
+/** Async action: a call made while it's already running is ignored (blocks click spam). */
 export type AsyncAction<TArgs extends unknown[] = []> = {
-  /** Trả true nếu đã chạy, false nếu bị bỏ qua vì đang chạy. */
+  /** Returns true if it actually ran, false if skipped because it was already running. */
   run: (...args: TArgs) => Promise<boolean>;
-  /** Cho render: bind vào `loading` của nút. */
+  /** For rendering: bind to the button's `loading`. */
   pending: boolean;
-  /** Đọc đồng bộ trong handler (state `pending` chỉ đúng sau lần render kế). */
+  /** Synchronous read inside a handler (the `pending` state is only accurate after the next render). */
   isRunning: () => boolean;
 };
 
-/** Hộp thoại xác nhận: luôn có huỷ, hành động phá huỷ phải `danger`. */
+/** Confirmation dialog: always has a cancel; a destructive action must be `danger`. */
 export type ConfirmOptions = {
   title: string;
   content?: ReactNode;
   okText: string;
   cancelText: string;
   danger?: boolean;
-  /** Việc cần làm khi xác nhận; nút OK loading và không bấm được lần hai tới khi xong. */
+  /** Work to do on confirm; the OK button shows loading and can't be clicked again until it finishes. */
   onConfirm?: () => Promise<unknown>;
 };
 
-/** Trả true khi người dùng xác nhận (và `onConfirm` nếu có đã chạy xong). */
+/** Returns true once the user confirms (and `onConfirm`, if provided, has finished running). */
 export type ConfirmFn = (options: ConfirmOptions) => Promise<boolean>;
 
-/** Trạng thái list đã chuẩn hoá cho mọi thư viện bảng. */
+/** List state normalized for any table library. */
 export type ListState<TItem> = {
   items: TItem[];
   total: number;
-  /** true chỉ khi thật sự đang tải lần đầu; query bị tắt không tính là loading. */
+  /** true only while actually loading for the first time; a disabled query doesn't count as loading. */
   isLoading: boolean;
-  /** Đang tải trang mới nhưng còn data cũ để hiện. */
+  /** Fetching a new page while still showing the old data. */
   isRefreshing: boolean;
   isError: boolean;
   error: unknown;

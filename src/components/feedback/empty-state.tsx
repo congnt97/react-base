@@ -4,11 +4,11 @@ import type { ReactNode } from 'react';
 type EmptyStateProps = {
   title: string;
   description?: string;
-  /** Nút hành động chính, ví dụ "Tạo dự án". */
+  /** Primary action button, e.g. "Create project". */
   action?: { label: string; onClick: () => void; icon?: ReactNode };
 };
 
-// Empty state có hướng dẫn hành động; "Trống" mặc định của AntD không nói user nên làm gì.
+// An empty state with an action hint; AntD's default "Empty" doesn't tell the user what to do.
 export function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
     <Empty

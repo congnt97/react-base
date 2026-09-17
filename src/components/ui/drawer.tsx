@@ -1,11 +1,11 @@
 import { Drawer as AntDrawer, type DrawerProps as AntDrawerProps } from 'antd';
 
 type DrawerProps = AntDrawerProps & {
-  /** Đang gửi: khoá mask, ESC và nút đóng để không mất dữ liệu đang lưu. */
+  /** While submitting: locks the mask, ESC, and close button so in-flight data isn't lost. */
   submitting?: boolean;
 };
 
-/** Bản bọc Drawer: khoá đóng khi đang gửi, huỷ nội dung khi đóng. Feature phải dùng bản này. */
+/** Drawer wrapper: locks closing while submitting, destroys content on close. Features must use this. */
 export function Drawer({
   submitting = false,
   maskClosable = true,
@@ -16,7 +16,7 @@ export function Drawer({
   return (
     <AntDrawer
       destroyOnHidden
-      // AntD 6.6 deprecate maskClosable, thay bằng mask.closable (giữ enabled mặc định true).
+      // AntD 6.6 deprecates maskClosable, replaced by mask.closable (keeps enabled defaulting to true).
       mask={{ closable: maskClosable && !submitting }}
       keyboard={keyboard && !submitting}
       closable={closable && !submitting}

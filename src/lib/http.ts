@@ -25,7 +25,7 @@ type ErrorResponseBody = {
   error?: string;
   statusCode?: number;
   message?: string | string[];
-  /** Lỗi theo field: `{ email: 'Email đã tồn tại' }` hoặc `{ email: ['...'] }`. */
+  /** Field-level errors: `{ email: 'Email đã tồn tại' }` or `{ email: ['...'] }`. */
   errors?: Record<string, string | string[]>;
 };
 
@@ -47,7 +47,7 @@ const toFieldErrors = (errors: ErrorResponseBody['errors']) => {
 export type HttpRequestOptions = {
   urlParams?: UrlParams;
   queryParams?: QueryParams;
-  /** Truyền `signal` của TanStack Query vào đây để huỷ request khi query bị bỏ. */
+  /** Pass TanStack Query's `signal` here to cancel the request when the query is discarded. */
   signal?: AbortSignal;
   config?: AxiosRequestConfig;
 };
@@ -64,13 +64,13 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  // Mỗi request một id để đối chiếu log FE (monitoring) với log BE.
+  // One id per request, to match FE logs (monitoring) against BE logs.
   config.headers[REQUEST_ID_HEADER] = crypto.randomUUID();
 
   return config;
 });
 
-// Gom mọi request 401 đồng thời vào một lần refresh duy nhất.
+// Coalesces every concurrent 401 into a single refresh call.
 const refreshAuthTokens = (refreshToken: string) => {
   refreshTokenRequest ??= axiosInstance
     .post<ApiResponse<AuthTokens>>(Endpoints.Auth.REFRESH_TOKEN, {
@@ -100,7 +100,7 @@ const refreshAuthTokens = (refreshToken: string) => {
   return refreshTokenRequest;
 };
 
-/** 401 lần đầu, không phải chính request refresh, và đang có refresh token. */
+/** First 401, not the refresh request itself, and a refresh token is available. */
 const canRetryWithRefresh = (
   error: AxiosError<ErrorResponseBody>,
   request: RetriableRequestConfig | undefined,

@@ -48,7 +48,7 @@ export function useDeleteMember() {
   });
 }
 
-/** Đổi trạng thái nhiều thành viên trong một request. */
+/** Changes the status of multiple members in a single request. */
 export function useUpdateMembersStatus() {
   const { t } = useTranslation();
   const { message } = App.useApp();

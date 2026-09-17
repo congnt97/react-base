@@ -102,7 +102,7 @@ function MemberInfo({ member }: { member: Member }) {
 export function MemberDetailPage() {
   const { t } = useTranslation();
   const { id } = route.useParams();
-  // Loader đã ensureQueryData nên lần đầu render có data ngay.
+  // The loader already called ensureQueryData, so data is available on the very first render.
   const member = useMember(id);
   const updateMember = useUpdateMember();
   const [editing, setEditing] = useState(false);
@@ -116,7 +116,7 @@ export function MemberDetailPage() {
   }
 
   const data = member.data;
-  // Lỗi đã toast ở mutation; Form bọc gắn lỗi field và giữ drawer mở.
+  // The error is already toasted in the mutation; the Form wrapper attaches field errors and keeps the drawer open.
   const handleSubmit = (values: MemberPayload) =>
     updateMember
       .mutateAsync({ id: data.id, ...values })

@@ -22,7 +22,7 @@ const route = getRouteApi('/_app/projects/$id');
 export function ProjectDetailPage() {
   const { t } = useTranslation();
   const { id } = route.useParams();
-  // Loader đã ensureQueryData nên lần đầu render có data ngay; hook giữ cache đồng bộ sau mutation.
+  // The loader already called ensureQueryData, so data is available on the very first render; the hook keeps the cache in sync after mutations.
   const project = useProject(id);
   const updateProject = useUpdateProject();
   const [editing, setEditing] = useState(false);
@@ -40,7 +40,7 @@ export function ProjectDetailPage() {
     return <PageLoading />;
   }
 
-  // Lỗi đã toast ở mutation; Form bọc gắn lỗi field và giữ modal mở.
+  // The error is already toasted in the mutation; the Form wrapper attaches field errors and keeps the modal open.
   const handleSubmit = (values: ProjectPayload) =>
     updateProject
       .mutateAsync({ id: data.id, ...values })

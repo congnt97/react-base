@@ -15,17 +15,18 @@ type SearchSelectProps = Omit<
   | 'notFoundContent'
   | 'onChange'
 > & {
-  /** Gọi server; nhận `signal` để huỷ khi người dùng gõ tiếp. */
+  /** Calls the server; receives `signal` to cancel when the user keeps typing. */
   search: (keyword: string, signal: AbortSignal) => Promise<SelectOption[]>;
-  /** Option của giá trị đang chọn (khi sửa), để hiện label trước khi tìm. */
+  /** Option for the currently selected value (when editing), to show the label before searching. */
   selectedOption?: SelectOption;
   onChange?: (value: string | undefined, option?: SelectOption) => void;
   minLength?: number;
 };
 
 /**
- * Select tìm từ server: debounce, huỷ request cũ, bỏ response cũ về sau.
- * Feature dùng bản này cho mọi select có dữ liệu từ API; select tĩnh dùng antd Select.
+ * Select that searches the server: debounces, cancels the previous request, discards a
+ * stale response that arrives late. Features use this for any select backed by API data;
+ * a static select uses AntD's Select directly.
  */
 export function SearchSelect({
   search,
@@ -38,7 +39,7 @@ export function SearchSelect({
   const { t } = useTranslation();
   const result = useAsyncOptions(search, { minLength });
 
-  // Giữ option đang chọn trong danh sách để Select luôn hiện được label.
+  // Keep the currently selected option in the list so Select can always show its label.
   const options =
     selectedOption &&
     !result.options.some((option) => option.value === selectedOption.value)

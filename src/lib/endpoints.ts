@@ -19,9 +19,9 @@ export const Endpoints = {
   Members: {
     LIST: '/members',
     DETAIL: '/members/:id',
-    /** Hành động hàng loạt: PATCH một lần cho nhiều id. */
+    /** Bulk action: a single PATCH for many ids. */
     STATUS: '/members/status',
-    /** List con theo id cha. */
+    /** Sub-list keyed by the parent id. */
     SESSIONS: '/members/:id/sessions',
   },
 } as const;

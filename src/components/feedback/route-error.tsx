@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { getErrorMessage } from '@/lib/api-error';
 import { monitoring } from '@/lib/monitoring';
 
-// Dùng làm defaultErrorComponent của router: nhận diện lỗi 403 để hiện đúng trang.
+// Used as the router's defaultErrorComponent: detects a 403 error to show the right page.
 export function RouteError({ error }: ErrorComponentProps) {
   const { t } = useTranslation();
   const isForbidden = error instanceof Error && error.name === 'ForbiddenError';
 
-  // Báo lỗi render/loader về monitoring (hệ thống ngoài React), bỏ qua 403.
+  // Reports render/loader errors to monitoring (a system outside React), skipping 403.
   useEffect(() => {
     if (!isForbidden) {
       monitoring.captureException(error, { source: 'route' });

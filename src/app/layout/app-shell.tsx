@@ -13,7 +13,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <Layout className="h-screen overflow-hidden">
-      {/* Bỏ qua điều hướng bằng bàn phím: chỉ hiện khi focus. */}
+      {/* Skipped in keyboard navigation: only shown on focus. */}
       <a href="#main-content" className="skip-link">
         {t('Tới nội dung chính')}
       </a>

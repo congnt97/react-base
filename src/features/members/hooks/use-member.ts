@@ -4,7 +4,7 @@ import { useDetailQuery } from '@/core/hooks/use-detail-query';
 import { membersApi } from '@/features/members/api';
 import { memberKeys } from '@/features/members/hooks/use-members';
 
-/** Dùng chung cho route loader (prefetch) và hook, để cùng key và cùng queryFn. */
+/** Shared by the route loader (prefetch) and the hook, so they use the same key and queryFn. */
 export const memberDetailQueryOptions = (id: string) =>
   queryOptions({
     queryKey: memberKeys.detail(id),

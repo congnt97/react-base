@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchInput } from '@/components/ui/search-input';
 
-// Timer thật đua với tốc độ gõ của userEvent: dưới tải (máy chậm, chạy cùng
-// coverage), gõ "dự án" có thể mất hơn khoảng debounce, khiến nó bắn giữa chừng
-// với giá trị dở dang rồi test đỏ ngẫu nhiên. Timer giả loại bỏ hẳn cuộc đua đó.
+// Real timers race userEvent's typing speed: under load (a slow machine, coverage
+// running alongside), typing "dự án" can take longer than the debounce window, firing
+// mid-way with a partial value and turning the test randomly flaky. Fake timers remove
+// that race entirely.
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
 });

@@ -7,8 +7,8 @@ export type ErrorReporter = {
   setUser: (user: MonitoringUser) => void;
 };
 
-// Mặc định log ra console. Production thay bằng Sentry/Datadog qua monitoring.use()
-// trong app/monitoring.ts, không sửa file này.
+// Logs to the console by default. Production swaps in Sentry/Datadog via monitoring.use()
+// in app/monitoring.ts — don't edit this file.
 const consoleReporter: ErrorReporter = {
   captureException: (error, context) => {
     console.error('[monitoring]', error, context ?? '');
@@ -18,7 +18,7 @@ const consoleReporter: ErrorReporter = {
 
 let reporter: ErrorReporter = consoleReporter;
 
-/** Lỗi nghiệp vụ (4xx) là hành vi bình thường, không báo về monitoring. */
+/** A business error (4xx) is normal behavior; don't report it to monitoring. */
 export const shouldReport = (error: unknown) =>
   !(
     error instanceof ApiError &&
@@ -37,7 +37,7 @@ export const monitoring = {
     if (!shouldReport(error)) {
       return;
     }
-    // requestId đi kèm để tra đúng dòng log backend.
+    // requestId is attached so it can be matched against the right backend log line.
     const requestId = error instanceof ApiError ? error.requestId : undefined;
     reporter.captureException(
       error,
@@ -49,7 +49,7 @@ export const monitoring = {
   },
 };
 
-// Bắt lỗi ngoài React tree (script lỗi, promise không catch). Gọi một lần lúc boot.
+// Catches errors outside the React tree (script errors, uncaught promise rejections). Call once at boot.
 export const initMonitoring = () => {
   window.addEventListener('error', (event) => {
     monitoring.captureException(event.error ?? event.message, {

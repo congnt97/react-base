@@ -32,7 +32,7 @@ export function MembersPage() {
   const navigate = route.useNavigate();
   const selection = useMembersSelection();
 
-  // URL là source of truth cho filter/pagination; đổi trang/filter thì bỏ chọn.
+  // The URL is the source of truth for filter/pagination; changing page/filter clears the selection.
   const updateSearch = (patch: Partial<MembersSearch>) => {
     selection.clear();
     return navigate({ search: (prev) => ({ ...prev, ...patch }) });

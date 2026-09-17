@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Trả về hàm gọi trễ `delay` ms sau lần gọi cuối. Dùng cho ô tìm kiếm để không
- * bắn request mỗi lần gõ. Timer được dọn khi unmount nên không set state sau đó.
+ * Returns a function that calls `delay` ms after the last call. Used for search inputs so
+ * a request isn't fired on every keystroke. The timer is cleared on unmount so state isn't
+ * set afterward.
  *
- * `callback` giữ trong ref: lần gọi luôn dùng bản mới nhất mà không cần đưa vào
- * dependency, nên hàm trả về ổn định qua các lần render.
+ * `callback` is kept in a ref: each call always uses the latest version without needing it
+ * in the dependency array, so the returned function stays stable across renders.
  */
 export function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,

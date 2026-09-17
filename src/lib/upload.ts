@@ -8,7 +8,7 @@ export type UploadedFile = {
   size: number;
 };
 
-// Upload dùng chung cho mọi feature nên đặt ở lib thay vì features/<x>/api.ts.
+// Upload is shared across every feature, so it lives in lib instead of features/<x>/api.ts.
 export const uploadFile = async (file: File) => {
   const body = new FormData();
   body.append('file', file);

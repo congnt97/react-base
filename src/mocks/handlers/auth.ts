@@ -16,13 +16,13 @@ type MockAccount = {
   refreshToken: string;
 };
 
-// Hai tài khoản để thấy khác biệt permission: admin có tất cả, user không xoá
-// dự án và không vào Cài đặt.
+// Two accounts to show the permission difference: admin has everything, user can't
+// delete projects and can't access Settings.
 //
-// Backend chưa chốt nên hai tài khoản trả hai kiểu, để cả hai nhánh của
-// resolvePermissions chạy thật trong dev và E2E: admin trả `permissions` (backend
-// quyết định quyền), user chỉ trả `role` (frontend tra ROLE_PERMISSIONS). Khi biết
-// backend thật, sửa cả hai về đúng một kiểu.
+// The backend isn't finalized, so the two accounts return two different shapes so both
+// branches of resolvePermissions run for real in dev and E2E: admin returns `permissions`
+// (backend decides permissions), user only returns `role` (frontend looks it up in
+// ROLE_PERMISSIONS). Once the real backend is known, change both to the same shape.
 const mockAccounts: MockAccount[] = [
   {
     user: {

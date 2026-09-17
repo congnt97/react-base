@@ -6,9 +6,10 @@ export enum Role {
 }
 
 /**
- * User đúng như backend trả về. Backend chưa chốt nên nhận cả hai kiểu phổ biến:
- * có `permissions` (backend quyết định quyền) hoặc chỉ có `role` (frontend tra
- * `ROLE_PERMISSIONS`). Chỉ `features/auth/api.ts` và mock dùng type này.
+ * User exactly as the backend returns it. The backend isn't finalized yet, so this
+ * accepts both common shapes: with `permissions` (backend decides permissions) or with
+ * only `role` (frontend looks it up in `ROLE_PERMISSIONS`). Only `features/auth/api.ts`
+ * and the mock use this type.
  */
 export type AuthUserDto = {
   id: string;
@@ -22,10 +23,10 @@ export type AuthUserDto = {
 };
 
 /**
- * User bên trong app, đã chuẩn hoá ở `api.ts`. Cố ý không có `role`: mọi quyết
- * định quyền đi qua `can()` với `permissions`, nên đổi kiểu backend không phải
- * sửa feature nào. Cần hiển thị vai trò thì thêm field nhãn (vd `roleLabel`) ở
- * biên API, không đưa `role` vào lại.
+ * User inside the app, already normalized in `api.ts`. Deliberately has no `role`: every
+ * permission decision goes through `can()` with `permissions`, so a backend shape change
+ * never requires touching any feature. If a role needs to be displayed, add a label field
+ * (e.g. `roleLabel`) at the API boundary — don't bring `role` back.
  */
 export type AuthUser = {
   id: string;

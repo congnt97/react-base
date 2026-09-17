@@ -30,7 +30,7 @@ describe('Popconfirm', () => {
     expect(ok).toHaveClass('ant-btn-dangerous');
 
     await userEvent.click(ok);
-    // Nút đang loading chặn pointer-events; fireEvent mô phỏng click lọt qua.
+    // A loading button blocks pointer-events; fireEvent simulates a click getting through anyway.
     fireEvent.click(ok);
     fireEvent.click(ok);
     expect(onConfirm).toHaveBeenCalledTimes(1);
@@ -39,7 +39,7 @@ describe('Popconfirm', () => {
     );
 
     finish();
-    // jsdom không bắn animationend nên popover dừng ở trạng thái đang đóng.
+    // jsdom doesn't fire animationend, so the popover stays stuck in its closing state.
     await waitFor(() =>
       expect(document.querySelector('.ant-popover')?.className).toMatch(
         /leave|hidden/,

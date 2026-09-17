@@ -4,7 +4,7 @@ import { useDetailQuery } from '@/core/hooks/use-detail-query';
 import { projectsApi } from '@/features/projects/api';
 import { projectKeys } from '@/features/projects/hooks/use-projects';
 
-/** Dùng chung cho route loader (prefetch) và hook, để cùng key và cùng queryFn. */
+/** Shared by the route loader (prefetch) and the hook, so they use the same key and queryFn. */
 export const projectDetailQueryOptions = (id: string) =>
   queryOptions({
     queryKey: projectKeys.detail(id),
@@ -15,7 +15,7 @@ export function useProject(id: string | undefined) {
   return useDetailQuery({
     queryKey: projectKeys.detail(id ?? ''),
     queryFn: ({ signal }) => projectsApi.detail(id ?? '', { signal }),
-    // Không gọi API khi chưa có id (vd đang chờ param); isLoading không kẹt true.
+    // Doesn't call the API without an id (e.g. waiting on a param); isLoading doesn't get stuck true.
     enabled: Boolean(id),
   });
 }

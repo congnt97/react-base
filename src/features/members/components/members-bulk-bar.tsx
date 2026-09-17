@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 
 type MembersBulkBarProps = {
   count: number;
-  /** Trả Promise để Button bọc tự loading và chặn bấm trùng. */
+  /** Returns a Promise so the Button wrapper self-loads and blocks duplicate clicks. */
   onActivate: () => Promise<void>;
   onDeactivate: () => Promise<void>;
   onClear: () => void;
 };
 
-/** Thanh hành động hàng loạt: chỉ hiện khi có dòng được chọn, luôn có "Bỏ chọn". */
+/** Bulk-action bar: only shows when rows are selected, always has a "Clear" option. */
 export function MembersBulkBar({
   count,
   onActivate,

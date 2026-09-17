@@ -32,7 +32,7 @@ export function SettingsPage() {
               children: user?.name ?? t('Chưa cập nhật'),
             },
             {
-              // Quyền đã chuẩn hoá ở biên API; hiện ra để kiểm backend trả đúng chưa.
+              // Permissions are already normalized at the API boundary; shown here to check the backend returns them correctly.
               key: 'permissions',
               label: t('Quyền'),
               children: user?.permissions.length ? (

@@ -1,20 +1,20 @@
 import tokens from '@/app/design-tokens.json';
 
 /**
- * Nguồn duy nhất của design token là `app/design-tokens.json`. File này đọc ra và
- * đặt tên cho từng nhóm để code dùng.
+ * The single source of design tokens is `app/design-tokens.json`. This file just reads
+ * it and names each group for code to use.
  *
- * Token để ở JSON để chỉ có một nơi phải sửa: `theme.ts` map sang AntD, còn
- * `styles/tokens.generated.css` sinh từ chính file đó qua
- * `scripts/generate-token-css.mjs` cho Tailwind và CSS thường. `pnpm dev` tự sinh
- * lại; sửa JSON rồi quên chạy `pnpm tokens:css` thì `tokens.test.ts` fail.
+ * Tokens live in JSON so there's only one place to edit: `theme.ts` maps them to AntD,
+ * and `styles/tokens.generated.css` is generated from the same file via
+ * `scripts/generate-token-css.mjs` for Tailwind and plain CSS. `pnpm dev` regenerates it
+ * automatically; editing the JSON and forgetting to run `pnpm tokens:css` fails `tokens.test.ts`.
  *
- * Màu chữ và nền chọn để đạt WCAG AA; đổi thì chạy `pnpm test:e2e`.
+ * Text and background colors are chosen to meet WCAG AA; changing them means running `pnpm test:e2e`.
  */
 export const designTokens = tokens;
 
 export type DesignTokens = typeof tokens;
 
-/** `appBg` -> `--app-bg`. Dùng chung giữa app và script sinh CSS. */
+/** `appBg` -> `--app-bg`. Shared between the app and the CSS-generation script. */
 export const cssVariableName = (token: string) =>
   `--${token.replace(/[A-Z]/g, (chunk) => `-${chunk.toLowerCase()}`)}`;

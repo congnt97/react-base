@@ -6,7 +6,7 @@ const authKeys = {
   me: ['auth', 'me'] as const,
 };
 
-// Dùng trong beforeLoad của routes/_app/route.tsx; user sau đó nằm trong auth store.
+// Used in the beforeLoad of routes/_app/route.tsx; the user then lives in the auth store.
 export const meQueryOptions = () =>
   queryOptions({
     queryKey: authKeys.me,

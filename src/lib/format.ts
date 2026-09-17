@@ -3,8 +3,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-// Mọi định dạng hiển thị đi qua đây để toàn app thống nhất và đổi một chỗ.
-// Locale ngày theo dayjs.locale() đặt trong app/i18n.ts.
+// Every display format goes through here so the whole app stays consistent and changes in one place.
+// The date locale follows dayjs.locale(), set in app/i18n.ts.
 
 export const formatDate = (value: string | Date) =>
   dayjs(value).format('DD/MM/YYYY');
@@ -29,7 +29,7 @@ export const formatCurrency = (
     maximumFractionDigits: currency === 'VND' ? 0 : 2,
   }).format(value);
 
-/** Bytes -> "1,5 MB". */
+/** Bytes -> "1.5 MB". */
 export const formatFileSize = (bytes: number, locale = 'vi-VN') => {
   const units = ['B', 'KB', 'MB', 'GB'] as const;
   let size = bytes;

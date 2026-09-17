@@ -16,7 +16,7 @@ export const router = createRouter({
   defaultPreloadStaleTime: 0,
   defaultStructuralSharing: true,
   scrollRestoration: true,
-  // Hiện spinner thay vì trang trắng khi beforeLoad/loader chờ API (vd /me lúc mở app).
+  // Shows a spinner instead of a blank page while beforeLoad/loader waits on the API (e.g. /me on app start).
   defaultPendingComponent: PageLoading,
   defaultPendingMs: 200,
   defaultErrorComponent: RouteError,
@@ -28,8 +28,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
-// lib/http.ts gọi notifySessionExpired khi refresh token thất bại.
-// Giữ redirectTo để đăng nhập lại xong quay về đúng màn; reason để login báo lý do.
+// lib/http.ts calls notifySessionExpired when the refresh token fails.
+// Keeps redirectTo so login returns to the right screen; reason tells login why.
 subscribeSessionExpired(() => {
   useAuthStore.getState().clearAuth();
   queryClient.clear();
@@ -44,7 +44,7 @@ subscribeSessionExpired(() => {
   });
 });
 
-// Page view cho analytics sau mỗi lần điều hướng xong.
+// Page view for analytics after every navigation completes.
 router.subscribe('onResolved', ({ toLocation }) => {
   analytics.page(toLocation.pathname);
 });

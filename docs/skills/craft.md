@@ -28,6 +28,7 @@ Trước khi viết, liệt kê các trạng thái đầu vào và xử lý đ�
 - Early return cho trường hợp đặc biệt, để luồng chính không bị thụt sâu.
 - Không magic number: đặt tên hằng có đơn vị (`REFRESH_TIMEOUT_MS`), trừ 0, 1 và giá trị hiển nhiên trong layout.
 - Comment nói _vì sao_, không nói _cái gì_. Code tự giải thích thì không comment.
+- Comment trong code (`//`, `/** */`) viết bằng tiếng Anh. Chuỗi qua `t()`, text JSX, `aria-label`/`title`/`placeholder`, tên biến enum/data vẫn giữ tiếng Việt như cũ.
 - Không trừu tượng hoá sớm: lặp hai lần chấp nhận được, lần thứ ba mới gom. Không tạo helper "để sau dùng".
 - Không để lại code thử nghiệm, biến không dùng, import thừa, `TODO` không có ticket.
 

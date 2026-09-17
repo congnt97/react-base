@@ -4,10 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchSelect } from '@/components/ui/search-select';
 
-// Timer thật đua với tốc độ gõ của userEvent: dưới tải, debounce (300ms mặc định
-// của useAsyncOptions) có thể bắn giữa chừng với từ khoá dở dang, khiến
-// `search` bị gọi với "la" thay vì "lan" và test đỏ ngẫu nhiên. Timer giả loại
-// bỏ hẳn cuộc đua đó, xem thêm search-input.test.tsx.
+// Real timers race userEvent's typing speed: under load, the debounce (300ms default in
+// useAsyncOptions) can fire mid-way with a partial keyword, causing `search` to be called
+// with "la" instead of "lan" and turning the test randomly flaky. Fake timers remove that
+// race entirely — see also search-input.test.tsx.
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
 });

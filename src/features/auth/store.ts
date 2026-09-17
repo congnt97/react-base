@@ -16,7 +16,7 @@ export type AuthState = {
   clearAuth: () => void;
 };
 
-// Token là source of truth ở auth-storage; store chỉ giữ UI state.
+// The token's source of truth is auth-storage; the store only holds UI state.
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: hasStoredAccessToken(),

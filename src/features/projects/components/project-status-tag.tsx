@@ -15,7 +15,7 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
 
 type ProjectStatusTagProps = {
   status: ProjectStatus;
-  /** Có onChange thì tag thành dropdown đổi trạng thái (cần permission update). */
+  /** With onChange, the tag becomes a dropdown to change status (needs update permission). */
   onChange?: (status: ProjectStatus) => void;
 };
 

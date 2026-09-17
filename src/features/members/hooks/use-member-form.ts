@@ -8,7 +8,7 @@ import type { Member, MemberPayload } from '@/features/members/types';
 
 type FormState = { open: boolean; member: Member | null };
 
-/** Gom state và luồng submit của drawer tạo/sửa để page chỉ còn nối UI. */
+/** Bundles the create/edit drawer's state and submit flow so the page only wires up UI. */
 export function useMemberForm() {
   const createMember = useCreateMember();
   const updateMember = useUpdateMember();
@@ -16,7 +16,7 @@ export function useMemberForm() {
 
   const close = () => setState({ open: false, member: null });
 
-  // Lỗi đã được toast trong hook mutation; Form bọc gắn lỗi field và giữ drawer mở.
+  // The error is already toasted in the mutation hook; the Form wrapper attaches field errors and keeps the drawer open.
   const submit = (values: MemberPayload) => {
     const mutation = state.member
       ? updateMember.mutateAsync({ id: state.member.id, ...values })

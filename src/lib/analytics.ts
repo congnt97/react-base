@@ -3,8 +3,8 @@ export type AnalyticsProvider = {
   track: (event: string, properties?: Record<string, unknown>) => void;
 };
 
-// Mặc định không làm gì. Production thay bằng GA4/PostHog/Mixpanel qua analytics.use()
-// trong app/monitoring.ts.
+// Does nothing by default. Production swaps in GA4/PostHog/Mixpanel via analytics.use()
+// in app/monitoring.ts.
 const noopProvider: AnalyticsProvider = {
   page: () => undefined,
   track: () => undefined,

@@ -3,11 +3,11 @@ import { useRef, useState } from 'react';
 import type { AsyncAction } from '@/core/contracts';
 
 /**
- * Bọc một hành động async để chặn click spam: gọi khi đang chạy thì bỏ qua,
- * `pending` để adapter bind vào `loading` của nút.
+ * Wraps an async action to block click spam: a call made while it's already running is
+ * skipped; `pending` lets the adapter bind to the button's `loading`.
  *
- * Dùng ref thay vì state cho cờ chạy, vì state cập nhật sau render còn click thứ hai
- * có thể tới trước khi render kịp.
+ * Uses a ref instead of state for the running flag, because state updates after render
+ * while a second click can arrive before the render catches up.
  */
 export function useAsyncAction<TArgs extends unknown[]>(
   action: (...args: TArgs) => Promise<unknown>,

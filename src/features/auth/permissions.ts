@@ -1,8 +1,8 @@
 import { Role, type AuthUser, type AuthUserDto } from '@/features/auth/types';
 import { monitoring } from '@/lib/monitoring';
 
-// Permission theo hành động trên resource: `<resource>:<action>`. Đây là danh sách
-// quyền frontend biết và có UI tương ứng; backend có thể có nhiều hơn.
+// Permission by action on a resource: `<resource>:<action>`. This is the list of
+// permissions the frontend knows and has UI for; the backend may have more.
 export enum Permission {
   PROJECTS_READ = 'projects:read',
   PROJECTS_CREATE = 'projects:create',
@@ -18,8 +18,8 @@ export enum Permission {
 const PERMISSION_VALUES: readonly string[] = Object.values(Permission);
 
 /**
- * Quyền theo role. Chỉ được đọc khi backend trả `role` mà không trả `permissions`,
- * và để mock mô phỏng backend. Backend trả `permissions` thì bảng này bị bỏ qua.
+ * Permissions by role. Only read when the backend returns `role` without `permissions`,
+ * and used by the mock to simulate the backend. Ignored when the backend returns `permissions`.
  */
 export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
   [Role.ADMIN]: Object.values(Permission),
@@ -37,8 +37,8 @@ const isPermission = (value: string): value is Permission =>
 const isRole = (value: string): value is Role =>
   (Object.values(Role) as string[]).includes(value);
 
-// Mỗi giá trị lạ chỉ báo một lần mỗi phiên: đủ để thấy lệch tên giữa backend và
-// frontend trên monitoring, không spam mỗi lần gọi /auth/me.
+// Each unknown value is reported only once per session: enough to see a naming
+// mismatch between backend and frontend in monitoring, without spamming on every /auth/me call.
 const reported = new Set<string>();
 
 const reportUnknown = (kind: 'permission' | 'role', value: string) => {
@@ -54,11 +54,11 @@ const reportUnknown = (kind: 'permission' | 'role', value: string) => {
 };
 
 /**
- * Chuẩn hoá quyền từ backend về danh sách frontend biết, theo thứ tự:
- * 1. Có `permissions` (kể cả mảng rỗng) thì dùng nó, không nhìn `role`. Chuỗi lạ
- *    bị bỏ và báo monitoring một lần.
- * 2. Không có `permissions` mà có `role` hợp lệ thì tra `ROLE_PERMISSIONS`.
- * 3. Còn lại không có quyền nào: từ chối là mặc định an toàn.
+ * Normalizes permissions from the backend into the list the frontend knows, in order:
+ * 1. If `permissions` is present (even an empty array), use it and ignore `role`. Unknown
+ *    strings are dropped and reported to monitoring once.
+ * 2. No `permissions` but a valid `role`: look it up in `ROLE_PERMISSIONS`.
+ * 3. Otherwise, no permissions at all: deny by default is the safe fallback.
  */
 export const resolvePermissions = (
   dto: Pick<AuthUserDto, 'role' | 'permissions'>,
@@ -82,7 +82,7 @@ export const resolvePermissions = (
   return [...ROLE_PERMISSIONS[dto.role]];
 };
 
-/** Nơi duy nhất quyết định quyền. Frontend chỉ ẩn/hiện và chặn route; backend vẫn phải enforce. */
+/** The single place that decides permission. Frontend only hides/shows and guards routes; the backend must still enforce it. */
 export const can = (
   user: Pick<AuthUser, 'permissions'> | null | undefined,
   ...permissions: Permission[]

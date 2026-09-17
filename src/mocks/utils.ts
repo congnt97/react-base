@@ -4,7 +4,7 @@ import { env } from '@/lib/env';
 
 export const apiUrl = (path: string) => `${env.VITE_API_BASE_URL}${path}`;
 
-/** Lấy phần tử theo vòng, kiểu trả về không undefined nhờ tuple không rỗng. */
+/** Picks an element cyclically; the return type isn't undefined thanks to the non-empty tuple. */
 export const cycle = <T>(items: readonly [T, ...T[]], index: number): T =>
   items[index % items.length] ?? items[0];
 
@@ -16,7 +16,7 @@ export const fail = (statusCode: number, message: string) =>
     { status: statusCode },
   );
 
-/** Lỗi theo field (422): `lib/http.ts` đưa `errors` vào `ApiError.fieldErrors`. */
+/** Field-level error (422): `lib/http.ts` puts `errors` into `ApiError.fieldErrors`. */
 export const failFields = (
   statusCode: number,
   message: string,
@@ -27,11 +27,11 @@ export const failFields = (
     { status: statusCode },
   );
 
-/** So khớp filter dạng chuỗi trên URL với giá trị enum, không so enum với chuỗi lạ. */
+/** Matches a string filter from the URL against an enum value, without comparing the enum to an arbitrary string. */
 export const matchesFilter = (value: string, filter: string | null) =>
   !filter || value === filter;
 
-/** Cắt trang theo `page`/`pageSize` trên URL, đúng envelope PaginatedResponse. */
+/** Slices a page by the URL's `page`/`pageSize`, matching the PaginatedResponse envelope. */
 export const paginate = <T>(items: T[], url: URL) => {
   const page = Number(url.searchParams.get('page') ?? 1);
   const pageSize = Number(url.searchParams.get('pageSize') ?? 10);

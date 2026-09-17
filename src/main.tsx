@@ -9,7 +9,7 @@ import { router } from '@/app/router';
 import { env } from '@/lib/env';
 import '@/styles/styles.css';
 
-// MSW chỉ chạy ở dev khi bật VITE_ENABLE_MOCK_API; production không bundle mocks.
+// MSW only runs in dev when VITE_ENABLE_MOCK_API is on; production doesn't bundle the mocks.
 async function enableMocking() {
   if (!import.meta.env.DEV || !env.VITE_ENABLE_MOCK_API) {
     return;

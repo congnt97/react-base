@@ -2,8 +2,8 @@ import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 
 import { monitoring } from '@/lib/monitoring';
 
-// Lỗi server/mạng từ mọi query/mutation đều đi qua monitoring một chỗ;
-// toast cho user vẫn do hook của từng feature xử lý.
+// Server/network errors from every query/mutation all flow through monitoring in one place;
+// toasting the user is still handled by each feature's own hook.
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {

@@ -33,8 +33,8 @@ describe('uploadFile', () => {
 
     expect(hasFileField).toBe(true);
     expect(contentType).toContain('multipart/form-data');
-    // Tên file không assert được: axios trong jsdom dùng XHR nên filename thành
-    // "blob"; trình duyệt thật giữ nguyên. E2E patterns.spec.ts kiểm tên file.
+    // The filename can't be asserted here: axios under jsdom uses XHR, which turns the
+    // filename into "blob"; a real browser keeps it. E2E patterns.spec.ts checks the filename.
     expect(result).toEqual({ url: '/uploads/a.pdf', name: 'a.pdf', size: 3 });
   });
 

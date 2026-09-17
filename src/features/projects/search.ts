@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { ProjectStatus } from '@/features/projects/types';
 
-// `.catch` thay vì throw: query param sai/thiếu thì về mặc định, không văng lỗi route.
+// `.catch` instead of throw: a bad/missing query param falls back to the default instead of a route error.
 export const projectsSearchSchema = z.object({
   page: z.number().int().min(1).catch(1),
   pageSize: z.number().int().min(1).max(100).catch(10),

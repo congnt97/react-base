@@ -14,19 +14,19 @@ type FormProps<TValues> = Omit<
 > & {
   children?: ReactNode;
   /**
-   * Trả Promise thì form khoá field tới khi xong và bỏ qua submit trùng.
-   * `ApiError.fieldErrors` được gắn vào đúng field; lỗi ApiError khác đã được
-   * toast ở hook mutation nên không ném tiếp. Lỗi không phải ApiError ném ra
-   * để monitoring bắt.
+   * If it returns a Promise, the form locks its fields until done and ignores a
+   * duplicate submit. `ApiError.fieldErrors` gets attached to the right field; any
+   * other `ApiError` has already been toasted in the mutation hook so it isn't
+   * rethrown. A non-`ApiError` is rethrown for monitoring to catch.
    */
   onSubmit: (values: TValues) => unknown;
-  /** Đang gửi từ bên ngoài (vd mutation.isPending); khoá field như trên. */
+  /** Submitting from outside (e.g. `mutation.isPending`); locks fields the same way. */
   submitting?: boolean;
 };
 
 /**
- * Bản bọc Form: chặn submit trùng, khoá field khi đang gửi, hiện lỗi field từ
- * backend. Feature phải dùng bản này thay vì antd Form.
+ * Form wrapper: blocks duplicate submit, locks fields while submitting, shows field
+ * errors from the backend. Features must use this instead of AntD's Form.
  */
 export function Form<TValues extends object>({
   onSubmit,
@@ -35,7 +35,7 @@ export function Form<TValues extends object>({
   ...props
 }: FormProps<TValues>) {
   const [instance] = AntForm.useForm<TValues>(form);
-  // Tên field từ backend là chuỗi; FormInstance không generic nhận NamePath chuỗi.
+  // Field names from the backend are strings; FormInstance isn't generic over a string NamePath.
   const fields: FormInstance = instance;
   const action = useAsyncAction(async (values: TValues) => {
     try {

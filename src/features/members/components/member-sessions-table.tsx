@@ -14,7 +14,7 @@ type MemberSessionsTableProps = {
   onPageChange: (page: number, pageSize: number) => void;
 };
 
-/** Bảng con trên trang chi tiết: cùng DataTable, phân trang riêng trên URL. */
+/** Sub-table on the detail page: same DataTable, its own pagination in the URL. */
 export function MemberSessionsTable({
   list,
   page,

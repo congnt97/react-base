@@ -51,7 +51,7 @@ const matchNavKey = (pathname: string) =>
     )
     .sort((a, b) => b.length - a.length)[0];
 
-/** Dùng chung cho Sider (desktop) và Drawer (mobile). */
+/** Shared by the Sider (desktop) and Drawer (mobile). */
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
   const pathname = useRouterState({
@@ -74,7 +74,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <div className="flex h-16 items-center px-6">
-        {/* text-white! vì AntD đặt màu link cho mọi <a>; nền sidebar tối cần chữ trắng. */}
+        {/* text-white! because AntD sets a link color on every <a>; the dark sidebar needs white text. */}
         <Link
           to="/"
           onClick={onNavigate}
@@ -95,7 +95,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 type SidebarProps = {
-  /** Mobile: Drawer do Header điều khiển. Desktop: bỏ qua, dùng Sider cố định. */
+  /** Mobile: Drawer controlled by Header. Desktop: ignored, uses a fixed Sider. */
   open: boolean;
   onClose: () => void;
 };
@@ -109,7 +109,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       <Drawer
         open={open}
         placement="left"
-        // AntD 6 deprecate `width` của Drawer; `size` nhận số px.
+        // AntD 6 deprecates Drawer's `width`; `size` takes a pixel number.
         size={260}
         closable={false}
         onClose={onClose}

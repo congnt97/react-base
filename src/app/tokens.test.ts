@@ -9,8 +9,9 @@ import { cssVariableName, designTokens } from '@/app/tokens';
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const generatedPath = path.join(ROOT, 'src/styles/tokens.generated.css');
 
-// Sửa design-tokens.json mà quên sinh lại CSS là lỗi im lặng: component AntD đổi
-// màu còn class Tailwind thì không. Test chạy lại script và so với file đang commit.
+// Editing design-tokens.json and forgetting to regenerate the CSS is a silent bug:
+// AntD components pick up the new color but Tailwind classes don't. This test reruns
+// the script and diffs it against the committed file.
 describe('design tokens', () => {
   it('tokens.generated.css khớp design-tokens.json', () => {
     const expected = execFileSync(

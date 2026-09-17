@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { EmptyState } from '@/components/feedback/empty-state';
 
 type ProjectsEmptyStateProps = {
-  /** Rỗng do lọc thì gợi ý đổi filter; rỗng thật thì gợi ý tạo mới. */
+  /** Empty because of a filter suggests changing it; genuinely empty suggests creating one. */
   hasFilter: boolean;
-  /** undefined = không có quyền tạo, ẩn nút. */
+  /** undefined = no create permission, hides the button. */
   onCreate?: () => void;
 };
 

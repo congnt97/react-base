@@ -21,7 +21,7 @@ export function useLogin() {
       void navigate({ to: redirectTo || '/', replace: true });
     },
     onError: (error) => {
-      // Message từ server tiếng Việt; t() dịch nếu có key, không thì giữ nguyên.
+      // The server message is in Vietnamese; t() translates it if a key exists, otherwise it's kept as-is.
       message.error(t(getErrorMessage(error)));
     },
   });

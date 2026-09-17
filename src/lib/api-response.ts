@@ -7,7 +7,7 @@ export type ApiResponse<T = unknown> = {
   result?: T;
 };
 
-/** List phân trang theo số trang (Table). */
+/** List paginated by page number (Table). */
 export type PaginatedResponse<T> = {
   items: T[];
   total: number;
@@ -20,15 +20,15 @@ export type PaginationParams = {
   pageSize: number;
 };
 
-/** List phân trang theo cursor (infinite scroll / "Tải thêm"). */
+/** List paginated by cursor (infinite scroll / "Load more"). */
 export type CursorPage<T> = {
   items: T[];
   nextCursor: string | null;
 };
 
 /**
- * Lấy payload từ envelope `{ data }` hoặc `{ result }` của backend.
- * `null`/`undefined` ở cả hai field đều bị coi là phản hồi không hợp lệ.
+ * Extracts the payload from the backend's `{ data }` or `{ result }` envelope.
+ * `null`/`undefined` in both fields is treated as an invalid response.
  */
 export const unwrapResponse = <T>(response: ApiResponse<T>): T => {
   const value = response.data ?? response.result;

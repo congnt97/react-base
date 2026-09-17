@@ -1,9 +1,9 @@
-/** Lỗi theo field từ backend (422): `{ email: 'Email đã tồn tại' }`. */
+/** Field-level errors from the backend (422): `{ email: 'Email đã tồn tại' }`. */
 export type FieldErrors = Record<string, string>;
 
 type ApiErrorOptions = {
   statusCode?: number;
-  /** X-Request-Id gửi kèm request, dùng tra log backend khi báo lỗi. */
+  /** X-Request-Id sent with the request, used to look up backend logs when reporting an error. */
   requestId?: string;
   fieldErrors?: FieldErrors;
 };
@@ -11,7 +11,7 @@ type ApiErrorOptions = {
 export class ApiError extends Error {
   readonly statusCode?: number;
   readonly requestId?: string;
-  /** Có thì Form adapter gắn thẳng vào field; không có thì toast `message`. */
+  /** If present, the Form adapter attaches it directly to the field; otherwise, toast `message`. */
   readonly fieldErrors?: FieldErrors;
 
   constructor(message: string, options: ApiErrorOptions = {}) {

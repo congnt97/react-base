@@ -2,8 +2,8 @@ import type { ThemeConfig } from 'antd';
 
 import { designTokens, type DesignTokens } from '@/app/tokens';
 
-// Token nằm ở app/design-tokens.json (nguồn duy nhất); file này chỉ map sang tên
-// của AntD.
+// Tokens live in app/design-tokens.json (the single source); this file only maps them
+// to AntD's names.
 const buildAntdTheme = (tokens: DesignTokens): ThemeConfig => {
   const { colors, layout, typography, components } = tokens;
 
@@ -59,7 +59,7 @@ const buildAntdTheme = (tokens: DesignTokens): ThemeConfig => {
         headerBg: colors.contentBg,
         siderBg: colors.sidebarBg,
       },
-      // Sidebar menu: chỉnh qua token thay vì override CSS bằng !important.
+      // Sidebar menu: adjusted via tokens instead of overriding CSS with !important.
       Menu: {
         darkItemBg: colors.sidebarBg,
         darkItemColor: colors.borderStrong,

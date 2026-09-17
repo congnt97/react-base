@@ -4,13 +4,13 @@ import type { MouseEvent } from 'react';
 import { useAsyncAction } from '@/core/hooks/use-async-action';
 
 type ButtonProps = Omit<AntButtonProps, 'onClick'> & {
-  /** Trả Promise thì nút tự `loading` và bỏ qua click khi đang chạy (chặn click spam). */
+  /** Returning a Promise makes the button `loading` and ignores clicks while running (blocks click spam). */
   onClick?: (event: MouseEvent<HTMLElement>) => unknown;
 };
 
 /**
- * Bản bọc Button: hành động async không cần tự quản lý loading hay khoá nút.
- * Feature phải dùng bản này thay vì antd Button (ESLint chặn).
+ * Button wrapper: an async action doesn't need to manage its own loading state or disable the button.
+ * Features must use this instead of antd's Button (ESLint blocks it).
  */
 export function Button({ onClick, loading, ...props }: ButtonProps) {
   const action = useAsyncAction(async (event: MouseEvent<HTMLElement>) => {

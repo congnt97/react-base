@@ -1,6 +1,6 @@
 import type { PaginationParams } from '@/lib/api-response';
 
-// Tập giá trị đóng đi qua enum; xem docs/skills/naming.md.
+// A closed set of values goes through an enum; see docs/skills/naming.md.
 export enum MemberRole {
   ADMIN = 'admin',
   EDITOR = 'editor',
@@ -29,7 +29,7 @@ export type Member = {
   email: string;
   role: MemberRole;
   status: MemberStatus;
-  /** Quan hệ cha con trong cùng entity: người quản lý cũng là thành viên. */
+  /** A parent-child relationship within the same entity: a manager is also a member. */
   managerId?: string;
   managerName?: string;
   createdAt: string;
@@ -46,7 +46,7 @@ export type MemberListParams = PaginationParams & {
   status?: MemberStatus;
 };
 
-/** Hành động hàng loạt: một request cho nhiều id, không lặp từng cái. */
+/** Bulk action: one request for many ids, instead of repeating one at a time. */
 export type MemberStatusPayload = {
   ids: string[];
   status: MemberStatus;

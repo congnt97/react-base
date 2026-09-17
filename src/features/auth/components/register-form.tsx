@@ -17,7 +17,7 @@ export function RegisterForm() {
     <Form<RegisterRequest>
       layout="vertical"
       requiredMark={false}
-      // Form bọc: khoá field và chặn submit trùng tới khi mutateAsync xong.
+      // Form wrapper: locks fields and blocks duplicate submits until mutateAsync finishes.
       onSubmit={(values) => register.mutateAsync(values)}
     >
       <Form.Item

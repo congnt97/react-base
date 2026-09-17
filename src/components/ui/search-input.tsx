@@ -5,14 +5,14 @@ import { useDebouncedCallback } from '@/core/hooks/use-debounced-callback';
 
 type SearchInputProps = Omit<InputProps, 'onChange' | 'value'> & {
   defaultValue?: string;
-  /** Gọi sau khi ngừng gõ `delay` ms, khi bấm Enter, hoặc khi xoá trắng. */
+  /** Called after typing stops for `delay` ms, on Enter, or when cleared. */
   onSearch: (keyword: string | undefined) => void;
   delay?: number;
 };
 
 /**
- * Ô tìm kiếm tự tìm sau khi ngừng gõ. Người dùng không phải biết là phải bấm Enter;
- * Enter vẫn tìm ngay cho ai quen thao tác bàn phím.
+ * Search input that searches on its own once typing stops. The user doesn't need to know
+ * to press Enter; Enter still searches immediately for keyboard-driven users.
  */
 export function SearchInput({
   defaultValue,

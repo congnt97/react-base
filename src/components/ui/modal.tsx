@@ -3,15 +3,16 @@ import { Modal as AntModal, type ModalProps as AntModalProps } from 'antd';
 import { useAsyncAction } from '@/core/hooks/use-async-action';
 
 type ModalProps = Omit<AntModalProps, 'onOk' | 'confirmLoading'> & {
-  /** Trả Promise thì modal tự khoá (mask, ESC, nút đóng, nút huỷ) tới khi xong. */
+  /** If it returns a Promise, the modal locks itself (mask, ESC, close button, cancel button) until done. */
   onOk?: () => unknown;
-  /** Đang gửi từ bên ngoài (vd mutation.isPending); khoá như trên. */
+  /** Submitting from outside (e.g. `mutation.isPending`); locks the same way. */
   submitting?: boolean;
 };
 
 /**
- * Bản bọc Modal: khi đang gửi thì không thể đóng bằng mask/ESC/nút X, nút huỷ disable,
- * nút OK loading; mở lại thì form mới (destroyOnHidden). Feature phải dùng bản này.
+ * Modal wrapper: while submitting, it can't be closed via mask/ESC/X button, cancel is
+ * disabled, OK shows loading; reopening always gets a fresh form (`destroyOnHidden`).
+ * Features must use this wrapper.
  */
 export function Modal({
   onOk,
@@ -31,7 +32,7 @@ export function Modal({
     <AntModal
       destroyOnHidden
       confirmLoading={locked}
-      // AntD 6.6 deprecate maskClosable, thay bằng mask.closable (giữ enabled mặc định true).
+      // AntD 6.6 deprecates maskClosable in favor of mask.closable (keeps enabled defaulting to true).
       mask={{ closable: maskClosable && !locked }}
       keyboard={keyboard && !locked}
       closable={closable && !locked}

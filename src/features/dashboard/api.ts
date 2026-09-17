@@ -7,7 +7,7 @@ import {
 import { Endpoints } from '@/lib/endpoints';
 import { http, type HttpRequestOptions } from '@/lib/http';
 
-// Contract tường minh: đọc interface là biết feature nói chuyện với backend thế nào.
+// Explicit contract: reading the interface tells you how the feature talks to the backend.
 export interface DashboardApi {
   activity: (
     params: ActivityListParams,

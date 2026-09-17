@@ -9,8 +9,8 @@ import type { Project, ProjectPayload } from '@/features/projects/types';
 type FormState = { open: boolean; project: Project | null };
 
 /**
- * Gom state và luồng submit của modal tạo/sửa để page chỉ còn nối UI.
- * Tạo hay sửa quyết định bởi `project` đang mở.
+ * Bundles the create/edit modal's state and submit flow so the page only wires up UI.
+ * Create vs. edit is decided by which `project` is open.
  */
 export function useProjectForm() {
   const createProject = useCreateProject();
@@ -22,7 +22,7 @@ export function useProjectForm() {
 
   const close = () => setState({ open: false, project: null });
 
-  // Lỗi đã được toast trong hook mutation; Form bọc gắn lỗi field và giữ modal mở.
+  // The error is already toasted in the mutation hook; the Form wrapper attaches field errors and keeps the modal open.
   const submit = (values: ProjectPayload) => {
     const mutation = state.project
       ? updateProject.mutateAsync({ id: state.project.id, ...values })

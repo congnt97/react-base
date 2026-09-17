@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 type BreadcrumbItem = {
   label: string;
-  /** Có `to` thì là link, không thì là mục hiện tại. */
+  /** With `to` it's a link; without it, it's the current item. */
   to?: string;
 };
 

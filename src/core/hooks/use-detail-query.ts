@@ -3,11 +3,11 @@ import { useQuery, type QueryKey } from '@tanstack/react-query';
 type DetailQueryOptions<TData> = {
   queryKey: QueryKey;
   queryFn: (context: { signal: AbortSignal }) => Promise<TData>;
-  /** Chưa có id thì tắt; hook không kẹt loading. */
+  /** Disabled when there's no id yet; the hook won't get stuck in loading. */
   enabled?: boolean;
 };
 
-/** Detail query chuẩn hoá: `isLoading` đúng nghĩa, `signal` sẵn, không kẹt khi tắt. */
+/** Normalized detail query: `isLoading` means what it says, `signal` is available, never stuck when disabled. */
 export function useDetailQuery<TData>({
   queryKey,
   queryFn,

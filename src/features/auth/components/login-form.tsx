@@ -17,7 +17,7 @@ export function LoginForm() {
     <Form<LoginRequest>
       layout="vertical"
       requiredMark={false}
-      // Form bọc: khoá field và chặn submit trùng tới khi mutateAsync xong.
+      // Form wrapper: locks fields and blocks duplicate submits until mutateAsync finishes.
       onSubmit={(values) => login.mutateAsync(values)}
     >
       <Form.Item
@@ -45,7 +45,7 @@ export function LoginForm() {
 
       <p className="mb-0 mt-4 text-center text-sm text-[var(--text-muted)]">
         {t('Chưa có tài khoản?')}{' '}
-        {/* underline! vì .ant-app a đặt text-decoration none; link trong đoạn văn phải có gạch chân (a11y). */}
+        {/* underline! because .ant-app a sets text-decoration none; an in-paragraph link needs an underline (a11y). */}
         <Link to="/auth/register" className="underline!">
           {t('Đăng ký')}
         </Link>

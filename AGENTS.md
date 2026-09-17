@@ -33,6 +33,7 @@ Sửa một bug thật thì để lại guard chặn nó (test hành vi, rule li
 - Không import `Button, Modal, Table, Popconfirm, Upload, Drawer, Form` thẳng từ thư viện UI trong feature; dùng bản bọc `components/ui/<tên>`. Hành động async từ nút đi qua `Button` bọc hoặc `useAsyncAction`; select có dữ liệu từ API dùng `SearchSelect`.
 - Không `useMemo`/`useCallback` tay (React Compiler lo), không `useEffect` để tính derived state hay sync data từ Query.
 - Không hardcode text hiển thị; mọi chuỗi qua `t()` với key là câu tiếng Việt có dấu.
+- Comment trong code (`//`, `/** */`) viết bằng tiếng Anh; xem `docs/skills/craft.md`.
 - Không `!important`, không hex màu trong component; token ở `src/app/tokens.ts`.
 - Không refactor ngoài phạm vi task. Không xoá test để cho qua.
 

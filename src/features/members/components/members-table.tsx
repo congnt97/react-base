@@ -20,7 +20,7 @@ type MembersTableProps = {
   pageSize: number;
   onPageChange: (page: number, pageSize: number) => void;
   emptyState: ReactNode;
-  /** Có thì bảng hiện cột chọn; undefined = không có quyền hành động hàng loạt. */
+  /** When present, the table shows a selection column; undefined = no permission for bulk actions. */
   selection?: { ids: string[]; onChange: (ids: string[]) => void };
   onEdit?: (member: Member) => void;
   onDelete?: (member: Member) => void;

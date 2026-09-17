@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom/vitest';
 
-// i18n khởi tạo với locale vi (trả về key), để component dùng t() render được.
+// Initializes i18n with locale vi (returns the key), so components using t() can render.
 import '@/app/i18n';
 
-// jsdom thiếu vài browser API mà Ant Design gọi. Gán thẳng (không kiểm tra
-// tồn tại) vì type của DOM khai là luôn có; trong test môi trường là jsdom.
+// jsdom is missing a few browser APIs that Ant Design calls. Assigned directly (no
+// existence check) because the DOM types declare them as always present; the test
+// environment is jsdom.
 window.matchMedia = (query: string) => ({
   matches: false,
   media: query,
@@ -22,6 +23,6 @@ window.ResizeObserver = class {
   disconnect() {}
 };
 
-// jsdom chưa hỗ trợ pseudo-element; AntD gọi getComputedStyle(el, '::after').
+// jsdom doesn't support pseudo-elements yet; AntD calls getComputedStyle(el, '::after').
 const getComputedStyle = window.getComputedStyle.bind(window);
 window.getComputedStyle = (element: Element) => getComputedStyle(element);

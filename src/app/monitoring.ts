@@ -2,8 +2,8 @@ import { analytics } from '@/lib/analytics';
 import { initMonitoring, monitoring } from '@/lib/monitoring';
 
 /**
- * Điểm cắm duy nhất cho error reporting và analytics. Base không kéo SDK nào
- * để giữ bundle nhẹ; dự án thật thay reporter ở đây, ví dụ Sentry:
+ * Single plug-in point for error reporting and analytics. The base pulls in no SDK
+ * to keep the bundle light; a real project swaps in the reporter here, e.g. Sentry:
  *
  *   import * as Sentry from '@sentry/react';
  *   Sentry.init({ dsn: env.VITE_SENTRY_DSN, environment: import.meta.env.MODE });
@@ -12,11 +12,11 @@ import { initMonitoring, monitoring } from '@/lib/monitoring';
  *     setUser: (user) => Sentry.setUser(user),
  *   });
  *
- * Analytics tương tự qua analytics.use({ page, track }).
+ * Analytics works the same way via analytics.use({ page, track }).
  */
 export const setupMonitoring = () => {
   if (import.meta.env.PROD) {
-    // TODO(dự án): monitoring.use(...) và analytics.use(...) với SDK thật.
+    // TODO(project): monitoring.use(...) and analytics.use(...) with a real SDK.
   }
 
   void analytics;

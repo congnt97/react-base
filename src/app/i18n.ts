@@ -11,12 +11,14 @@ import {
 } from '@/lib/locale-storage';
 
 /**
- * Key là câu tiếng Việt tự nhiên: `t('Đăng nhập')`. Tiếng Việt không cần file
- * dịch (thiếu key thì i18next trả lại key); ngôn ngữ khác thêm vào src/locales.
- * Code vì thế vẫn đọc được như text thường, không có key kỹ thuật.
+ * Keys are natural Vietnamese sentences: `t('Đăng nhập')`. Vietnamese needs no
+ * translation file (a missing key falls back to the key itself in i18next);
+ * other languages get a file added under src/locales. This way the code
+ * still reads like plain text, with no technical keys.
  *
- * Bản dịch tải động theo ngôn ngữ đang chọn để chunk đầu không gánh file dịch
- * của ngôn ngữ người dùng không bật.
+ * Translation bundles load dynamically based on the selected language, so
+ * the initial chunk doesn't carry the translation file for a language the
+ * user hasn't enabled.
  */
 const BUNDLES: Record<
   Exclude<Locale, typeof DEFAULT_LOCALE>,
@@ -55,5 +57,5 @@ export const changeLocale = async (locale: Locale) => {
   await i18n.changeLanguage(locale);
 };
 
-/** Gọi trước khi render để người dùng chọn tiếng Anh không thấy nháy tiếng Việt. */
+/** Call before rendering so users who picked English don't see a flash of Vietnamese. */
 export const initLocale = () => changeLocale(getStoredLocale());

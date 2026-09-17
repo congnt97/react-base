@@ -27,7 +27,7 @@ export function MembersFilter({
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
       <SearchInput
-        // key theo keyword để input reset đúng khi URL đổi từ bên ngoài (back/forward).
+        // Keyed by keyword so the input resets correctly when the URL changes externally (back/forward).
         key={keyword ?? ''}
         className="sm:max-w-[320px]"
         defaultValue={keyword}

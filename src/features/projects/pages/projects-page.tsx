@@ -32,7 +32,7 @@ export function ProjectsPage() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
-  // URL là source of truth cho filter/pagination: share link, back/forward đều đúng.
+  // The URL is the source of truth for filter/pagination: shared links and back/forward both work correctly.
   const updateSearch = (patch: Partial<ProjectsSearch>) =>
     navigate({ search: (prev) => ({ ...prev, ...patch }) });
 
@@ -55,7 +55,7 @@ export function ProjectsPage() {
       okText: t('Xoá'),
       cancelText: t('Huỷ'),
       danger: true,
-      // Lỗi đã toast trong mutation; kết quả true/false không cần xử lý thêm.
+      // The error is already toasted in the mutation; the true/false result needs no further handling.
       onConfirm: () => deleteProject.mutateAsync(project.id),
     });
 

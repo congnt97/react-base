@@ -8,21 +8,22 @@ type DataTableProps<TRow> = Pick<
   TableProps<TRow>,
   'columns' | 'rowKey' | 'size' | 'rowSelection' | 'expandable'
 > & {
-  /** Trạng thái từ useListQuery: loading đúng nghĩa, trang tràn đã được lo. */
+  /** State from useListQuery: loading means what it says, page overflow is already handled. */
   list: Pick<ListState<TRow>, 'items' | 'total' | 'isLoading' | 'isRefreshing'>;
   page: number;
   pageSize: number;
   onPageChange: (page: number, pageSize: number) => void;
-  /** Bắt buộc: bảng trống phải nói người dùng nên làm gì. */
+  /** Required: an empty table must tell the user what to do. */
   emptyState: ReactNode;
   showTotal?: (total: number) => ReactNode;
-  /** Chiều rộng tối thiểu để bảng cuộn ngang trên màn hẹp thay vì vỡ cột. */
+  /** Minimum width so the table scrolls horizontally on narrow screens instead of breaking columns. */
   minWidth?: number;
 };
 
 /**
- * Bảng list chuẩn: spinner trễ 200ms (không nháy khi nhanh), giữ data cũ khi đổi trang,
- * gợi ý cuộn ngang, empty state bắt buộc. Feature phải dùng bản này thay vì antd Table.
+ * Standard list table: spinner delayed by 200ms (no flicker when fast), keeps stale data
+ * while changing page, horizontal-scroll hint, empty state required. Features must use
+ * this instead of AntD's Table.
  */
 export function DataTable<TRow extends object>({
   list,

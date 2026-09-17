@@ -5,7 +5,7 @@ type AsyncBoundaryProps = {
   isError: boolean;
   error: unknown;
   isEmpty: boolean;
-  /** Bốn nhánh đều bắt buộc ở tầng type: không thể quên empty hay error. */
+  /** All four branches are required at the type level: empty or error can never be forgotten. */
   renderLoading: () => ReactNode;
   renderError: (error: unknown) => ReactNode;
   renderEmpty: () => ReactNode;
@@ -13,8 +13,9 @@ type AsyncBoundaryProps = {
 };
 
 /**
- * Headless: chọn đúng nhánh theo trạng thái, không vẽ gì. Adapter cung cấp UI cho
- * từng nhánh. Thứ tự: lỗi > loading > rỗng > data, để lỗi không bị che bởi loading.
+ * Headless: picks the right branch based on state, renders nothing itself. The adapter
+ * supplies the UI for each branch. Order: error > loading > empty > data, so an error
+ * is never hidden behind loading.
  */
 export function AsyncBoundary({
   isLoading,
