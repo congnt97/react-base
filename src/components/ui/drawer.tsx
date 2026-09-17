@@ -16,7 +16,8 @@ export function Drawer({
   return (
     <AntDrawer
       destroyOnHidden
-      maskClosable={maskClosable && !submitting}
+      // AntD 6.6 deprecate maskClosable, thay bằng mask.closable (giữ enabled mặc định true).
+      mask={{ closable: maskClosable && !submitting }}
       keyboard={keyboard && !submitting}
       closable={closable && !submitting}
       {...props}

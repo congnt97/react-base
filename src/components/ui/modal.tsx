@@ -31,7 +31,8 @@ export function Modal({
     <AntModal
       destroyOnHidden
       confirmLoading={locked}
-      maskClosable={maskClosable && !locked}
+      // AntD 6.6 deprecate maskClosable, thay bằng mask.closable (giữ enabled mặc định true).
+      mask={{ closable: maskClosable && !locked }}
       keyboard={keyboard && !locked}
       closable={closable && !locked}
       cancelButtonProps={{ ...cancelButtonProps, disabled: locked }}
